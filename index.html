@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.css' integrity='sha512-lp6wLpq/o3UVdgb9txVgXUTsvs0Fj1YfelAbza2Kl/aQHbNnfTYPMLiQRvy3i+3IigMby34mtcvcrh31U50nRw==' crossorigin='anonymous'/>
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css' integrity='sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw==' crossorigin='anonymous'/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link href="assets/img/lysce/favicon.ico" rel="icon">
+
+    <title>LYSCE</title>
+    <style>
+        body{
+            min-height: 150vh;
+        }
+
+        #topbar{
+  padding: 10px 0
+}
+#topbar i{
+  color: #ff3300;
+}
+@media (max-width: 575.9px) {
+  #topbar{
+    font-size: 0.75em;
+  }
+}
+
+.swiper {
+  /*width: 600px;*/
+  max-height: 380px;
+}
+/*.swiper {
+      width: 100%;
+      height: 100%;
+    }*/
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /*position:absolute;*/
+      z-index: -1;
+    }
+
+
+    .caption-slider{
+  position: absolute;
+  z-index: 1000;
+  bottom:20px;
+  left: calc(10vw - 20px);
+  color: #fff;
+  display: flex;
+  flex-flow:column nowrap;
+  justify-content: flex-end;
+  text-transform: uppercase;
+  /*outline:1px solid rgba(255,255,255,0.15);*/
+  flex-grow: 1;
+  padding: 10px
+}
+.caption-slider h2 .slide-words{
+  display: block;
+  font-size: 2.5em;
+  color: #ff0033;
+  font-weight: bold;
+  line-height: .85;
+}
+
+@media (max-width: 575.9px) {
+  .caption-slider h2,
+  .caption-slider h2 .slide-words{
+  font-size: 1.25em;
+  }
+  .caption-slider{
+    bottom: 0;
+  }
+  .caption-slider p{
+    font-size: 0.75em;
+  }
+  .swiper-button-prev,
+  .swiper-button-next{
+    transform: scale(0.35) !important;
+    transform-origin: center left
+  }
+  .swiper-button-next{
+    transform-origin: center right
+  }
+}
+
+.slide-words .swrd-anim{
+  display: none;
+}
+.slide-words .swrd-anim.active{
+  display: inline-block !important;
+}
+.caption-slider p{
+  color: orange;
+  margin: 0;
+  max-width: 50vw;
+}
+#slideWords{overflow: hidden;}
+#slideWords span{transition: transform 1s;}
+#slideWords, #slideWords *, #slideWords span{transition: transform 1s;transition-delay:0.25s;}
+#slideWords .swrd-anim{
+  transform: translateY(100px);
+}
+#slideWords .swrd-anim.active{
+  transform: translateY(0);
+}
+
+/* BLOCKQUOTE */
+#empresa blockquote i{
+  font-size: 2.5em;
+  color: #ff3300;
+  display: inline-block;
+  padding: 0 1vw;
+}
+#empresa blockquote {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items:flex-start;
+}
+
+#empresa blockquote p{
+  flex: 1;
+}
+#empresa blockquote i.fa-quote-right{
+  align-self: flex-end;
+  font-size: 1.5em;
+}
+
+@media (max-width: 575.9px) {
+#empresa blockquote i.fa-quote-left,
+#empresa blockquote i.fa-quote-right,
+  #empresa blockquote p{font-size: 0.85em;}
+}
+
+/* PARALLAX WORLDMAP */
+.parallax-container {
+  position: relative;
+  min-height: 220px;
+      overflow: hidden;
+}
+@media (max-width: 575.9px) {
+  .parallax-container{
+    min-height: initial;
+  }
+}
+.parallax {
+  position: absolute;
+  height: 200%;
+  width: 100%;
+  z-index: -1;
+  background-image: url(assets/img/worldmap.png), url(assets/img/bg.jpg);
+  background-size: cover, initial;
+  background-repeat: no-repeat, repeat;
+  background-position: top center, center;
+}
+.parallax-2 .parallax {
+  background-image: url(assets/img/parallax-2.jpg), url(assets/img/parallax-2.jpg);
+}
+.parallax-3 .parallax {
+  background-image: url(assets/img/logistica2.jpg), url(assets/img/logistica2-2.jpg);
+}
+
+#solutions .parallax-text blockquote{
+  display: flex;
+  font-size: clamp(18px, 4vw, 36px);
+}
+#solutions .parallax-text blockquote i{
+  color: #ff3300;
+  margin: 0 0.5em;
+}
+#solutions .parallax-text blockquote i.fa-quote-right{
+  align-self: flex-end;
+}
+#solutions .parallax-text blockquote i.fa-quote-left{
+  font-size: clamp(36px, 8vw, 48px);
+}
+
+/* CARD */
+#solutions h2{
+  color: #333;
+  text-align: center;
+  margin: 3vh 2vw calc(3vh + 40px);
+  font-weight: bold;
+  position:relative;
+}
+#solutions h2 small{
+  display: block;
+  font-size: 0.5em;
+  color: #ff0033;
+}
+#solutions h2:after{
+  position: absolute;
+  bottom: -10px;
+  height: 4px;
+  background-color: #ff0033;
+  width: 100px;
+  content: " ";
+  left: calc(50% - 50px);
+}
+#solutions .card > div > div{
+  padding: 0.5em;
+}
+#solutions .card{
+  border: none;
+}
+#solutions svg{
+  fill: #ff0033;
+  max-width: 80px;
+  display: block;
+  margin: 0 auto;
+}
+
+#funciones .list-group li{
+  background-color: transparent;
+  border-color: transparent;
+}
+#funciones .list-group-item i{
+  color: #ff0033;
+}
+
+#filosofia{
+  background-color: transparent;
+}
+#filosofia h2{
+  color: #fff;
+  text-align: center;
+  margin: 3vh 2vw calc(3vh + 40px);
+  font-weight: bold;
+  position:relative;
+}
+#filosofia h2 small{
+  display: block;
+  font-size: 0.5em;
+  color: #ff0033;
+}
+#filosofia h2:after{
+  position: absolute;
+  bottom: -10px;
+  height: 4px;
+  background-color: #ff0033;
+  width: 100px;
+  content: " ";
+  left: calc(50% - 50px);
+}
+
+
+
+#end{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+.spinny-wrapper{
+    /*outline: 1px solid red;*/
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow:hidden;
+    line-height:0;
+    padding:0;
+  }
+.spinny-wrapper h3{
+  /*outline: 1px solid red;*/
+  width: 50vw;
+  text-align: center;
+}
+
+.spinny-words{
+    display: inline-block;
+    text-align: center;
+    text-transform: uppercase;
+}
+.spinny-words span{
+    position: absolute;
+    font-weight: bold;
+  font-size: 1.5em;
+  line-height: .85;
+    top:-0px;
+    opacity: 0;    
+  left:0;
+    animation: rotateWord 12s linear infinite 0s;
+  width: 100%;
+  text-align: center;
+}
+.spinny-words span:nth-child(1) { 
+    animation-delay: 3s; 
+}
+.spinny-words span:nth-child(2) { 
+    animation-delay: 6s; 
+}
+.spinny-words span:nth-child(3) { 
+    animation-delay: 9s; 
+}
+@keyframes rotateWord {
+  0%   { opacity: 0; }
+  2%   { opacity: 0; transform: translateY(-30px); }
+  5%   { opacity: 1; transform: translateY(0px);}
+  17%  { opacity: 1; transform: translateY(0px); }
+  20%  { opacity: 0; transform: translateY(30px); }
+  80%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+
+
+.spacer-3{  height: 3vh;}
+
+footer{
+    background-color: #ededed;
+    padding: 3vw;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<section id="topbar">
+    <div class="container-fluid d-flex justify-content-between">
+        <div class="contact-info flex-shrink-0 flex-grow-1">
+            <i class="fa-solid fa-phone"></i> &nbsp;
+            <span class="person">+52 (449) 973-4395</span>
+        </div>
+        <div class="flex-grow-0 text-end">
+            <i class="fa-brands fa-facebook fa-lg fa-fw"></i> GrupoLysceMx 
+            <span class="d-none d-md-inline-block mx-2">|</span>
+            <div class="text-nowrap d-inline-block"><i class="fa-sharp fa-solid fa-envelope"></i> contacto@lysce.com.mx</div>
+
+        </div>
+    </div>
+</section>
+
+<header id="topnav">
+    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary p-0">
+        <div class="container-fluid">
+          <a class="navbar-brand p-0" href="#">
+            <img src="assets/img/lysce/lysce_logo.png" alt="Logo" width="100" class="d-inline-block align-text-top m-md-3">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#servicios">Servicios</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#empresa">Empresa</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="login.php">Intranet</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>    
+</header>
+
+    <section id="hero">
+        <div class="container-fluid g-0">
+<!-- Slider main container -->
+<div class="swiper">
+    <!-- Additional required wrapper -->
+    <div class="caption-slider">
+        <h2>Moviendo soluciones
+            <span id="slideWords" class="slide-words">
+                <span>por</span>
+                <span class="swrd-anim">aire</span>
+                <span class="swrd-anim">mar</span>
+                <span class="swrd-anim">tierra</span>
+            </span>
+        </h2>
+        <p>Logística y servicios de comercio exterior</p>
+    </div>
+    <div class="swiper-wrapper">
+      <!-- Slides -->
+      <div class="swiper-slide">
+        <img class="d-block img-responsive" src="assets/img/slides/slide_1.jpg" alt="">
+      </div>
+      <div class="swiper-slide">
+        <img class="d-block img-responsive" src="assets/img/slides/slide_2.jpg" alt="">
+      </div>
+      <div class="swiper-slide">
+        <img class="d-block img-responsive" src="assets/img/slides/slide_3.jpg" alt="">
+      </div>
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+  
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  
+    <!-- If we need scrollbar -->
+    <div class="swiper-scrollbar"></div>
+  </div>
+  
+        </div>
+    </section>
+
+    <section id="empresa" class="parallax-container d-flex align-items-center justify-content-center">
+        <div class="parallax-text container my-3">
+            <div class="d-flex align-items-center">
+                <blockquote class="blockquote text-white m-md-5">
+                    <i class="fa-sharp fa-solid fa-quote-left"></i>
+                    <p data-aos="flip-down" data-aos-duration="1500">Somos una <strong>Empresa Mexicana</strong> con una amplia experiencia en brindar <strong>servicios de logística de transporte y asesoría en comercio exterior.</strong></p>
+                    <i class="fa-sharp fa-solid fa-quote-right"></i>
+                </blockquote>
+                <div class="d-grid gap-2 align-self-center d-none d-md-block">
+                    <button class="btn btn-danger mx-lg-4 text-nowrap" type="button">Leer más</button>
+                </div>
+            </div>
+        </div>
+        <div class="parallax align-self-start"></div>
+      </section>
+
+<!-- SOLUTIONS SECTION -->
+<section id="solutions">
+    <div class="container">
+        <h2>Soluciones en 
+            <small class="text-uppercase">aduanas, trámites, almacenaje, logística</small>
+        </h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 justify-content-center">
+            <div class="col-in-row">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <svg id="icon_1" viewBox="0 0 58 65">
+                            <g>
+                                <path d="M55.113,23.882c-0.682,0.67-0.994,1.709-1.641,2.413
+                                    c0.984,2.489,1.736,5.213,1.833,8.59c-4.504,0-9.009,0-13.513,0c-0.2-0.269,0.441-0.597,0.772-0.868
+                                    c2.401-1.97,4.96-4.188,7.239-6.467c2.574-2.575,4.789-5.976,5.115-10.521c0.35-4.878-1.67-9.104-4.054-11.775
+                                    c-2.813-3.151-7.214-5.608-13.127-5.212c-7.769,0.521-14.093,6.636-14.671,14.575C22.255,25.784,31.5,29.508,36.484,34.886
+                                    c-2.123,0-4.246,0-6.37,0c-0.139-1.112,0.194-1.984,0-2.703c-0.311-1.153-1.88-1.462-2.413-2.316c0,1.673,0,3.346,0,5.019
+                                    c-3.957,0-7.915,0-11.872,0c0.283-4.608,1.249-8.532,2.799-11.872c1.447,0.322,2.772,0.767,4.343,0.965
+                                    c-0.084-0.721-0.825-1.62-0.965-2.606c-0.716-0.217-1.503-0.363-2.22-0.579c0.356-0.962,0.94-1.698,1.448-2.51
+                                    c-0.201-1.039-0.303-2.632-0.097-3.764c-1.444,1.227-2.608,3.569-3.764,5.405c-2.453-0.765-4.413-2.022-6.467-3.186
+                                    c2.916-2.747,6.423-4.902,10.907-6.081c0.349-0.97,0.692-1.946,1.158-2.799C9.843,11.204,1.803,19.637,0,34.307
+                                    c0,1.223,0,2.445,0,3.668c0.74,8.508,4.228,14.362,8.977,19.111C13.575,61.684,20.446,65,29.149,65
+                                    c8.794,0,15.355-3.677,19.883-8.204c4.782-4.782,8.151-10.684,8.783-19.304c0-0.901,0-1.802,0-2.703
+                                    C57.504,30.563,56.531,27,55.113,23.882z M9.169,18.478c2.207,1.397,4.47,2.737,7.143,3.667c-1.527,3.686-2.686,7.739-2.896,12.741
+                                    c-3.667,0-7.335,0-11.003,0C2.917,27.667,5.55,22.58,9.169,18.478z M2.413,37.299c3.667,0,7.335,0,11.003,0
+                                    c0.191,5.183,1.467,9.279,2.992,13.127c-2.599,0.907-4.91,2.104-6.949,3.571C5.605,49.937,2.943,44.684,2.413,37.299z
+                                     M11.196,55.638c2.024-1.129,3.998-2.308,6.37-3.089c2.035,3.821,4.648,7.063,7.818,9.749
+                                    C19.533,61.586,14.619,59.101,11.196,55.638z M27.701,61.043c-3.162-2.469-6.013-5.762-7.722-9.362
+                                    c2.418-0.542,4.878-1.042,7.722-1.158C27.701,54.029,27.701,57.536,27.701,61.043z M27.701,48.109
+                                    c-3.369,0.105-6.263,0.687-8.977,1.447c-1.446-3.477-2.696-7.148-2.799-11.968c-0.113-0.016-0.082-0.177-0.097-0.29
+                                    c3.958,0,7.915,0,11.872,0C27.701,40.902,27.701,44.506,27.701,48.109z M25.481,16.933c-0.326-4.48,1.439-8.066,3.861-10.521
+                                    c2.201-2.229,5.761-4.283,10.617-3.957c6.81,0.457,12.485,5.947,12.548,13.223c0.042,4.841-2.28,8.255-5.019,10.81
+                                    c-2.781,2.594-5.679,5.054-8.494,7.239C34.652,29.095,26.098,25.402,25.481,16.933z M30.211,37.299c3.893,0,7.785,0,11.679,0
+                                    c-0.094,4.926-1.35,8.688-2.8,12.258c-2.746-0.728-5.591-1.357-8.976-1.447C30.179,44.538,29.985,40.709,30.211,37.299z
+                                     M30.114,50.522c2.819,0.173,5.462,0.521,7.722,1.255c-1.924,3.642-4.692,6.954-7.722,9.169
+                                    C30.114,57.472,30.114,53.997,30.114,50.522z M32.527,62.395c2.737-2.732,5.763-6.014,7.722-9.846
+                                    c2.341,0.844,4.45,1.92,6.37,3.186C43.041,59.074,38.465,61.414,32.527,62.395z M48.453,53.997
+                                    c-2.143-1.429-4.529-2.614-7.047-3.668c1.629-3.744,2.626-8.12,3.09-13.03c3.604,0,7.207,0,10.81,0
+                                    C54.962,44.806,52.078,49.771,48.453,53.997z"/>
+                                <path d="M47.102,17.223c0.732-5.772-3.781-9.769-8.687-9.362
+                                    c-4.407,0.365-7.695,3.841-7.626,8.204c0.07,4.334,3.309,7.573,6.95,8.011C42.045,24.593,46.5,21.96,47.102,17.223z M38.029,21.663
+                                    c-2.749-0.379-5.58-3.336-4.633-7.239c0.469-1.934,2.205-3.701,4.535-4.054c3.732-0.564,6.381,1.904,6.757,4.633
+                                    C45.262,19.157,41.828,22.187,38.029,21.663z"/>
+                            </g>
+                            </svg>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title">Gestión del transporte</h5>
+                          <p class="card-text">Logística en transporte nacional e internacional aéreo, marítimo y terrestre</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                
+            </div>
+            <div class="col-in-row">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <svg viewBox="0 0 57.998 72.999">
+<g>
+	<path d="M39.603,9.5l-0.754,1.925c11.048,4.336,17.883,15.208,17.008,27.055C54.813,52.63,42.943,63.441,28.98,63.422l6.031-6.031
+		l-1.463-1.459l-8.53,8.533l8.53,8.534l1.463-1.46l-6.042-6.042c0.015,0,0.037,0.001,0.048,0.001
+		c15.03,0,27.776-11.644,28.901-26.862C58.858,25.876,51.499,14.174,39.603,9.5z"/>
+	<path d="M2.136,34.517C3.184,20.336,15.104,9.5,29.113,9.576l-6.033,6.033l1.459,1.456l8.535-8.529L24.54,0l-1.459,1.458
+		l6.048,6.056C14.043,7.437,1.202,19.094,0.078,34.366C-0.853,47.001,6.413,58.67,18.157,63.401l0.771-1.917
+		C8.024,57.092,1.274,46.253,2.136,34.517z"/>
+	<path d="M34.419,45.389v-1.141c1.167,0.109,2.366,0.178,3.61,0.178c6.063,0,12.587-1.354,12.587-4.333V25.948
+		c0-2.979-6.524-4.333-12.587-4.333c-6.062,0-12.586,1.354-12.586,4.333v4.51c-1.186-0.111-2.407-0.167-3.608-0.167
+		c-6.063,0-12.589,1.356-12.589,4.334v10.763c0,2.978,6.527,4.333,12.589,4.333S34.419,48.367,34.419,45.389z M48.551,40.084
+		c-0.163,0.627-3.631,2.277-10.521,2.277c-1.25,0-2.448-0.072-3.61-0.185v-1.488c1.167,0.107,2.366,0.182,3.61,0.182
+		c3.965,0,8.115-0.587,10.521-1.821V40.084z M48.551,36.523c-0.163,0.632-3.631,2.283-10.521,2.283c-1.25,0-2.448-0.078-3.61-0.191
+		v-1.482c1.167,0.105,2.366,0.178,3.61,0.178c3.965,0,8.115-0.586,10.521-1.818V36.523z M48.551,32.969
+		c-0.163,0.629-3.631,2.275-10.521,2.275c-1.25,0-2.448-0.072-3.61-0.185v-0.434c0-0.38-0.113-0.741-0.314-1.072
+		c1.283,0.13,2.613,0.196,3.924,0.196c3.965,0,8.115-0.581,10.521-1.819V32.969z M27.51,25.955c0.166-0.625,3.633-2.275,10.52-2.275
+		c6.893,0,10.366,1.651,10.521,2.251c-0.156,0.63-3.627,2.287-10.521,2.287c-6.889,0-10.354-1.652-10.52-2.259V25.955z M27.51,28.46
+		c2.406,1.233,6.556,1.821,10.52,1.821c3.965,0,8.115-0.588,10.521-1.821v0.948c-0.163,0.627-3.631,2.277-10.521,2.277
+		c-6.894,0-10.365-1.652-10.52-2.269V28.46z M32.353,45.379c-0.163,0.628-3.629,2.278-10.518,2.278
+		c-6.896,0-10.366-1.652-10.523-2.269v-1.13c2.407,1.234,6.558,1.821,10.523,1.821s8.113-0.587,10.518-1.821V45.379z M32.353,41.733
+		c-0.163,0.631-3.629,2.282-10.518,2.282c-6.896,0-10.366-1.656-10.523-2.269v-1.129c2.407,1.229,6.558,1.817,10.523,1.817
+		s8.113-0.587,10.518-1.817V41.733z M32.353,38.091c-0.163,0.629-3.629,2.278-10.518,2.278c-6.896,0-10.366-1.65-10.523-2.269
+		v-0.958c2.407,1.237,6.558,1.816,10.523,1.816s8.113-0.579,10.518-1.816V38.091z M21.835,36.894c-6.89,0-10.355-1.647-10.523-2.251
+		v-0.003c0.168-0.632,3.635-2.281,10.523-2.281c6.892,0,10.365,1.653,10.519,2.259C32.2,35.242,28.728,36.894,21.835,36.894z"/>
+</g>
+</svg>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title">Documentación</h5>
+                          <p class="card-text">Tramitología y asesoría en procesos de comercio exterior</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+            </div>
+            <div class="col-in-row">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <svg viewBox="0 0 55.427 72.999">
+<g>
+	<path d="M51.047,44.258l4.38-1.788l-4.838-12.948l-0.048,0.02L39.358,23.31l-0.866,2.129l9.343,5.208l-20.122,8.216L7.591,30.646
+		l9.392-5.235l-0.866-2.129l-11.23,6.26l-0.048-0.02L0,42.47l4.38,1.788v18.286l23.333,10.884l23.333-10.884V44.258z M52.71,41.083
+		l-20.419,8.337l-3.219-8.615l0.838-0.342l19.58-7.995L52.71,41.083z M5.937,32.468l19.58,7.995l0.838,0.342l-3.219,8.615
+		L2.717,41.083L5.937,32.468z M6.395,60.946V45.081l17.839,7.284l2.473-6.617v24.671L6.395,60.946z M28.721,70.419V45.748
+		l2.473,6.617l17.839-7.284v15.865L28.721,70.419z"/>
+	<rect x="25.363" y="30.7" width="4.281" height="2.358"/>
+	<path d="M22.208,22.618c1.123,1.754,1.225,4.112,1.226,4.112v2.694h1.643h4.988h1.643l0-2.652c0-0.023,0.104-2.401,1.226-4.153
+		c1.948-3.041,2.658-6.106,2.109-9.111c-0.652-3.577-3.369-7.187-7.328-7.357V6.134c-0.049,0-0.095,0.007-0.144,0.008
+		c-0.048-0.001-0.095-0.008-0.144-0.008V6.15c-3.959,0.17-6.675,3.78-7.328,7.357C19.549,16.512,20.259,19.578,22.208,22.618z
+		 M22.068,14c0.491-2.693,2.534-5.413,5.502-5.5c2.968,0.087,5.011,2.807,5.502,5.5c0.421,2.309-0.168,4.732-1.751,7.204
+		c-1.515,2.365-1.624,5.356-1.628,5.525v0.336h-0.972V15.866h-2.014v11.199h-1.26v-0.378c-0.004-0.126-0.113-3.118-1.627-5.484
+		C22.236,18.732,21.646,16.309,22.068,14z"/>
+	<polygon points="17.623,25.078 19.046,26.745 21.013,24.442 19.589,22.775 	"/>
+	<polygon points="37.386,5.279 35.961,3.612 33.994,5.915 35.418,7.582 	"/>
+	<polygon points="33.994,24.442 35.961,26.745 37.385,25.078 35.418,22.775 	"/>
+	<polygon points="21.013,5.915 19.046,3.612 17.622,5.279 19.589,7.582 	"/>
+	<rect x="26.497" width="2.014" height="3.256"/>
+	<rect x="37.689" y="14" width="2.782" height="2.358"/>
+	<rect x="14.536" y="14" width="2.782" height="2.358"/>
+</g>
+</svg>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title">Consolidación de planes</h5>
+                          <p class="card-text">Proyectos para la importación de nuevos productos</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+            </div>
+            <div class="col-in-row">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <svg viewBox="0 0 51.227 72.999">
+<g>
+	<path d="M50.328,54.439l-23.913,5.646L13.97,4.639L0.725,0L0,2.07l12.096,4.237l7.862,35.025l-4.004,11.651
+		c-0.317-0.031-0.637-0.048-0.961-0.048c-5.486,0-9.949,4.462-9.949,9.947c0,5.485,4.463,9.949,9.949,9.949
+		c5.485,0,9.948-4.463,9.948-9.949c0-0.065-0.008-0.127-0.009-0.192l25.901-6.116L50.328,54.439z M14.992,70.638
+		c-4.276,0-7.754-3.479-7.754-7.755c0-4.275,3.479-7.753,7.754-7.753c4.275,0,7.754,3.479,7.754,7.753
+		C22.746,67.159,19.268,70.638,14.992,70.638z M18.115,53.445l2.759-8.029l2.854,12.712C22.528,55.934,20.523,54.244,18.115,53.445z
+		"/>
+	<path d="M20.95,28.635l6.69,29.607l23.586-5.329l-6.69-29.607l-5.29,1.195L36.825,13.78l-18.296,4.134L20.95,28.635L20.95,28.635z
+		 M42.881,25.93l5.722,25.327l-19.306,4.362l-5.722-25.326l1.51-0.341l14.646-3.309l0,0L42.881,25.93z M21.152,19.571l14.017-3.167
+		l1.939,8.581l-14.017,3.167L21.152,19.571z"/>
+</g>
+</svg>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title">Desplazamiento</h5>
+                          <p class="card-text">Hand carrier, seguro de mercancía</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+            </div>
+            <div class="col-in-row">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <svg viewBox="0 0 61.061 56.301">
+                     <g>
+                       <polygon points="45.442,32.79 45.414,30.974 33.792,35.282 33.819,37.098 	"/>
+                       <polygon points="39.166,27.467 37.548,28.071 37.861,18.301 36.032,18.983 35.719,28.753 34.101,29.356 36.511,32.214 	"/>
+                       <polygon points="41.391,30.395 43.22,29.712 43.533,19.942 45.151,19.339 42.741,16.481 40.086,21.229 41.703,20.625 	"/>
+                       <path d="M61.061,36.313l-9.269-5.575l-0.008,0.013V5.872L32.866,0L10,5.716v24.016L0,34.09v6.962l26.873,15.01l0.427,0.239
+                         l1.511-0.619l5.666-2.321l0.227-4.362l4.524,2.481l0.07-0.128l-0.004,0.094l7.833-3.127l0.232-4.432l0.772-0.308l4.564,2.502
+                         l8.022-3.2l0.343-6.544l-0.019,0.008L61.061,36.313z M58.822,37.228l-3.89,1.552l-5.593-3.419l2.446-0.907v-1.459L58.822,37.228z
+                          M49.878,33.104l-21.15,7.839V14.488l21.15-6.064V33.104z M48.481,6.81l-20.672,5.927l-7.304-2.88l20.509-5.335L48.481,6.81z
+                          M32.807,2.008l4.672,1.432L17.445,8.651l-4.541-1.79L32.807,2.008z M11.937,8.563l4.479,1.766v9.082l1.938,0.646v-8.963
+                         l8.438,3.326v26.336l-14.854-7.569V8.563z M10,31.84v1.404l-1.431-0.785L10,31.84z M1.994,39.906l-0.043-2.494l8.781,4.903
+                         l0.044,2.51L1.994,39.906z M12.733,45.921l-0.044-2.513l2.361,1.318l0.043,2.517L12.733,45.921z M26.873,53.841l-9.822-5.501
+                         l-0.044-2.521l9.866,5.51V53.841z M27.775,49.613L2.083,35.267l4.233-1.832l26.118,14.32L27.775,49.613z M32.605,52.034
+                         l-3.795,1.555v-2.17l3.908-1.542L32.605,52.034z M39.402,49.365l-2.433-1.334l2.555-1.019L39.402,49.365z M34.767,46.824
+                         l-6.586-3.611l5.954-2.209l-0.007,0.011l6.004,3.669L34.767,46.824z M45.256,46.979l-3.871,1.545l0.112-2.144l3.871-1.545
+                         L45.256,46.979z M42.379,43.787l-5.949-3.637l4.343-1.611l5.829,3.563L42.379,43.787z M43.085,37.681l3.941-1.462l5.657,3.458
+                         l-3.833,1.529L43.085,37.681z M52.808,43.934l-2.344-1.286l2.463-0.982L52.808,43.934z M58.848,41.542l-4.06,1.618l0.12-2.281
+                         l4.059-1.62L58.848,41.542z"/>
+                     </g>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title">Almacén</h5>
+                          <p class="card-text">Servicio de almacenamiento y distribución de mercancía</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+            </div>
+
+        </div>
+    </div>
+</section>
+<a href="#" id="servicios"></a>
+<section id="funciones" style="background-color: #ededed;">
+  <div class="container">
+      <div class="row">
+          <h2 class="text-center m-3">Nuestras funciones son</h2>
+          <ul class="list-group list-group-horizontal-lg">
+            <li class="list-group-item flex-fill d-flex"
+                data-aos="flip-left"
+                data-aos-easing="ease-out-cubic"
+                data-aos-duration="500">
+              <i class="fa-sharp fa-regular fa-circle-check m-1"></i>
+              <span>Coordinar embarques en diferentes partes del mundo</span>
+            </li>
+            <li class="list-group-item flex-fill d-flex"
+                data-aos="flip-left"
+                data-aos-easing="ease-out-cubic"
+                data-aos-duration="1000">
+              <i class="fa-sharp fa-regular fa-circle-check m-1"></i>
+              <span>Ofrecer servicio especializado a nuestros clientes</span>
+            </li>
+            <li class="list-group-item flex-fill d-flex"
+                data-aos="flip-left"
+                data-aos-easing="ease-out-cubic"
+                data-aos-duration="1500">
+              <i class="fa-sharp fa-regular fa-circle-check m-1"></i>
+              <span>Asesorar trámites en comercio exterior y aduanales</span>
+            </li>
+            <li class="list-group-item flex-fill d-flex"
+                data-aos="flip-left"
+                data-aos-easing="ease-out-cubic"
+                data-aos-duration="2000">
+              <i class="fa-sharp fa-regular fa-circle-check m-1"></i>
+              <span>Desarrollar proyectos para la exportación e importación de nuevos productos</span>
+            </li>
+          </ul>
+      </div>
+  </div>
+  <div class="spacer-3"></div>
+</section>
+
+<!-- FILOSOFIA SECTION -->
+<section id="filosofia">
+  <div class="parallax-container parallax-2">
+    <div class="parallax-text container p-4">
+      <div class="container">
+        <h2>Filosoría Empresarial </h2>
+        <blockquote class="blockquote text-white text-center mb-4">
+          <p><i class="fa-sharp fa-solid fa-quote-left m-2"></i> En LYSCE mantenemos capacitado a nuestro personal para ofrecer un servicio eficaz, brindando precisión en logística, tiempo y costos; superando el compromiso que tenemos con la sociedad para el crecimiento de la economía de nuestro país. <i class="fa-sharp fa-solid fa-quote-right m-2"></i></p>
+        </blockquote>
+      </div>
+    </div>
+    <div class="parallax align-self-start"></div>
+  </div>
+</section>
+<!-- 
+<section>
+    <div class="container">
+        <div class="row">
+            <h2>Lorem ipsum dolor sit amet.</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi rem quos deserunt dolor totam explicabo quia nulla? Repellendus laudantium accusantium quos quasi rerum asperiores consequuntur! Vitae at veniam vero animi.</p>
+        </div>
+    </div>
+    <div class="spacer-3"></div>
+</section>
+ -->
+<!-- END SECTION -->
+<section id="end" class="simple-parallax-container simple-parallax-3">
+  <div class="simple-parallax-text container p-4">
+    <div class="container wrapper text-center">
+      <div class="spinny-wrapper">
+        <h3><!-- Por&nbsp; -->
+          <span class="spinny-words">
+            <span>Por Aire</span>
+            <span>Por Océanos</span>
+            <span>Por Carretera</span>
+          </span>
+        </h3>
+      </div>
+      <p class="text-center">Coordinamos para que los productos de nuestros clientes  lleguen de la manera más eficiente hasta su destino.</p>
+    </div>
+  </div>
+  <div class="simple-parallax align-self-start"></div>
+</section>
+<style>
+  .simple-parallax {
+    height: 100vh; /* Establece la altura del parallax */
+    background-image: url('assets/img/logistica2.jpg'); /* Ruta de la imagen de fondo */
+    background-attachment: fixed; /* Fija la imagen de fondo */
+    background-position: 0 5vh; /* Centra la imagen de fondo */
+    background-repeat: no-repeat; /* Evita que la imagen de fondo se repita */
+    background-size: cover; /* Ajusta la imagen de fondo para cubrir todo el contenedor */
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+  }
+  
+  .simple-parallax-container {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 50vh;
+  }
+  @media (max-width: 575.9px) {
+    .simple-parallax-container{
+      min-height: 30vh;
+    }
+    .simple-parallax{
+      height: 50vh;
+      background-size: auto 100%;
+      background-position: center center;
+    }
+  }
+  
+  
+  @keyframes parallaxEffect {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(0, 0, 50px);
+    }
+  }
+  
+</style>
+<script>
+  /*
+  window.addEventListener('scroll', function() {
+    const parallax = document.querySelector('.simple-parallax');
+    let scrollPosition = window.pageYOffset;
+  
+    parallax.style.transform = 'translate3d(0, ' + scrollPosition * -0.3 + 'px, 0)';
+  });
+  */
+</script>
+
+<div class="spacer-3"></div>
+
+
+<!--
+
+  <section id="awards">
+    <div class="container">
+      <div class="row">
+        <h2 class="text-center m-3">Premios & Clientes</h2>
+        LOGOS
+      </div>
+    </div>
+    <div class="spacer-3"></div>
+  </section>
+  
+-->
+
+<footer class="bg-dark">
+    <div class="container text-white">
+        <div class="row">
+          <div class="col-md-2">
+            <img class="d-block" style="max-width: 100px" src="assets/img/lysce/logo.jpg" alt="">
+          </div>
+          <div class="col-md-6">
+            &nbsp;
+          </div>
+          <div class="col-md-4">
+            <address>
+              <strong>LYSCE</strong><br>
+              Sierra del Laurel 312 Piso 2,<br>
+              Bosques del Prado Norte, <br>
+              Aguascalientes, Ags. <br>
+              México, C.P. 20127<br>
+              <span class="fs-4">+52(449) 300-3265</span> <br>
+              <a href="mailto:contacto@lysce.com.mx">contacto@lysce.com.mx</a>
+            </address>
+          </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.js' integrity='sha512-jxHTIcyuk3K/8tFI4UWP/2XfMAnBUL/GCcY0ah39DQfnsG8+YgtAJsOE8fznN+jWqwgLazJMEpmyE9HW1Mmc+A==' crossorigin='anonymous'></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+      AOS.init();
+
+const swiper = new Swiper('.swiper', {
+    autoplay: { delay: 5000 },
+  // Optional parameters
+  // direction: 'vertical',
+  loop: true,
+
+  // If we need pagination
+  // pagination: { el: '.swiper-pagination',},
+
+  // Navigation arrows
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+
+  // And if we need scrollbar
+  scrollbar: {
+    el: '.swiper-scrollbar',
+  },
+});
+swiper.on('slideChange', function () {
+  console.log('slide changed', swiper.realIndex,);
+  //currSpan(swiper.realIndex);
+  setTimeout(function() {currSpan(swiper.realIndex);}, 500, swiper.realIndex);
+});
+
+var container = document.getElementById('slideWords');
+var divs = container.getElementsByTagName('span');
+function currSpan(num){
+    // Índice o número que determina el elemento activo
+    var activeIndex = num;
+
+    // Remover la clase "active" de todos los elementos
+    for (var i = 0; i < divs.length; i++) {
+        divs[i].classList.remove('active');
+    }
+    // Asignar la clase "active" al div correspondiente
+    divs[activeIndex + 1].classList.add('active');
+}
+
+//Intitialize
+setTimeout(function() {currSpan(0);}, 500);
+//currSpan(0);
+
+/////
+
+document.addEventListener("DOMContentLoaded", function(){
+  window.addEventListener('scroll', function() {
+      if (window.scrollY > 50) {
+        document.getElementById('topnav').classList.add('fixed-top');
+        // add padding top to show content behind navbar
+        navbar_height = document.querySelector('.navbar').offsetHeight;
+        document.body.style.paddingTop = navbar_height + 'px';
+      } else {
+        document.getElementById('topnav').classList.remove('fixed-top');
+         // remove padding top from body
+        document.body.style.paddingTop = '0';
+      } 
+  });
+}); 
+// DOMContentLoaded  end
+
+
+var parallaxElements = document.querySelectorAll('.parallax');
+var parallaxQuantity = parallaxElements.length;
+
+window.addEventListener('scroll', function () {
+
+  window.requestAnimationFrame(function () {
+
+    for (var i = 0; i < parallaxQuantity; i++) {
+      var currentElement = parallaxElements[i];
+      var scrolled = window.pageYOffset || document.documentElement.scrollTop;
+      
+      currentElement.style.transform = 'translate3d(0,' + (scrolled * -0.3) + 'px, 0)';
+    }
+  });
+
+});
+
+    </script>
+</body>
+</html>
