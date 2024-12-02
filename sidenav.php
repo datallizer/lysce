@@ -45,7 +45,7 @@ require 'dbcon.php';
                         <div class="collapse" id="collapseAereo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="aereoimponacional.php">Impo nacional</a>
-                                <a class="nav-link" href="cotizaciones.php">Impo internacional</a>
+                                <a class="nav-link" href="aereoimpointernacional.php">Impo internacional</a>
                                 <a class="nav-link" href="cotizaciones.php">Expo nacional</a>
                                 <a class="nav-link" href="cotizaciones.php">Expo internacional</a>
                             </nav>
