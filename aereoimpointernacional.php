@@ -74,7 +74,18 @@ if (!empty($message)) {
             </div>
             <div class="col-3 mb-3">
                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                <input class="form-control" value="LYSCE-XXXXX" disabled>
+                <?php
+                $query = "SELECT MAX(id) AS max_id FROM aereoimportacion"; // Consulta para obtener el ID más alto
+                $result = mysqli_query($con,$query);
+                if ($result && $row = $result->fetch_assoc()){
+                    $lastID = $row['max_id'];
+                }
+                else {
+                    $lastID = 0;
+                }
+                $newNumber = $lastID + 1; 
+                ?>
+                <input class="form-control" value="<?php echo "LYSCE-" . str_pad($newNumber, 5, "0", STR_PAD_LEFT); ?>" disabled>
                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
                 <input class="form-control" type="text" name="fecha" id="expedicion" value="">
             </div>
