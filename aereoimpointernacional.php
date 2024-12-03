@@ -472,7 +472,7 @@ if (!empty($message)) {
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
-                <table class="table table-striped mt-3">
+                <table class="table table-striped mt-3" id="tablaIncrementables">
                     <tr>
                         <th>Incrementable</th>
                         <th>USD</th>
@@ -493,12 +493,16 @@ if (!empty($message)) {
                         <td><input type="text" name="" value=""></td>
                         <td><input type="text" name="" value=""></td>
                     </tr>
-                    <tr>
+                    <tr id="totalRow">
                         <td>TOTAL</td>
                         <td><span id="">$</span></td>
                         <td><span id="">$</span></td>
                     </tr>
                 </table>
+                <div class="text-center">
+                    <button class = "btn btn-secondary" type="button" onclick="addRow()">+</button>
+                    <button class="btn btn-danger" type="button" onclick="removeRow()">-</button>
+                </div>
             </div>
 
             <div class="col-12 mt-5">
@@ -863,7 +867,31 @@ function actualizarValorComercial() {
     // Mostrar el valor comercial en el input correspondiente
     document.getElementById("valorComercial").value = valorComercial.toFixed(2);
 }
+function addRow(){
+    const Tabla = document.getElementById("tablaIncrementables");
+    const totalRow = document.getElementById("totalRow");
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+                <td><input type="text" name="campo1[]" placeholder="Incrementable"></td>
+                <td><input type="text" name="campo2[]" placeholder="USD"></td>
+                <td><input type="text" name="campo3[]" placeholder="MXN"></td>
+            `;
+            Tabla.tBodies[0].insertBefore(newRow, totalRow);
+}
+function countRows() {
+    const table = document.getElementById('tablaIncrementables');
+    const rows = table.querySelectorAll('tr'); 
+    return rows.length;
+}
 
+function removeRow(button) {
+    const Tabla = document.getElementById("tablaIncrementables");
+        if (Tabla.rows.length > 5) {
+            Tabla.deleteRow(Tabla.rows.length - 2);
+        } else {
+            alert("No hay más filas para eliminar.");
+        }
+}
     </script>
 </body>
 
