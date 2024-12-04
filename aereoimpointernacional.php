@@ -480,18 +480,18 @@ if (!empty($message)) {
                     </tr>
                     <tr>
                         <td>FLETE EXTRANJERO</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
+                        <td><input id="DolarCrudo" type="number" name="" value=""  oninput="USDtoMXN()"></td>
+                        <td><input id="mxnOutput" type="text" name="" value="" readonly></td>
                     </tr>
                     <tr>
                         <td>MANIOBRAS</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
+                        <td><input id="DolarCrudo" type="number" name="" value="" oninput="USDtoMXN()"></td>
+                        <td><input id="mxnOutput" type="text" name="" value="" readonly></td>
                     </tr>
                     <tr>
                         <td>ALMACENAJE</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
+                        <td><input id="DolarCrudo" type="number" name="" value="" oninput="USDtoMXN()"></td>
+                        <td><input id="mxnOutput" type="text" name="" value="" readonly></td>
                     </tr>
                     <tr id="totalRow">
                         <td>TOTAL</td>
@@ -872,9 +872,9 @@ function addRow(){
     const totalRow = document.getElementById("totalRow");
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
-                <td><input type="text" name="campo1[]" placeholder="Incrementable"></td>
-                <td><input type="text" name="campo2[]" placeholder="USD"></td>
-                <td><input type="text" name="campo3[]" placeholder="MXN"></td>
+                <td><input type="text" name="" placeholder="Incrementable"></td>
+                <td><input id="DolarCrudo" type="number" name="" placeholder="USD" oninput="updateMXNValue()"></td>
+                <td><input id="mxnOutput" type="text" name="" placeholder="MXN" readonly></td>
             `;
             Tabla.tBodies[0].insertBefore(newRow, totalRow);
 }
@@ -892,6 +892,17 @@ function removeRow(button) {
             alert("No hay más filas para eliminar.");
         }
 }
+function USDtoMXN(){
+    const valorCambio = parseFloat(document.getElementById('valorMoneda').value);
+    const dolarInput = parseFloat(document.getElementById('dolarCrudo').value);
+    if (!isNaN(valorCambio) && !isNaN(dolarInput) && dolarInput >= 0) {
+        const mxnValue = dolarInput * valorCambio;
+        document.getElementById('mxnOutput').value = mxnValue.toFixed(2); // Muestra el resultado en MXN
+    } else {
+        document.getElementById('mxnOutput').value = ''; // Limpia el campo si el valor no es válido
+    }
+}
+
     </script>
 </body>
 
