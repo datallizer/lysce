@@ -155,7 +155,7 @@ if (!empty($message)) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="codeusuarios.php" method="POST" class="row">
+                    <form action="codeusuarios.php" method="POST" class="row" enctype="multipart/form-data">
 
                         <div class="col-12 col-md-12 form-floating mb-3">
                             <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre" autocomplete="off" required>

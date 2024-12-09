@@ -43,12 +43,12 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
       exit();
     } else {
       $_SESSION['message'] = "La contraseña es incorrecta";
-      header("Location: index.php");
+      header("Location: login.php");
       exit();
     }
   } else {
     $_SESSION['message'] = "El correo ingresado no existe";
-    header("Location: index.php");
+    header("Location: login.php");
     exit();
   }
 }

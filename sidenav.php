@@ -58,7 +58,7 @@ require 'dbcon.php';
                         </a>
                         <div class="collapse" id="collapseTerrestre" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="cotizaciones.php">Consolidado</a>
+                                <a class="nav-link" href="impoterrestreltlusa.php">Impo LTL USA</a>
                                 <a class="nav-link" href="cotizaciones.php">Exportación</a>
                             </nav>
                         </div>

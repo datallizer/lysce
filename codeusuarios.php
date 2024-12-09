@@ -92,37 +92,15 @@ if (isset($_POST['update'])) {
 }
 
 
-if (isset($_POST['nominaupdate'])) {
-    $id = mysqli_real_escape_string($con, $_POST['id']);
-    $nomina = mysqli_real_escape_string($con, $_POST['nomina']);
-    // Obtener la nueva imagen cargada
-    $query = "UPDATE `usuarios` SET `nomina` = '$nomina' WHERE `usuarios`.`id` = '$id'";
-        $query_run = mysqli_query($con, $query);
-
-        if ($query_run) {
-            $idcodigo = $_SESSION['codigo'];
-            $fecha_actual = date("Y-m-d"); // Obtener fecha actual en formato Año-Mes-Día
-            $hora_actual = date("H:i"); // Obtener hora actual en formato Hora:Minutos:Segundos
-            $querydos = "INSERT INTO historial SET idcodigo='$idcodigo', detalles='Edito la nómina, nombre: $nombre $apellidop $apellidom, codigo: $codigo, rol: $rol, estatus: $estatus', hora='$hora_actual', fecha='$fecha_actual'";
-            $query_rundos = mysqli_query($con, $querydos);
-            $_SESSION['message'] = "Nómina editado exitosamente";
-            header("Location: nomina.php");
-            exit(0);
-        } else {
-            $_SESSION['message'] = "Error al editar la nómina, contacte a soporte";
-            header("Location: nomina.php");
-            exit(0);
-        }
-}
-
 
 if (isset($_POST['save'])) {
     $nombre = mysqli_real_escape_string($con, $_POST['nombre']);
     $apellidop = mysqli_real_escape_string($con, $_POST['apellidop']);
     $apellidom = mysqli_real_escape_string($con, $_POST['apellidom']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
+    $password = mysqli_real_escape_string($con, $_POST['password']);
     $rol = mysqli_real_escape_string($con, $_POST['rol']);
-    
+
     // Verificar si el email ya existe en la tabla
     $query_check = "SELECT * FROM usuarios WHERE email='$email'";
     $result_check = mysqli_query($con, $query_check);
@@ -133,8 +111,12 @@ if (isset($_POST['save'])) {
         header("Location: usuarios.php");
         exit(0);
     } else {
+        // Encriptar la contraseña
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
         // Preparar los datos para la inserción
-        $query = "INSERT INTO usuarios (nombre, apellidop, apellidom, email, estatus, rol) VALUES ('$nombre', '$apellidop', '$apellidom', '$email', '1', '$rol')";
+        $query = "INSERT INTO usuarios (nombre, apellidop, apellidom, email, password, estatus, rol) 
+                  VALUES ('$nombre', '$apellidop', '$apellidom', '$email', '$hashed_password', '1', '$rol')";
         $query_run = mysqli_query($con, $query);
 
         if ($query_run) {
@@ -155,7 +137,7 @@ if (isset($_POST['save'])) {
                 if ($imagen) {
                     imagejpeg($imagen, $imagen_destino, 100); // Guardar como JPG con calidad 100
                     imagedestroy($imagen);
-                    
+
                     // Establecer la ruta de la imagen
                     $ruta_imagen = $imagen_destino;
                 }
@@ -164,13 +146,6 @@ if (isset($_POST['save'])) {
             // Actualizar la base de datos con la ruta de la imagen
             $query_update = "UPDATE usuarios SET medio='./$ruta_imagen' WHERE id='$id'";
             $query_update_run = mysqli_query($con, $query_update);
-
-            $fecha_actual = date("Y-m-d"); // Obtener fecha actual en formato Año-Mes-Día
-            $hora_actual = date("H:i"); // Obtener hora actual en formato Hora:Minutos:Segundos
-
-            $querydos = "INSERT INTO historial (idcodigo, detalles, hora, fecha) VALUES ('$id', 'Registro un nuevo usuario, nombre: $nombre $apellidop $apellidom, codigo: $codigo, rol: $rol', '$hora_actual', '$fecha_actual')";
-            $query_rundos = mysqli_query($con, $querydos);
-
             $_SESSION['message'] = "Usuario creado exitosamente";
             header("Location: usuarios.php");
             exit(0);
@@ -181,5 +156,3 @@ if (isset($_POST['save'])) {
         }
     }
 }
-
-?>

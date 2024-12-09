@@ -76,14 +76,13 @@ if (!empty($message)) {
                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
                 <?php
                 $query = "SELECT MAX(id) AS max_id FROM aereoimportacion"; // Consulta para obtener el ID más alto
-                $result = mysqli_query($con,$query);
-                if ($result && $row = $result->fetch_assoc()){
+                $result = mysqli_query($con, $query);
+                if ($result && $row = $result->fetch_assoc()) {
                     $lastID = $row['max_id'];
-                }
-                else {
+                } else {
                     $lastID = 0;
                 }
-                $newNumber = $lastID + 1; 
+                $newNumber = $lastID + 1;
                 ?>
                 <input class="form-control" value="<?php echo "LYSCE-" . str_pad($newNumber, 5, "0", STR_PAD_LEFT); ?>" disabled>
                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
@@ -470,40 +469,47 @@ if (!empty($message)) {
                 </div>
             </div>
 
-            <div class="col-12 mt-5">
-                <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
+            <div class="row mt-5">
+                <p class="text-center"><b>DETERMINACIÓN DE INCREMENTABLES</b></p>
                 <table class="table table-striped mt-3" id="tablaIncrementables">
-                    <tr>
-                        <th>Incrementable</th>
-                        <th>USD</th>
-                        <th>MXN</th>
-                    </tr>
-                    <tr>
-                        <td>FLETE EXTRANJERO</td>
-                        <td><input id="DolarCrudo" type="number" name="" value=""  oninput="USDtoMXN()"></td>
-                        <td><input id="mxnOutput" type="text" name="" value="" oninput="actualizarTotal()" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>MANIOBRAS</td>
-                        <td><input id="DolarCrudo1" type="number" name="" value=""  oninput="USDtoMXN1()"></td>
-                        <td><input id="mxnOutput1" type="text" name="" value="" oninput="actualizarTotal()" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>ALMACENAJE</td>
-                        <td><input id="DolarCrudo2" type="number" name="" value=""  oninput="USDtoMXN2()"></td>
-                        <td><input id="mxnOutput2" type="text" name="" value="" oninput="actualizarTotal()" readonly></td>
-                    </tr>
-                    <tr id="totalRow">
-                        <td>TOTAL</td>
-                        <td><span id="totalDolar" value="0.00">$</span></td>
-                        <td><span id="totalMXN" value="0.00">$</span></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Incrementable</th>
+                            <th>USD</th>
+                            <th>MXN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>FLETE EXTRANJERO</td>
+                            <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxnOutput" value="" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>MANIOBRAS</td>
+                            <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxnOutput" value="" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>ALMACENAJE</td>
+                            <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxnOutput" value="" readonly></td>
+                        </tr>
+                        <tr id="totalRow">
+                            <td>TOTAL</td>
+                            <td><span id="totalDolar">$0.00</span></td>
+                            <td><span id="totalMXN">$0.00</span></td>
+                        </tr>
+                    </tbody>
                 </table>
-                <div class="text-center">
-                    <button class = "btn btn-secondary" type="button" onclick="addRow()">+</button>
+
+                <div class="col-12 text-center">
+                    <button class="btn btn-secondary" type="button" onclick="addRow()">+</button>
                     <button class="btn btn-danger" type="button" onclick="removeRow()">-</button>
                 </div>
             </div>
+
+
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE EN MEXICO</b></p>
@@ -787,149 +793,145 @@ if (!empty($message)) {
         }
 
         function actualizarTotales() {
-    const tabla = document.getElementById("miTablaCotizacion");
-    let totalLbs = 0;
-    let totalKgs = 0;
-    let totalValor = 0;
-    let totalFt3 = 0;
-    let totalM3 = 0;
-    let totalPesoCargable = 0;
+            const tabla = document.getElementById("miTablaCotizacion");
+            let totalLbs = 0;
+            let totalKgs = 0;
+            let totalValor = 0;
+            let totalFt3 = 0;
+            let totalM3 = 0;
+            let totalPesoCargable = 0;
 
-    // Iterar sobre cada fila para sumar los totales
-    for (let i = 1; i < tabla.rows.length; i++) {
-        const fila = tabla.rows[i];
-        
-        // Obtener peso en libras, kilogramos, y valor
-        const pesoLbsInput = fila.querySelector("input[name='pesoFilaMercanciaLbs']");
-        const pesoKgsInput = fila.querySelector("input[name='pesoFilaMercanciaKgs']");
-        const valorInput = fila.querySelector("input[id='valorFilaMercancia']");
-        const ft3Input = fila.querySelector("[placeholder='pies cúbicos']");
-        const m3Input = fila.querySelector("[placeholder='metros cúbicos']");
+            // Iterar sobre cada fila para sumar los totales
+            for (let i = 1; i < tabla.rows.length; i++) {
+                const fila = tabla.rows[i];
 
-        // Obtener las dimensiones y cantidad de la fila
-        const altoCm = parseFloat(fila.querySelector("input[id='altoFilaCm']").value) || 0;
-        const anchoCm = parseFloat(fila.querySelector("input[id='anchoFilaCm']").value) || 0;
-        const profundidadCm = parseFloat(fila.querySelector("input[id='profundidadFilaCm']").value) || 0;
-        const cantidad = parseFloat(fila.querySelector("input[id='cantidadFila']").value) || 1; // Default a 1 si no hay cantidad
+                // Obtener peso en libras, kilogramos, y valor
+                const pesoLbsInput = fila.querySelector("input[name='pesoFilaMercanciaLbs']");
+                const pesoKgsInput = fila.querySelector("input[name='pesoFilaMercanciaKgs']");
+                const valorInput = fila.querySelector("input[id='valorFilaMercancia']");
+                const ft3Input = fila.querySelector("[placeholder='pies cúbicos']");
+                const m3Input = fila.querySelector("[placeholder='metros cúbicos']");
 
-        // Cálculo del peso cargable por fila: (alto * ancho * profundidad) * cantidad / 0.006
-        const pesoCargableFila = ((altoCm * anchoCm * profundidadCm) * cantidad) / 0.00006;
-        totalPesoCargable += pesoCargableFila;
+                // Obtener las dimensiones y cantidad de la fila
+                const altoCm = parseFloat(fila.querySelector("input[id='altoFilaCm']").value) || 0;
+                const anchoCm = parseFloat(fila.querySelector("input[id='anchoFilaCm']").value) || 0;
+                const profundidadCm = parseFloat(fila.querySelector("input[id='profundidadFilaCm']").value) || 0;
+                const cantidad = parseFloat(fila.querySelector("input[id='cantidadFila']").value) || 1; // Default a 1 si no hay cantidad
 
-        // Sumar valores de peso, volumen, y valor
-        if (pesoLbsInput) {
-            const pesoLbs = parseFloat(pesoLbsInput.value) || 0;
-            totalLbs += pesoLbs;
+                // Cálculo del peso cargable por fila: (alto * ancho * profundidad) * cantidad / 0.006
+                const pesoCargableFila = ((altoCm * anchoCm * profundidadCm) * cantidad) / 0.00006;
+                totalPesoCargable += pesoCargableFila;
+
+                // Sumar valores de peso, volumen, y valor
+                if (pesoLbsInput) {
+                    const pesoLbs = parseFloat(pesoLbsInput.value) || 0;
+                    totalLbs += pesoLbs;
+                }
+
+                if (pesoKgsInput) {
+                    const pesoKgs = parseFloat(pesoKgsInput.value) || 0;
+                    totalKgs += pesoKgs;
+                }
+
+                if (valorInput) {
+                    const valor = parseFloat(valorInput.value) || 0;
+                    totalValor += valor;
+                }
+
+                if (ft3Input) {
+                    const ft3 = parseFloat(ft3Input.value) || 0;
+                    totalFt3 += ft3;
+                }
+
+                if (m3Input) {
+                    const m3 = parseFloat(m3Input.value) || 0;
+                    totalM3 += m3;
+                }
+            }
+
+            // Mostrar los totales en los inputs correspondientes
+            document.getElementById("pesoMercanciaLbs").value = totalLbs.toFixed(2);
+            document.getElementById("pesoMercanciaKgs").value = totalKgs.toFixed(2);
+            document.getElementById("valorMercancia").value = totalValor.toFixed(2);
+            document.getElementById("ft3Total").value = totalFt3.toFixed(3);
+            document.getElementById("m3Total").value = totalM3.toFixed(3);
+
+            // Mostrar el total de peso cargable
+            document.getElementById("pesoCargableKgs").value = totalPesoCargable.toFixed(2);
+
+            // Actualizar el valor comercial
+            actualizarValorComercial();
         }
-        
-        if (pesoKgsInput) {
-            const pesoKgs = parseFloat(pesoKgsInput.value) || 0;
-            totalKgs += pesoKgs;
+
+        function actualizarValorComercial() {
+            const valorMercancia = parseFloat(document.getElementById("valorMercancia").value) || 0;
+            const valorMoneda = parseFloat(document.getElementById("valorMoneda").value) || 0;
+
+            // Multiplicar el valor de la mercancia por el valor de la moneda
+            const valorComercial = valorMercancia * valorMoneda;
+
+            // Mostrar el valor comercial en el input correspondiente
+            document.getElementById("valorComercial").value = valorComercial.toFixed(2);
         }
-        
-        if (valorInput) {
-            const valor = parseFloat(valorInput.value) || 0;
-            totalValor += valor;
+
+        function updateRow(input) {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarValue = parseFloat(input.value) || 0;
+
+            // Encuentra la fila actual y el campo de salida (MXN)
+            const row = input.closest("tr");
+            const mxnOutput = row.querySelector(".mxnOutput");
+
+            // Calcula y actualiza el valor en MXN
+            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+
+            // Actualiza los totales
+            updateTotals();
         }
-        
-        if (ft3Input) {
-            const ft3 = parseFloat(ft3Input.value) || 0;
-            totalFt3 += ft3;
+
+        function updateTotals() {
+            const dolarInputs = document.querySelectorAll(".dolarInput");
+            const mxnOutputs = document.querySelectorAll(".mxnOutput");
+
+            let totalUSD = 0;
+            let totalMXN = 0;
+
+            // Suma todos los valores USD y MXN
+            dolarInputs.forEach((input) => {
+                totalUSD += parseFloat(input.value) || 0;
+            });
+            mxnOutputs.forEach((output) => {
+                totalMXN += parseFloat(output.value) || 0;
+            });
+
+            // Actualiza los totales en la tabla
+            document.getElementById("totalDolar").textContent = `$${totalUSD.toFixed(2)}`;
+            document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
         }
-        
-        if (m3Input) {
-            const m3 = parseFloat(m3Input.value) || 0;
-            totalM3 += m3;
+
+        function addRow() {
+            const tabla = document.getElementById("tablaIncrementables").querySelector("tbody"); // Selecciona <tbody>
+            const totalRow = document.getElementById("totalRow"); // Fila del total
+            const newRow = document.createElement("tr");
+
+            newRow.innerHTML = `
+    <td><input type="text" placeholder="Incrementable"></td>
+    <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
+    <td><input type="text" class="mxnOutput" value="" readonly></td>
+  `;
+
+            tabla.insertBefore(newRow, totalRow); // Inserta la nueva fila antes de la fila de totales
         }
-    }
 
-    // Mostrar los totales en los inputs correspondientes
-    document.getElementById("pesoMercanciaLbs").value = totalLbs.toFixed(2);
-    document.getElementById("pesoMercanciaKgs").value = totalKgs.toFixed(2);
-    document.getElementById("valorMercancia").value = totalValor.toFixed(2);
-    document.getElementById("ft3Total").value = totalFt3.toFixed(3);
-    document.getElementById("m3Total").value = totalM3.toFixed(3);
-
-    // Mostrar el total de peso cargable
-    document.getElementById("pesoCargableKgs").value = totalPesoCargable.toFixed(2);
-
-    // Actualizar el valor comercial
-    actualizarValorComercial();
-}
-
-function actualizarValorComercial() {
-    const valorMercancia = parseFloat(document.getElementById("valorMercancia").value) || 0;
-    const valorMoneda = parseFloat(document.getElementById("valorMoneda").value) || 0;
-    
-    // Multiplicar el valor de la mercancia por el valor de la moneda
-    const valorComercial = valorMercancia * valorMoneda;
-    
-    // Mostrar el valor comercial en el input correspondiente
-    document.getElementById("valorComercial").value = valorComercial.toFixed(2);
-}
-function addRow(){
-    const Tabla = document.getElementById("tablaIncrementables");
-    const totalRow = document.getElementById("totalRow");
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-                <td><input type="text" name="" placeholder="Incrementable"></td>
-                <td><input id="DolarCrudo" type="number" name="" placeholder="USD" oninput="updateMXNValue()"></td>
-                <td><input id="mxnOutput" type="text" name="" placeholder="MXN" readonly></td>
-            `;
-            Tabla.tBodies[0].insertBefore(newRow, totalRow);
-}
-function countRows() {
-    const table = document.getElementById('tablaIncrementables');
-    const rows = table.querySelectorAll('tr'); 
-    return rows.length;
-}
-
-function removeRow(button) {
-    const Tabla = document.getElementById("tablaIncrementables");
-        if (Tabla.rows.length > 5) {
-            Tabla.deleteRow(Tabla.rows.length - 2);
-        } else {
-            alert("No hay más filas para eliminar.");
+        function removeRow() {
+            const tabla = document.getElementById("tablaIncrementables");
+            const rows = tabla.querySelectorAll("tr");
+            if (rows.length > 2) {
+                tabla.deleteRow(rows.length - 2);
+            } else {
+                alert("No hay más filas para eliminar.");
+            }
         }
-}
-function USDtoMXN(){
-    const valorCambio = parseFloat(document.getElementById('valorMoneda').value);
-    const dolarInput = parseFloat(document.getElementById('DolarCrudo').value);
-    if (!isNaN(valorCambio) && !isNaN(dolarInput) && dolarInput >= 0) {
-        const mxnValue = dolarInput * valorCambio;
-        document.getElementById('mxnOutput').value = mxnValue.toFixed(2); // Muestra el resultado en MXN
-    } else {
-        document.getElementById('mxnOutput').value = ''; // Limpia el campo si el valor no es válido
-    }
-}
-function USDtoMXN1(){
-    const valorCambio1 = parseFloat(document.getElementById('valorMoneda').value);
-    const dolarInput1 = parseFloat(document.getElementById('DolarCrudo1').value);
-    if (!isNaN(valorCambio1) && !isNaN(dolarInput1) && dolarInput1 >= 0) {
-        const mxnValue1 = dolarInput1 * valorCambio1;
-        document.getElementById('mxnOutput1').value = mxnValue1.toFixed(2); // Muestra el resultado en MXN
-    } else {
-        document.getElementById('mxnOutput1').value = ''; // Limpia el campo si el valor no es válido
-    }
-}
-function USDtoMXN2(){
-    const valorCambio2 = parseFloat(document.getElementById('valorMoneda').value);
-    const dolarInput2 = parseFloat(document.getElementById('DolarCrudo2').value);
-    if (!isNaN(valorCambio2) && !isNaN(dolarInput2) && dolarInput2 >= 0) {
-        const mxnValue2 = dolarInput2 * valorCambio2;
-        document.getElementById('mxnOutput2').value = mxnValue2.toFixed(2); // Muestra el resultado en MXN
-    } else {
-        document.getElementById('mxnOutput2').value = ''; // Limpia el campo si el valor no es válido
-    }
-}
-function TotalIncrementables(){
-    const fleteMXN = parseFloat(document.getElementById('mxnOutput').value);
-    const maniobrasMXN = parseFloat(document.getElementById('mxnOutput1').value);
-    const almacenajeMXN = parseFloat(document.getElementById('mxnOutput2').value);
-    const incrementablesMXN = almacenajeMXN + maniobrasMXN + fleteMXN;
-    document.getElementById('totalMXN').value = incrementablesMXN.toFixed(2);
-}
-
     </script>
 </body>
 
