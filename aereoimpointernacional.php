@@ -481,22 +481,22 @@ if (!empty($message)) {
                     <tr>
                         <td>FLETE EXTRANJERO</td>
                         <td><input id="DolarCrudo" type="number" name="" value=""  oninput="USDtoMXN()"></td>
-                        <td><input id="mxnOutput" type="text" name="" value="" readonly></td>
+                        <td><input id="mxnOutput" type="text" name="" value="" oninput="actualizarTotal()" readonly></td>
                     </tr>
                     <tr>
                         <td>MANIOBRAS</td>
-                        <td><input id="DolarCrudo" type="number" name="" value="" oninput="USDtoMXN()"></td>
-                        <td><input id="mxnOutput" type="text" name="" value="" readonly></td>
+                        <td><input id="DolarCrudo1" type="number" name="" value=""  oninput="USDtoMXN1()"></td>
+                        <td><input id="mxnOutput1" type="text" name="" value="" oninput="actualizarTotal()" readonly></td>
                     </tr>
                     <tr>
                         <td>ALMACENAJE</td>
-                        <td><input id="DolarCrudo" type="number" name="" value="" oninput="USDtoMXN()"></td>
-                        <td><input id="mxnOutput" type="text" name="" value="" readonly></td>
+                        <td><input id="DolarCrudo2" type="number" name="" value=""  oninput="USDtoMXN2()"></td>
+                        <td><input id="mxnOutput2" type="text" name="" value="" oninput="actualizarTotal()" readonly></td>
                     </tr>
                     <tr id="totalRow">
                         <td>TOTAL</td>
-                        <td><span id="">$</span></td>
-                        <td><span id="">$</span></td>
+                        <td><span id="totalDolar" value="0.00">$</span></td>
+                        <td><span id="totalMXN" value="0.00">$</span></td>
                     </tr>
                 </table>
                 <div class="text-center">
@@ -894,13 +894,40 @@ function removeRow(button) {
 }
 function USDtoMXN(){
     const valorCambio = parseFloat(document.getElementById('valorMoneda').value);
-    const dolarInput = parseFloat(document.getElementById('dolarCrudo').value);
+    const dolarInput = parseFloat(document.getElementById('DolarCrudo').value);
     if (!isNaN(valorCambio) && !isNaN(dolarInput) && dolarInput >= 0) {
         const mxnValue = dolarInput * valorCambio;
         document.getElementById('mxnOutput').value = mxnValue.toFixed(2); // Muestra el resultado en MXN
     } else {
         document.getElementById('mxnOutput').value = ''; // Limpia el campo si el valor no es válido
     }
+}
+function USDtoMXN1(){
+    const valorCambio1 = parseFloat(document.getElementById('valorMoneda').value);
+    const dolarInput1 = parseFloat(document.getElementById('DolarCrudo1').value);
+    if (!isNaN(valorCambio1) && !isNaN(dolarInput1) && dolarInput1 >= 0) {
+        const mxnValue1 = dolarInput1 * valorCambio1;
+        document.getElementById('mxnOutput1').value = mxnValue1.toFixed(2); // Muestra el resultado en MXN
+    } else {
+        document.getElementById('mxnOutput1').value = ''; // Limpia el campo si el valor no es válido
+    }
+}
+function USDtoMXN2(){
+    const valorCambio2 = parseFloat(document.getElementById('valorMoneda').value);
+    const dolarInput2 = parseFloat(document.getElementById('DolarCrudo2').value);
+    if (!isNaN(valorCambio2) && !isNaN(dolarInput2) && dolarInput2 >= 0) {
+        const mxnValue2 = dolarInput2 * valorCambio2;
+        document.getElementById('mxnOutput2').value = mxnValue2.toFixed(2); // Muestra el resultado en MXN
+    } else {
+        document.getElementById('mxnOutput2').value = ''; // Limpia el campo si el valor no es válido
+    }
+}
+function TotalIncrementables(){
+    const fleteMXN = parseFloat(document.getElementById('mxnOutput').value);
+    const maniobrasMXN = parseFloat(document.getElementById('mxnOutput1').value);
+    const almacenajeMXN = parseFloat(document.getElementById('mxnOutput2').value);
+    const incrementablesMXN = almacenajeMXN + maniobrasMXN + fleteMXN;
+    document.getElementById('totalMXN').value = incrementablesMXN.toFixed(2);
 }
 
     </script>
