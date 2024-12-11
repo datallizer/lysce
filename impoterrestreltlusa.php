@@ -53,7 +53,18 @@ if (!empty($message)) {
             </div>
             <div class="col-3 mb-3">
                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                <input class="form-control" value="LYSCE-XXXXX" disabled>
+                <?php
+                $query = "SELECT MAX(id) AS max_id FROM aereoimportacion"; // Consulta para obtener el ID más alto
+                $result = mysqli_query($con,$query);
+                if ($result && $row = $result->fetch_assoc()){
+                    $lastID = $row['max_id'];
+                }
+                else {
+                    $lastID = 0;
+                }
+                $newNumber = $lastID + 1; 
+                ?>
+                <input class="form-control" value="<?php echo "LYSCE-" . str_pad($newNumber, 5, "0", STR_PAD_LEFT); ?>" disabled>
                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
                 <input class="form-control" type="text" name="fecha" id="expedicion" value="">
             </div>
@@ -259,40 +270,106 @@ if (!empty($message)) {
             </div>
 
             <div class="col-12 mt-5">
-                <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
-                <table class="table table-striped mt-3">
-                    <tr>
-                        <th>Incrementable</th>
-                        <th>USD</th>
-                        <th>MXN</th>
-                    </tr>
-                    <tr>
-                        <td>FLETE EXTRANJERO</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>MANIOBRAS</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>ALMACENAJE</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>CANCELACION BOND</td>
-                        <td><input type="text" name="" value=""></td>
-                        <td><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>TOTAL</td>
-                        <td><span id="">$</span></td>
-                        <td><span id="">$</span></td>
-                    </tr>
-                </table>
-            </div>
+    <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
+    <table class="table table-striped mt-3" id="incrementableTable">
+        <thead>
+            <tr>
+                <th>Incrementable</th>
+                <th>USD</th>
+                <th>MXN</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Filas predeterminadas -->
+            <tr>
+                <td>FLETE EXTRANJERO</td>
+                <td><input type="text" class="usd-input" value="0"></td>
+                <td><input type="text" class="mxn-input" value="0"></td>
+            </tr>
+            <tr>
+                <td>MANIOBRAS</td>
+                <td><input type="text" class="usd-input" value="0"></td>
+                <td><input type="text" class="mxn-input" value="0"></td>
+            </tr>
+            <tr>
+                <td>ALMACENAJE</td>
+                <td><input type="text" class="usd-input" value="0"></td>
+                <td><input type="text" class="mxn-input" value="0"></td>
+            </tr>
+            <tr>
+                <td>CANCELACION BOND</td>
+                <td><input type="text" class="usd-input" value="0"></td>
+                <td><input type="text" class="mxn-input" value="0"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><b>TOTAL</b></td>
+                <td><span id="totalUSD">$0.00</span></td>
+                <td><span id="totalMXN">$0.00</span></td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="col-12 text-center">
+        <button class="btn btn-secondary" id="addRowButton" type="button">+</button>
+        <button class="btn btn-danger" id="removeRowButton" type="button">-</button>
+    </div>
+</div>
+
+
+<script>
+   document.addEventListener("DOMContentLoaded", () => {
+    
+    const tableBody = document.querySelector("#incrementableTable tbody");
+    const totalUSD = document.getElementById("totalUSD");
+    const totalMXN = document.getElementById("totalMXN");
+    const addRowButton = document.getElementById("addRowButton");
+    const removeRowButton = document.getElementById("removeRowButton");
+
+     function addRow() {
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td><input type="text" placeholder="Incrementable"></td>
+            <td><input type="text" class="usd-input" value="0" oninput="updateTotal()"></td>
+            <td><input type="text" class="mxn-input" value="0" oninput="updateTotal()"></td>
+        `;
+        tableBody.appendChild(newRow);
+        updateTotal();
+    }
+
+      function removeRow() {
+        const rows = tableBody.getElementsByTagName("tr");
+        if (rows.length > 4) {
+            tableBody.removeChild(rows[rows.length - 1]);
+            updateTotal();
+        } else {
+            alert("No puedes eliminar más filas predeterminadas.");
+        }
+    }
+
+     function updateTotal() {
+        let totalUSDValue = 0;
+        let totalMXNValue = 0;
+
+        document.querySelectorAll(".usd-input").forEach(input => {
+            totalUSDValue += parseFloat(input.value) || 0;
+        });
+
+        document.querySelectorAll(".mxn-input").forEach(input => {
+            totalMXNValue += parseFloat(input.value) || 0;
+        });
+
+        totalUSD.textContent = `$${totalUSDValue.toFixed(2)}`;
+        totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
+    }
+
+    addRowButton.addEventListener("click", addRow);
+    removeRowButton.addEventListener("click", removeRow);
+
+    updateTotal();
+    });
+
+</script>
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
@@ -368,6 +445,51 @@ if (!empty($message)) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script>
+        function updateTotals() {
+            const dolarInputs = document.querySelectorAll(".dolarInput");
+            const mxnOutputs = document.querySelectorAll(".mxnOutput");
+
+            let totalUSD = 0;
+            let totalMXN = 0;
+
+            // Suma todos los valores USD y MXN
+            dolarInputs.forEach((input) => {
+                totalUSD += parseFloat(input.value) || 0;
+            });
+            mxnOutputs.forEach((output) => {
+                totalMXN += parseFloat(output.value) || 0;
+            });
+
+            // Actualiza los totales en la tabla
+            document.getElementById("totalDolar").textContent = `$${totalUSD.toFixed(2)}`;
+            document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
+        }
+
+        function addRow() {
+            const tabla = document.getElementById("tablaIncrementables").querySelector("tbody"); // Selecciona <tbody>
+            const totalRow = document.getElementById("totalRow"); // Fila del total
+            const newRow = document.createElement("tr");
+
+            newRow.innerHTML = `
+    <td><input type="text" placeholder="Incrementable"></td>
+    <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
+    <td><input type="text" class="mxnOutput" value="" readonly></td>
+  `;
+
+            tabla.insertBefore(newRow, totalRow); // Inserta la nueva fila antes de la fila de totales
+        }
+
+        function removeRow() {
+            const tabla = document.getElementById("tablaIncrementables");
+            const rows = tabla.querySelectorAll("tr");
+            if (rows.length > 2) {
+                tabla.deleteRow(rows.length - 2);
+            } else {
+                alert("No hay más filas para eliminar.");
+            }
+        }
+
+
         // Obtiene la fecha actual para la cotizacion
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
