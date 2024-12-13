@@ -411,35 +411,35 @@ if (!empty($message)) {
                             </tr>
                             <tr>
                                 <td>Handling</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>Desconsol</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>Collect fee 4% HAWB</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>AMS fee</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
                             </tr>
 
                             <tr>
                                 <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
                             </tr>
 
                             <tr>
                                 <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>Subtotal</td>
@@ -453,8 +453,8 @@ if (!empty($message)) {
                             </tr>
                             <tr class="text-end">
                                 <td>Total</td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><span id="totalDolars">$0.00</span></td>
+                                <td><span id="totalMXNs">$0.00</span></td>
                             </tr>
                         </table>
                     </div>
@@ -931,6 +931,38 @@ if (!empty($message)) {
             } else {
                 alert("No hay más filas para eliminar.");
             }
+        }
+        function updateRowDestinySpents(input) {
+            const ExchangeValue = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const DolarInput = parseFloat(input.value) || 0;
+
+            const row = input.closest("tr");
+            const mxnOutputs = row.querySelector(".mxnOutputs");
+
+            // Calcula y actualiza el valor en MXN
+            mxnOutputs.value = (DolarInput * ExchangeValue).toFixed(2);
+
+            // Actualiza los totales
+            updateTotalsDestinySpents();
+        }
+        function updateTotalsDestinySpents() {
+            const dolarInputs = document.querySelectorAll(".dolarInputs");
+            const mxnOutputs = document.querySelectorAll(".mxnOutputs");
+
+            let totalUSD = 0;
+            let totalMXN = 0;
+
+            // Suma todos los valores USD y MXN
+            dolarInputs.forEach((input) => {
+                totalUSD += parseFloat(input.value) || 0;
+            });
+            mxnOutputs.forEach((output) => {
+                totalMXN += parseFloat(output.value) || 0;
+            });
+
+            // Actualiza los totales en la tabla
+            document.getElementById("totalDolars").textContent = `$${totalUSD.toFixed(2)}`;
+            document.getElementById("totalMXNs").textContent = `$${totalMXN.toFixed(2)}`;
         }
     </script>
 </body>
