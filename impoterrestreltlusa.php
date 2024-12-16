@@ -268,6 +268,48 @@ if (!empty($message)) {
                 </div>
 
             </div>
+            <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TablaServicios</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input {
+            width: 90%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
+    <table>
+        <tr>
+            <th>Concepto</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td>Servicio Flete Consolidado LTL USA - CANADA</td>
+            <td><input type="text" placeholder="Ingresa valor aquí"></td>
+        </tr>
+        <tr>
+            <td>Servicio Flete Consolidado LTL / MEXICO</td>
+            <td><input type="text" placeholder="Ingresa valor aquí"></td>
+        </tr>
+    </table>
+</body>
+</html>
 
             <div class="col-12 mt-5">
     <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
