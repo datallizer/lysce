@@ -353,25 +353,25 @@ if (!empty($message)) {
 
 <script>
    document.addEventListener("DOMContentLoaded", () => {
-    
+
     const tableBody = document.querySelector("#incrementableTable tbody");
     const totalUSD = document.getElementById("totalUSD");
     const totalMXN = document.getElementById("totalMXN");
     const addRowButton = document.getElementById("addRowButton");
     const removeRowButton = document.getElementById("removeRowButton");
 
-     function addRow() {
+    function addRow() {
         const newRow = document.createElement("tr");
         newRow.innerHTML = `
             <td><input type="text" placeholder="Incrementable"></td>
-            <td><input type="text" class="usd-input" value="0" oninput="updateTotal()"></td>
-            <td><input type="text" class="mxn-input" value="0" oninput="updateTotal()"></td>
+            <td><input type="number" class="usd-input" value="0" oninput="updateTotal()"></td>
+            <td><input type="number" class="mxn-input" value="0" oninput="updateTotal()"></td>
         `;
         tableBody.appendChild(newRow);
         updateTotal();
     }
 
-      function removeRow() {
+    function removeRow() {
         const rows = tableBody.getElementsByTagName("tr");
         if (rows.length > 4) {
             tableBody.removeChild(rows[rows.length - 1]);
@@ -381,7 +381,7 @@ if (!empty($message)) {
         }
     }
 
-     function updateTotal() {
+    function updateTotal() {
         let totalUSDValue = 0;
         let totalMXNValue = 0;
 
@@ -397,13 +397,15 @@ if (!empty($message)) {
         totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
     }
 
+    tableBody.addEventListener("input", updateTotal);
     addRowButton.addEventListener("click", addRow);
     removeRowButton.addEventListener("click", removeRow);
 
     updateTotal();
     });
-
 </script>
+
+
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>

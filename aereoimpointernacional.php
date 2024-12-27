@@ -516,27 +516,27 @@ if (!empty($message)) {
                 <table class="table table-striped mt-3">
                     <tr>
                         <td>Gastos en Destino / MANIOBRAS DESCONSOLIDACION</td>
-                        <td class="text-end"><input type="text" name="" value=""></td>
+                        <td class="text-end"><input type="number" id="valorGastos" name="" value="" oninput="calcularValores()"></td>
                     </tr>
                     <tr>
                         <td>Flete Terrestre MEXICO Flete Directo</td>
-                        <td class="text-end"><input type="text" name="" value=""></td>
+                        <td class="text-end"><input type="number" id="valorFlete" name="" value="" oninput="calcularValores()"></td>
                     </tr>
                     <tr class="text-end">
                         <td>Subtotal</td>
-                        <td><span id="">$</span></td>
+                        <td><span id="subtotal">$0.00</span></td>
                     </tr>
                     <tr class="text-end">
                         <td>I.V.A 16%</td>
-                        <td><span id="">$</span></td>
+                        <td><span id="iva">$0.00</span></td>
                     </tr>
                     <tr class="text-end">
                         <td>Retención 4%</td>
-                        <td><span id="">$</span></td>
+                        <td><input type="number" id="retencion" oninput="calcularValores()"></td>
                     </tr>
                     <tr class="text-end">
                         <td>Total</td>
-                        <td><span id="">$</span></td>
+                        <td><span id="total">$0.00</span></td>
                     </tr>
                 </table>
 
@@ -963,6 +963,20 @@ if (!empty($message)) {
             // Actualiza los totales en la tabla
             document.getElementById("totalDolars").textContent = `$${totalUSD.toFixed(2)}`;
             document.getElementById("totalMXNs").textContent = `$${totalMXN.toFixed(2)}`;
+        }
+        function calcularValores() {
+            const valorGastos = parseFloat(document.getElementById('valorGastos').value) || 0;
+            const valorFlete = parseFloat(document.getElementById('valorFlete').value) || 0;
+
+            const subtotal = valorGastos + valorFlete;
+            document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
+
+            const iva = subtotal * 0.16;
+            document.getElementById('iva').innerText = `$${iva.toFixed(2)}`;
+
+            const retencion = parseFloat(document.getElementById('retencion').value) || 0;
+            const total = subtotal + iva - retencion;
+            document.getElementById('total').innerText = `$${total.toFixed(2)}`;
         }
     </script>
 </body>
