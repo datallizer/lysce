@@ -655,17 +655,17 @@ if (!empty($message)) {
                 <td>
                     <div class="row">
                         <div class="col-6">
-                            <input class="form-control" type="text" placeholder="Alto (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control" type="text" placeholder="Largo (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
                             <input class="form-control" type="text" placeholder="Ancho (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
-                            <input class="form-control" type="text" placeholder="Profundidad (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control" type="text" placeholder="Alto (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
                             <p>pulgadas</p>
                             <input class="form-control" type="text" placeholder="pies cúbicos" readonly>
                             <p>ft³</p>
                         </div>
                         <div class="col-6">
-                            <input class="form-control" type="text" id="altoFilaCm" name="altoFilaCm" placeholder="Alto (cms)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="altoFilaCm" name="altoFilaCm" placeholder="Largo (cms)" oninput="convertToInchesAndCalculateVolume(this)">
                             <input class="form-control" type="text" id="anchoFilaCm" name="anchoFilaCm" placeholder="Ancho (cms)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <input class="form-control" type="text" id="profundidadFilaCm" name="profundidadFilaCm" placeholder="Profundidad (cms)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="profundidadFilaCm" name="profundidadFilaCm" placeholder="Alto (cms)" oninput="convertToInchesAndCalculateVolume(this)">
                             <p>cms</p>
                             <input class="form-control" type="text" placeholder="metros cúbicos" readonly>
                             <p>m³</p>
@@ -720,14 +720,14 @@ if (!empty($message)) {
 
         function convertToCmAndCalculateVolume(element) {
             const row = element.closest('tr');
-            const height = parseFloat(row.querySelector("[placeholder='Alto (pulgadas)']").value) || 0;
+            const height = parseFloat(row.querySelector("[placeholder='Largo (pulgadas)']").value) || 0;
             const width = parseFloat(row.querySelector("[placeholder='Ancho (pulgadas)']").value) || 0;
-            const deep = parseFloat(row.querySelector("[placeholder='Profundidad (pulgadas)']").value) || 0;
+            const deep = parseFloat(row.querySelector("[placeholder='Alto (pulgadas)']").value) || 0;
 
             // Convertir pulgadas a centímetros y calcular volumen
-            row.querySelector("[placeholder='Alto (cms)']").value = (height * 2.54).toFixed(3);
+            row.querySelector("[placeholder='Largo (cms)']").value = (height * 2.54).toFixed(3);
             row.querySelector("[placeholder='Ancho (cms)']").value = (width * 2.54).toFixed(3);
-            row.querySelector("[placeholder='Profundidad (cms)']").value = (deep * 2.54).toFixed(3);
+            row.querySelector("[placeholder='Alto (cms)']").value = (deep * 2.54).toFixed(3);
             const volumeFt3 = (height * width * deep) / 1728;
             row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(3);
             const volumeM3 = volumeFt3 * 0.0283168;
@@ -738,14 +738,14 @@ if (!empty($message)) {
 
         function convertToInchesAndCalculateVolume(element) {
             const row = element.closest('tr');
-            const altura = parseFloat(row.querySelector("[placeholder='Alto (cms)']").value) || 0;
+            const altura = parseFloat(row.querySelector("[placeholder='Largo (cms)']").value) || 0;
             const ancho = parseFloat(row.querySelector("[placeholder='Ancho (cms)']").value) || 0;
-            const profundidad = parseFloat(row.querySelector("[placeholder='Profundidad (cms)']").value) || 0;
+            const profundidad = parseFloat(row.querySelector("[placeholder='Alto (cms)']").value) || 0;
 
             // Convertir centímetros a pulgadas y calcular volumen
-            row.querySelector("[placeholder='Alto (pulgadas)']").value = (altura / 2.54).toFixed(3);
+            row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 2.54).toFixed(3);
             row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 2.54).toFixed(3);
-            row.querySelector("[placeholder='Profundidad (pulgadas)']").value = (profundidad / 2.54).toFixed(3);
+            row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 2.54).toFixed(3);
             const height = altura / 2.54;
             const width = ancho / 2.54;
             const deep = profundidad / 2.54;
