@@ -354,56 +354,73 @@ if (!empty($message)) {
 <script>
    document.addEventListener("DOMContentLoaded", () => {
 
-    const tableBody = document.querySelector("#incrementableTable tbody");
-    const totalUSD = document.getElementById("totalUSD");
-    const totalMXN = document.getElementById("totalMXN");
-    const addRowButton = document.getElementById("addRowButton");
-    const removeRowButton = document.getElementById("removeRowButton");
+       const tableBody = document.querySelector("#incrementableTable tbody");
+       const totalUSD = document.getElementById("totalUSD");
+       const totalMXN = document.getElementById("totalMXN");
+       const addRowButton = document.getElementById("addRowButton");
+       const removeRowButton = document.getElementById("removeRowButton");
+       const valorMonedaInput = document.getElementById("valorMoneda"); // Capturar input del tipo de cambio existente
 
-    function addRow() {
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
-            <td><input type="text" placeholder="Incrementable"></td>
-            <td><input type="number" class="usd-input" value="0" oninput="updateTotal()"></td>
-            <td><input type="number" class="mxn-input" value="0" oninput="updateTotal()"></td>
-        `;
-        tableBody.appendChild(newRow);
-        updateTotal();
-    }
+       function addRow() {
+           const newRow = document.createElement("tr");
+           newRow.innerHTML = `
+               <td><input type="text" placeholder="Incrementable"></td>
+               <td><input type="number" class="usd-input" value="0" oninput="updateTotal()"></td>
+               <td><input type="number" class="mxn-input" value="0" readonly></td>
+           `;
+           tableBody.appendChild(newRow);
+           updateTotal();
+       }
 
-    function removeRow() {
-        const rows = tableBody.getElementsByTagName("tr");
-        if (rows.length > 4) {
-            tableBody.removeChild(rows[rows.length - 1]);
-            updateTotal();
-        } else {
-            alert("No puedes eliminar más filas predeterminadas.");
-        }
-    }
+       function removeRow() {
+           const rows = tableBody.getElementsByTagName("tr");
+           if (rows.length > 1) {
+               tableBody.removeChild(rows[rows.length - 1]);
+               updateTotal();
+           } else {
+               alert("No puedes eliminar más filas predeterminadas.");
+           }
+       }
 
-    function updateTotal() {
-        let totalUSDValue = 0;
-        let totalMXNValue = 0;
+       function updateTotal() {
+           let totalUSDValue = 0;
+           let totalMXNValue = 0;
 
-        document.querySelectorAll(".usd-input").forEach(input => {
-            totalUSDValue += parseFloat(input.value) || 0;
-        });
+           // Obtener el valor del tipo de cambio dinámicamente desde el input existente
+           const valorMoneda = parseFloat(valorMonedaInput.value) || 0;
 
-        document.querySelectorAll(".mxn-input").forEach(input => {
-            totalMXNValue += parseFloat(input.value) || 0;
-        });
+           // Iterar sobre las filas y calcular valores
+           tableBody.querySelectorAll("tr").forEach(row => {
+               const usdInput = row.querySelector(".usd-input");
+               const mxnInput = row.querySelector(".mxn-input");
 
-        totalUSD.textContent = `$${totalUSDValue.toFixed(2)}`;
-        totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
-    }
+               const usdValue = parseFloat(usdInput.value) || 0;
+               const mxnValue = usdValue * valorMoneda;
 
-    tableBody.addEventListener("input", updateTotal);
-    addRowButton.addEventListener("click", addRow);
-    removeRowButton.addEventListener("click", removeRow);
+               // Sumar al total
+               totalUSDValue += usdValue;
+               totalMXNValue += mxnValue;
 
-    updateTotal();
-    });
+               // Actualizar el valor de la columna MXN
+               mxnInput.value = mxnValue.toFixed(2);
+           });
+
+           // Actualizar los totales en el DOM
+           totalUSD.textContent = `$${totalUSDValue.toFixed(2)}`;
+           totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
+       }
+
+       tableBody.addEventListener("input", updateTotal);
+       addRowButton.addEventListener("click", addRow);
+       removeRowButton.addEventListener("click", removeRow);
+
+       // Escuchar cambios en el input del tipo de cambio
+       valorMonedaInput.addEventListener("input", updateTotal);
+
+       updateTotal();
+   });
 </script>
+
 
 
 
