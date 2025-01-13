@@ -759,7 +759,8 @@ if (!empty($message)) {
             document.getElementById("m3Total").value = totalM3.toFixed(3);
 
             // Actualizar el valor comercial
-            actualizarValorComercial();
+            actualizarValorComercial(); 
+            actualizarValoresUSD_MXN();
         }
 
         function actualizarValorComercial() {
@@ -786,6 +787,18 @@ if (!empty($message)) {
             // Actualiza los totales
             updateTotalsinc();
         }
+        function actualizarValoresUSD_MXN() {
+        const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+        const dolarInputs = document.querySelectorAll(".usd-input");
+
+        dolarInputs.forEach((input) => {
+        const row = input.closest("tr");
+        const mxnOutput = row.querySelector(".mxn-input");
+        const dolarValue = parseFloat(input.value) || 0;
+        mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+        });
+        updateTotalsinc();
+}
         function updateTotalsinc() {
             const dolarInputs = document.querySelectorAll(".usd-input");
             const mxnOutputs = document.querySelectorAll(".mxn-input");
