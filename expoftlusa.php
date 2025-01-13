@@ -106,11 +106,11 @@ if (!empty($message)) {
                     }
                     ?>
                 </select>
-                <p id="detalleCliente"></p>
+                <p id="detalleOrigen"></p>
             </div>
             <div class="col-4 p-3" style="border: 1px solid #666666;">
                 <p class="mb-1"><b>Destino en frontera</b></p>
-                <select class="form-select" name="idDestinoFr" id="Destino">
+                <select class="form-select" name="idAduana" id="aduana">
                     <option selected>Selecciona el destino en frontera</option>
                     <?php
                     $query = "SELECT * FROM proveedores WHERE estatus = 1";
@@ -126,11 +126,11 @@ if (!empty($message)) {
 
                     ?>
                 </select>
-                <p id="detalleCliente"></p>
+                <p id="detalleAduana"></p>
             </div>
             <div class="col-4 p-3" style="border: 1px solid #666666;">
                 <p class="mb-1"><b>Destino Final</b></p>
-                <select class="form-select" name="idOrigen" id="origen">
+                <select class="form-select" name="idDestino" id="destino">
                     <option selected>Selecciona el destino final</option>
                     <?php
                     $query = "SELECT * FROM proveedores WHERE estatus = 1";
@@ -446,7 +446,6 @@ if (!empty($message)) {
             let totalUSD = 0;
             let totalMXN = 0;
 
-            // Suma todos los valores USD y MXN
             dolarInputs.forEach((input) => {
                 totalUSD += parseFloat(input.value) || 0;
             });
@@ -454,7 +453,6 @@ if (!empty($message)) {
                 totalMXN += parseFloat(output.value) || 0;
             });
 
-            // Actualiza los totales en la tabla
             document.getElementById("totalDolar").textContent = `$${totalUSD.toFixed(2)}`;
             document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
         }
@@ -571,7 +569,7 @@ if (!empty($message)) {
             nuevaFila.innerHTML = `
                 <td>
                 <input style="width: 60px;" class="form-control" type="text" id="cantidadFila" name="cantidadFila" oninput="actualizarTotales()">
-                <input style="width: 60px;" class="form-control" type="text" id="cantidadFila" name="cantidadCode"></td>
+                <input style="width: 60px;" class="form-control" type="text" id="cantidadCode" name="cantidadCode"></td>
                 <td>
                     <input class="form-control" type="text">
                     <input class="form-control" type="text">
@@ -651,15 +649,16 @@ if (!empty($message)) {
             const height = parseFloat(row.querySelector("[placeholder='Largo (pulgadas)']").value) || 0;
             const width = parseFloat(row.querySelector("[placeholder='Ancho (pulgadas)']").value) || 0;
             const deep = parseFloat(row.querySelector("[placeholder='Alto (pulgadas)']").value) || 0;
+            const cantidad = parseFloat(row.querySelector("input[id='cantidadFila']").value) || 1;
 
             // Convertir pulgadas a centímetros y calcular volumen
-            row.querySelector("[placeholder='Largo (cms)']").value = (height * 2.54).toFixed(3);
-            row.querySelector("[placeholder='Ancho (cms)']").value = (width * 2.54).toFixed(3);
-            row.querySelector("[placeholder='Alto (cms)']").value = (deep * 2.54).toFixed(3);
-            const volumeFt3 = (height * width * deep) / 1728;
-            row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(3);
+            row.querySelector("[placeholder='Largo (cms)']").value = (height * 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Ancho (cms)']").value = (width * 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Alto (cms)']").value = (deep * 0.0254).toFixed(2);
+            const volumeFt3 = ((height * 0.08333) * (width * 0.08333) * (deep * 0.08333)) * cantidad;
+            row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
             const volumeM3 = volumeFt3 * 0.0283168;
-            row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(3);
+            row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
 
             actualizarTotales(); // Actualiza los totales después de convertir
         }
@@ -758,8 +757,8 @@ if (!empty($message)) {
             document.getElementById("ft3Total").value = totalFt3.toFixed(3);
             document.getElementById("m3Total").value = totalM3.toFixed(3);
 
-            // Actualizar el valor comercial
             actualizarValorComercial();
+            actualizarValoresUSD_MXN();
         }
 
         function actualizarValorComercial() {
@@ -772,6 +771,7 @@ if (!empty($message)) {
             // Mostrar el valor comercial en el input correspondiente
             document.getElementById("valorComercial").value = valorComercial.toFixed(2);
         }
+
         function updateRow(input) {
             const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
             const dolarValue = parseFloat(input.value) || 0;
@@ -786,6 +786,25 @@ if (!empty($message)) {
             // Actualiza los totales
             updateTotalsinc();
         }
+
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".usd-input");
+
+            dolarInputs.forEach((input) => {
+                const row = input.closest("tr");
+                const mxnOutput = row.querySelector(".mxn-input");
+                const dolarValue = parseFloat(input.value) || 0;
+
+                // Calcula y actualiza MXN
+                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+            });
+
+            // Actualizar totales
+            updateTotalsinc();
+        }
+
+
         function updateTotalsinc() {
             const dolarInputs = document.querySelectorAll(".usd-input");
             const mxnOutputs = document.querySelectorAll(".mxn-input");
