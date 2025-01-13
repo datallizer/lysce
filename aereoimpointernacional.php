@@ -860,7 +860,8 @@ if (!empty($message)) {
             document.getElementById("pesoCargableKgs").value = totalPesoCargable.toFixed(0);
 
             // Actualizar el valor comercial
-            actualizarValorComercial();
+            actualizarValorComercial(); 
+            actualizarValoresUSD_MXN();
         }
 
         function actualizarValorComercial() {
@@ -887,6 +888,19 @@ if (!empty($message)) {
 
             // Actualiza los totales
             updateTotals();
+            
+        }
+        function actualizarValoresUSD_MXN() {
+        const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+        const dolarInputs = document.querySelectorAll(".dolarInput");
+
+        dolarInputs.forEach((input) => {
+        const row = input.closest("tr");
+        const mxnOutput = row.querySelector(".mxnOutput");
+        const dolarValue = parseFloat(input.value) || 0;
+        mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+        });
+        updateTotals();
         }
 
         function updateTotals() {

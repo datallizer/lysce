@@ -757,7 +757,8 @@ if (!empty($message)) {
             document.getElementById("ft3Total").value = totalFt3.toFixed(3);
             document.getElementById("m3Total").value = totalM3.toFixed(3);
 
-            actualizarValorComercial();
+            // Actualizar el valor comercial
+            actualizarValorComercial(); 
             actualizarValoresUSD_MXN();
         }
 
@@ -786,25 +787,18 @@ if (!empty($message)) {
             // Actualiza los totales
             updateTotalsinc();
         }
-
         function actualizarValoresUSD_MXN() {
-            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-            const dolarInputs = document.querySelectorAll(".usd-input");
+        const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+        const dolarInputs = document.querySelectorAll(".usd-input");
 
-            dolarInputs.forEach((input) => {
-                const row = input.closest("tr");
-                const mxnOutput = row.querySelector(".mxn-input");
-                const dolarValue = parseFloat(input.value) || 0;
-
-                // Calcula y actualiza MXN
-                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-            });
-
-            // Actualizar totales
-            updateTotalsinc();
-        }
-
-
+        dolarInputs.forEach((input) => {
+        const row = input.closest("tr");
+        const mxnOutput = row.querySelector(".mxn-input");
+        const dolarValue = parseFloat(input.value) || 0;
+        mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+        });
+        updateTotalsinc();
+}
         function updateTotalsinc() {
             const dolarInputs = document.querySelectorAll(".usd-input");
             const mxnOutputs = document.querySelectorAll(".mxn-input");
