@@ -32,10 +32,10 @@ require 'dbcon.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Usuarios
                         </a>
-                        <a class="nav-link" href="cotizaciones.php">
+                        <!-- <a class="nav-link" href="cotizaciones.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Cotizaciones
-                        </a>
+                        </a> -->
                         <div class="sb-sidenav-menu-heading">Modulos</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAereo" aria-expanded="false" aria-controls="collapseAereo">
                             <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>
@@ -44,22 +44,64 @@ require 'dbcon.php';
                         </a>
                         <div class="collapse" id="collapseAereo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="aereoimponacional.php">Impo nacional</a>
-                                <a class="nav-link" href="aereoimpointernacional.php">Impo internacional</a>
-                                <a class="nav-link" href="cotizaciones.php">Expo nacional</a>
-                                <a class="nav-link" href="cotizaciones.php">Expo internacional</a>
+                                <a class="nav-link" href="aereoimpointernacional.php">Importación carga internacional</a>
+                                <a class="nav-link" href="cotizaciones.php">Exportación carga internacional</a>
                             </nav>
                         </div>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTerrestre" aria-expanded="false" aria-controls="collapseTerrestre">
-                            <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Terrestre
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseTerrestre" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="impoterrestreltlusa.php">Impo LTL USA</a>
-                                <a class="nav-link" href="expoftlusa.php">Expo FTL USA</a>
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlUsa" aria-expanded="false" aria-controls="ftlUsa">
+                                    FTL USA
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="ftlUsa" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="ftlplataformasobrepeso.php">Plataforma con sobrepeso</a>
+                                        <a class="nav-link" href="ftlhotshotusa.php">Hotshot trailer completo</a>
+                                        <!-- <a class="nav-link" href="dashboard.php">Flete consolidado</a> -->
+                                        <a class="nav-link" href="expoftlusa.php">Dry van 53 ft</a>
+                                        <a class="nav-link" href="ftlfletesobredimensionado.php">Plataforma con sobredimensionado</a>
+                                        <a class="nav-link" href="ftlinbondfreightcanada.php.php">In bond freight Canada</a>
+                                        <a class="nav-link" href="dashboard.php">Carga completa 2 Stops</a>
+                                    </nav>
+                                </div>
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlMex" aria-expanded="false" aria-controls="ftlMex">
+                                    FTL MEX
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="ftlMex" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="dashboard.php">Camioneta dedicada, operador sencillo</a>
+                                        <a class="nav-link" href="dashboard.php">Caja 53 pies, materiales peligrosos</a>
+                                        <a class="nav-link" href="dashboard.php">Sobredimensionado</a>
+                                    </nav>
+                                </div>
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ltlImpo" aria-expanded="false" aria-controls="ltlImpo">
+                                    LTL IMPO
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="ltlImpo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="impoterrestreltlusa.php">Flete consolidado USA</a>
+                                        <a class="nav-link" href="dashboard.php">In bond freight Canada</a>
+                                    </nav>
+                                </div>
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ltlExpo" aria-expanded="false" aria-controls="ltlExpo">
+                                    LTL EXPO
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="ltlExpo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="dashboard.php">Flete consolidado USA</a>
+                                        <a class="nav-link" href="dashboard.php">Flete directo Hotshot USA</a>
+                                    </nav>
+                                </div>
                             </nav>
                         </div>
 
@@ -70,8 +112,8 @@ require 'dbcon.php';
                         </a>
                         <div class="collapse" id="collapseMaritimo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="cotizaciones.php">Importación</a>
-                                <a class="nav-link" href="cotizaciones.php">Exportación</a>
+                                <a class="nav-link" href="dashboard.php">LCL Contenedor importación</a>
+                                <a class="nav-link" href="dashboard.php">FCL Contenedor completo 40 ft</a>
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Panel de control</div>
