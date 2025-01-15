@@ -247,11 +247,11 @@ if (!empty($message)) {
                     <div class="col-5">
                         <table class="text-end w-100">
                             <tr>
-                                <td>Valor total de la mercancia</td>
+                                <td>Valor total de la mercancia USD</td>
                                 <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly></td>
                             </tr>
                             <tr>
-                                <td>VALOR TOTAL COMERCIAL USD</td>
+                                <td>VALOR TOTAL COMERCIAL PESOS</td>
                                 <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
                             </tr>
                         </table>

@@ -247,11 +247,11 @@ if (!empty($message)) {
                     <div class="col-5">
                         <table class="text-end w-100">
                             <tr>
-                                <td>Valor total de la mercancia</td>
+                                <td>Valor total de la mercancia USD</td>
                                 <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly></td>
                             </tr>
                             <tr>
-                                <td>VALOR TOTAL COMERCIAL USD</td>
+                                <td>VALOR TOTAL COMERCIAL PESOS</td>
                                 <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
                             </tr>
                         </table>
@@ -670,16 +670,16 @@ if (!empty($message)) {
             const profundidad = parseFloat(row.querySelector("[placeholder='Alto (cms)']").value) || 0;
 
             // Convertir centímetros a pulgadas y calcular volumen
-            row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 2.54).toFixed(3);
-            row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 2.54).toFixed(3);
-            row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 2.54).toFixed(3);
+            row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 2.54).toFixed(2);
+            row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 2.54).toFixed(2);
+            row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 2.54).toFixed(2);
             const height = altura / 2.54;
             const width = ancho / 2.54;
             const deep = profundidad / 2.54;
             const volumeFt3 = (height * width * deep) / 1728;
-            row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(3);
+            row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
             const volumeM3 = volumeFt3 * 0.0283168;
-            row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(3);
+            row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
 
             actualizarTotales(); // Actualiza los totales después de convertir
         }
@@ -688,14 +688,14 @@ if (!empty($message)) {
             const row = element.closest('tr');
             const lbs = parseFloat(row.querySelector("[placeholder='lbs']").value) || 0;
             const kg = lbs * 0.453592;
-            row.querySelector("[placeholder='kgs']").value = kg.toFixed(3);
+            row.querySelector("[placeholder='kgs']").value = kg.toFixed(2);
         }
 
         function convertToLbs(element) {
             const row = element.closest('tr');
             const kg = parseFloat(row.querySelector("[placeholder='kgs']").value) || 0;
             const lbs = kg / 0.453592;
-            row.querySelector("[placeholder='lbs']").value = lbs.toFixed(3);
+            row.querySelector("[placeholder='lbs']").value = lbs.toFixed(2);
         }
 
         function actualizarTotales() {
@@ -754,8 +754,8 @@ if (!empty($message)) {
             document.getElementById("pesoMercanciaLbs").value = totalLbs.toFixed(2);
             document.getElementById("pesoMercanciaKgs").value = totalKgs.toFixed(2);
             document.getElementById("valorMercancia").value = totalValor.toFixed(2);
-            document.getElementById("ft3Total").value = totalFt3.toFixed(3);
-            document.getElementById("m3Total").value = totalM3.toFixed(3);
+            document.getElementById("ft3Total").value = totalFt3.toFixed(2);
+            document.getElementById("m3Total").value = totalM3.toFixed(2);
 
             // Actualizar el valor comercial
             actualizarValorComercial(); 
