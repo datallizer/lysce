@@ -183,6 +183,32 @@ if (!empty($message)) {
                                     </div>
                                 </div>
                             </div>
+
+                            <script>
+    document.getElementById('clienteSelect').addEventListener('change', function() {
+        var clienteId = this.value;
+
+        
+        if (clienteId) {
+            fetch('obtener_proveedores.php?cliente_id=' + clienteId)
+                .then(response => response.text())
+                .then(data => {
+                    
+                    document.getElementById('origen').innerHTML = data;
+                    document.getElementById('Destino').innerHTML = data;
+                    document.getElementById('DestinoFinal').innerHTML = data;
+                })
+                .catch(error => console.log('Error al cargar los proveedores:', error));
+        } else {
+            
+            document.getElementById('origen').innerHTML = '<option>Selecciona el origen</option>';
+            document.getElementById('Destino').innerHTML = '<option>Selecciona el destino en frontera</option>';
+            document.getElementById('DestinoFinal').innerHTML = '<option>Selecciona el destino final</option>';
+        }
+    });
+</script>
+
+
                 
                             <div class="col-4 mt-3 mb-3">
                                 <p style="display: inline-block;margin-bottom: 5px;">
@@ -359,7 +385,7 @@ if (!empty($message)) {
        const totalMXN = document.getElementById("totalMXN");
        const addRowButton = document.getElementById("addRowButton");
        const removeRowButton = document.getElementById("removeRowButton");
-       const valorMonedaInput = document.getElementById("valorMoneda"); // Capturar input del tipo de cambio existente
+       const valorMonedaInput = document.getElementById("valorMoneda"); 
 
        function addRow() {
            const newRow = document.createElement("tr");
@@ -385,11 +411,9 @@ if (!empty($message)) {
        function updateTotal() {
            let totalUSDValue = 0;
            let totalMXNValue = 0;
-
-           // Obtener el valor del tipo de cambio dinámicamente desde el input existente
+           
            const valorMoneda = parseFloat(valorMonedaInput.value) || 0;
 
-           // Iterar sobre las filas y calcular valores
            tableBody.querySelectorAll("tr").forEach(row => {
                const usdInput = row.querySelector(".usd-input");
                const mxnInput = row.querySelector(".mxn-input");
@@ -397,15 +421,14 @@ if (!empty($message)) {
                const usdValue = parseFloat(usdInput.value) || 0;
                const mxnValue = usdValue * valorMoneda;
 
-               // Sumar al total
+               
                totalUSDValue += usdValue;
                totalMXNValue += mxnValue;
 
-               // Actualizar el valor de la columna MXN
                mxnInput.value = mxnValue.toFixed(2);
            });
 
-           // Actualizar los totales en el DOM
+           
            totalUSD.textContent = `$${totalUSDValue.toFixed(2)}`;
            totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
        }
@@ -414,15 +437,12 @@ if (!empty($message)) {
        addRowButton.addEventListener("click", addRow);
        removeRowButton.addEventListener("click", removeRow);
 
-       // Escuchar cambios en el input del tipo de cambio
+       
        valorMonedaInput.addEventListener("input", updateTotal);
 
        updateTotal();
    });
 </script>
-
-
-
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
