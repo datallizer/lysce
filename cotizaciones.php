@@ -86,7 +86,7 @@ if (!empty($message)) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT * FROM cotizaciones ORDER BY id DESC";
+                                        $query = "SELECT * FROM aereoimportacion ORDER BY id DESC";
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
@@ -96,25 +96,25 @@ if (!empty($message)) {
                                                         <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['nombre']; ?></p>
+                                                        <p><?= $registro['idCliente']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['cliente']; ?></p>
+                                                        <p><?= $registro['operador']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['medio']; ?></p>
+                                                        <p><?= $registro['unidad']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['tipo']; ?></p>
+                                                        <p><?= $registro['moneda']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['actividad']; ?></p>
+                                                        <p><?= $registro['idOrigen']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['modalidad']; ?></p>
+                                                        <p><?= $registro['idDestino']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <a href="editarcotizacion.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                        <a href="generate_pdf.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
                                                         <form action="codecotizaciones.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>

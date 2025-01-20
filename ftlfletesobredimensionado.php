@@ -247,11 +247,11 @@ if (!empty($message)) {
                     <div class="col-5">
                         <table class="text-end w-100">
                             <tr>
-                                <td>Valor total de la mercancia</td>
+                                <td>Valor total de la mercancia USD</td>
                                 <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly></td>
                             </tr>
                             <tr>
-                                <td>VALOR TOTAL COMERCIAL USD</td>
+                                <td>VALOR TOTAL COMERCIAL PESOS</td>
                                 <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
                             </tr>
                         </table>
@@ -274,23 +274,23 @@ if (!empty($message)) {
                         <!-- Filas predeterminadas -->
                         <tr>
                             <td>FLETE EXTRANJERO</td>
-                            <td><input type="text" class="usd-input" value="0"></td>
-                            <td><input type="text" class="mxn-input" value="0"></td>
+                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxn-input" value="0" readonly></td>
                         </tr>
                         <tr>
                             <td>MANIOBRAS</td>
-                            <td><input type="text" class="usd-input" value="0"></td>
-                            <td><input type="text" class="mxn-input" value="0"></td>
+                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxn-input" value="0" readonly></td>
                         </tr>
                         <tr>
                             <td>ALMACENAJE</td>
-                            <td><input type="text" class="usd-input" value="0"></td>
-                            <td><input type="text" class="mxn-input" value="0"></td>
+                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxn-input" value="0" readonly></td>
                         </tr>
                         <tr>
                             <td>CANCELACION BOND</td>
-                            <td><input type="text" class="usd-input" value="0"></td>
-                            <td><input type="text" class="mxn-input" value="0"></td>
+                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" class="mxn-input" value="0" readonly></td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -760,6 +760,7 @@ if (!empty($message)) {
 
             // Actualizar el valor comercial
             actualizarValorComercial();
+            actualizarValoresUSD_MXN();
         }
 
         function actualizarValorComercial() {
@@ -771,6 +772,51 @@ if (!empty($message)) {
 
             // Mostrar el valor comercial en el input correspondiente
             document.getElementById("valorComercial").value = valorComercial.toFixed(2);
+        }
+        function updateRow(input) {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarValue = parseFloat(input.value) || 0;
+
+            // Encuentra la fila actual y el campo de salida (MXN)
+            const row = input.closest("tr");
+            const mxnOutput = row.querySelector(".mxn-input");
+
+            // Calcula y actualiza el valor en MXN
+            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+
+            // Actualiza los totales
+            updateTotalsinc();
+        }
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".usd-input");
+
+        dolarInputs.forEach((input) => {
+            const row = input.closest("tr");
+            const mxnOutput = row.querySelector(".mxn-input");
+            const dolarValue = parseFloat(input.value) || 0;
+            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+        });
+        updateTotalsinc();
+        }
+        function updateTotalsinc() {
+            const dolarInputs = document.querySelectorAll(".usd-input");
+            const mxnOutputs = document.querySelectorAll(".mxn-input");
+
+            let totalUSD = 0;
+            let totalMXN = 0;
+
+            // Suma todos los valores USD y MXN
+            dolarInputs.forEach((input) => {
+                totalUSD += parseFloat(input.value) || 0;
+            });
+            mxnOutputs.forEach((output) => {
+                totalMXN += parseFloat(output.value) || 0;
+            });
+
+            // Actualiza los totales en la tabla
+            document.getElementById("totalUSD").textContent = `$${totalUSD.toFixed(2)}`;
+            document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
         }
     </script>
 </body>
