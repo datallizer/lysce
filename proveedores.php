@@ -68,10 +68,17 @@ if (!empty($message)) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 style="color:#fff" class="m-1">PROVEEDOR / AGENTE ADUANAL
-                                    <button type="button" class="btn btn-primary btn-sm float-end btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        Nuevo proveedor / agente aduanal
-                                    </button>
+                                <h4 style="color:#fff" class="m-1">PROVEEDOR / AGENTE ADUANAL   
+                                    
+                                <div class="float-end">
+                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Nuevo proveedor / agente aduanal
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#asociarModal">
+                                    Asociar
+                                </button>
+                            </div>
+
                                 </h4>
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
@@ -195,6 +202,17 @@ if (!empty($message)) {
                             <input type="text" class="form-control" name="contact" placeholder="Contact" autocomplete="off" required>
                             <label for="contact">Contacto</label>
                         </div>
+
+                        <div class="mb-3">
+                        <label for="clienteSelect" class="form-label"></label>
+                        <select class="form-select" id="clienteSelect" required>
+                            <option value="">Seleccione un cliente</option>
+                            <option value="cliente1">Cliente 1</option>
+                            <option value="cliente2">Cliente 2</option>
+                            <option value="cliente3">Cliente 3</option>
+                            
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -204,6 +222,51 @@ if (!empty($message)) {
             </div>
         </div>
     </div>
+
+<!-- Modal Asociar -->
+<div class="modal fade" id="asociarModal" tabindex="-1" aria-labelledby="asociarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="asociarLabel">Asociar Cliente con Proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAsociar">
+                    
+                    <div class="mb-3">
+                        <label for="clienteSelect" class="form-label">Seleccionar Cliente</label>
+                        <select class="form-select" id="clienteSelect" required>
+                            <option value="">Seleccione un cliente</option>
+                            <option value="cliente1">Cliente 1</option>
+                            <option value="cliente2">Cliente 2</option>
+                            <option value="cliente3">Cliente 3</option>
+                            
+                        </select>
+                    </div>
+                   
+                    <div class="mb-3">
+                        <label for="proveedorSelect" class="form-label">Seleccionar Proveedor</label>
+                        <select class="form-select" id="proveedorSelect" required>
+                            <option value="">Seleccione un proveedor</option>
+                            <option value="proveedor1">Proveedor 1</option>
+                            <option value="proveedor2">Proveedor 2</option>
+                            <option value="proveedor3">Proveedor 3</option>
+                            
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardarAsociacion">Guardar Asociación</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
