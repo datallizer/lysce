@@ -26,7 +26,6 @@ if (isset($_POST['save'])) {
     $pesoMercanciaLbs = mysqli_real_escape_string($con, $_POST['pesoMercanciaLbs']);
     $pesoMercanciaKgs = mysqli_real_escape_string($con, $_POST['pesoMercanciaKgs']);
     $pesoCargableKgs = mysqli_real_escape_string($con, $_POST['pesoCargableKgs']);
-    $pesoCotizacion = mysqli_real_escape_string($con, $_POST['pesoCotizacion']);
     $valorMercancia = mysqli_real_escape_string($con, $_POST['valorMercancia']);
     $valorComercial = mysqli_real_escape_string($con, $_POST['valorComercial']);
     $collectionFeeOrigenUno = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenUno']);

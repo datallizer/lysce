@@ -49,7 +49,19 @@ require 'dbcon.php';
                             </nav>
                         </div>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTerrestre" aria-expanded="false" aria-controls="collapseTerrestre">
+                            <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>
+                            Terrestre
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseTerrestre" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="ltl.php">- LTL</a>
+                                <a class="nav-link" href="ftl.php">- FTL</a>
+                            </nav>
+                        </div>
+
+                        <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Terrestre
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -57,29 +69,21 @@ require 'dbcon.php';
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlUsa" aria-expanded="false" aria-controls="ftlUsa">
-                                    FTL USA
+                                    FTL
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <div class="collapse" id="ftlUsa" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="ftlplataformasobrepeso.php">Plataforma con sobrepeso</a>
-                                        <a class="nav-link" href="ftlhotshotusa.php">Hotshot trailer completo</a>
-                                        <!-- <a class="nav-link" href="dashboard.php">Flete consolidado</a> -->
                                         <a class="nav-link" href="expoftlusa.php">Dry van 53 ft</a>
-                                        <a class="nav-link" href="ftlfletesobredimensionado.php">Plataforma con sobredimensionado</a>
-                                        <a class="nav-link" href="ftlinbondfreightcanada.php.php">In bond freight Canada</a>
-                                        <a class="nav-link" href="dashboard.php">Carga completa 2 Stops</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlMex" aria-expanded="false" aria-controls="ftlMex">
-                                    FTL MEX
+                                    LTL
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <div class="collapse" id="ftlMex" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
                                         <a class="nav-link" href="dashboard.php">Camioneta dedicada, operador sencillo</a>
-                                        <a class="nav-link" href="dashboard.php">Caja 53 pies, materiales peligrosos</a>
-                                        <a class="nav-link" href="dashboard.php">Sobredimensionado</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ltlImpo" aria-expanded="false" aria-controls="ltlImpo">
@@ -103,7 +107,7 @@ require 'dbcon.php';
                                     </nav>
                                 </div>
                             </nav>
-                        </div>
+                        </div> -->
 
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaritimo" aria-expanded="false" aria-controls="collapseMaritimo">
                             <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>

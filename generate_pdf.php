@@ -17,9 +17,13 @@ if (isset($_GET['id'])) {
     $dompdf = new Dompdf($options);
 
 
-    $query = "SELECT 
+    $query = "SELECT a.*,
     a.id,
     a.fecha,
+    a.distanciaOrigenDestinoMillas,
+    a.distanciaOrigenDestinoKms,
+    a.tiempoRecorridoOrigenDestino,
+    a.servicio,
     c.cliente AS cliente_nombre,
     c.calle AS cliente_calle,
     c.colonia AS cliente_colonia,
@@ -99,27 +103,27 @@ LIMIT 1;
         .text-center {
             text-align: center;
         }
-            p{
+        p{
             margin:0;
             padding:0;
-            }
+        }
     </style>
 </head>
 
 <body>
-    <table class="table">
-        <tr>
-            <td class="text-center" style="width: 30%;">
+    <table class="table" style="border: 0px;">
+        <tr style="border: 0px;">
+            <td class="text-center" style="width: 30%;border: 0px;">
                 <img class="logo" src="https://lysce.com.mx/assets/img/lysce/lysce_logo.png">
                 <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
             </td>
-            <td style="width: 40%;">
+            <td style="width: 40%;border: 0px;">
                 <h2><b>GRUPO LYSCE S.C.</b></h2>
                 <p style="margin: 0;">R.F.C GLY170421ES6</p>
                 <p style="margin: 0;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte, Aguascalientes, Ags. C.P. 20127</p>
                 <p style="margin: 0;">Tel / Fax +52 (449) 300 3265</p>
             </td>
-            <td style="width: 30%;">
+            <td style="width: 30%;border: 0px;">
                 <p style="margin-bottom:10px;"><b>COTIZACIÓN</b></p>
                 <p>LYSCE-' . $registro['id'] . '</p>
                 <p>Aguascalientes, Ags a ' . $registro['fecha'] . '</p>
@@ -138,24 +142,60 @@ LIMIT 1;
             </td>
         </tr>
         <tr>
-            <td><b>Origen:</b>
+            <td>
+                <b>Origen:</b>
                 <p>' . $registro['origen_nombre'] . '</p>
                 <p><b>Domicilio:</b> ' . $registro['origen_calle'] . ', ' . $registro['origen_colonia'] . ', ' . $registro['origen_municipio'] . '</p>
                 <p><b>Teléfono:</b> ' . $registro['origen_telefono'] . '</p>
                 <p><b>Contacto:</b> ' . $registro['origen_contacto'] . '</p>
             </td>
-            <td><b>Destino en frontera:</b>
+            <td>
+                <b>Destino en frontera:</b>
                 <p>' . $registro['destino_nombre'] . '</p>
                 <p><b>Domicilio:</b> ' . $registro['destino_calle'] . ', ' . $registro['destino_colonia'] . ', ' . $registro['destino_municipio'] . '</p>
                 <p><b>Teléfono:</b> ' . $registro['destino_telefono'] . '</p>
                 <p><b>Contacto:</b> ' . $registro['destino_contacto'] . '</p>
             </td>
-            <td><b>Destino Final:</b>
+            <td>
+                <b>Destino Final:</b>
                 <p>' . $registro['destino_final_nombre'] . '</p>
                 <p><b>Domicilio:</b> ' . $registro['destino_final_calle'] . ', ' . $registro['destino_final_colonia'] . ', ' . $registro['destino_final_municipio'] . '</p>
                 <p><b>Teléfono:</b> ' . $registro['destino_final_telefono'] . '</p>
                 <p><b>Contacto:</b> ' . $registro['destino_final_contacto'] . '</p>
             </td>
+        </tr>
+        <tr style="border: 0px;">
+            <td colspan="3" style="border: 0px;">
+            <table style="width:100%;border: 0px;">
+                <tr style="width:100%;border: 0px;">
+                    <td style="width:33%;border: 0px;">
+                        <p><b>Distancia:</b> ' . $registro['distanciaOrigenDestinoMillas'] . ' millas | ' . $registro['distanciaOrigenDestinoKms'] . ' kms</p>
+                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . ' hrs</p>
+                        <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
+                    </td>
+                    
+                    <td style="width:33%;border: 0px;">
+                        <p><b>Total CFT:</b> ' . $registro['totalFt3'] . '</p>
+                        <p><b>Total m3:</b> ' . $registro['totalM3'] . '</p>
+                    </td>
+                    
+                    <td style="width:33%;border: 0px;">
+                        <p><b>Distancia:</b> ' . $registro['distanciaDestinoFinalMillas'] . ' millas | ' . $registro['distanciaDestinoFinalKms'] . ' kms</p>
+                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . ' hrs</p>
+                        <p><b>Operador:</b> ' . $registro['operador'] . '</p>
+                        <p><b>Unidad:</b> ' . $registro['unidad'] . '</p>
+                    </td>
+                </tr>
+            </table>
+            </td>
+        </tr>
+    </table>
+    <h2>DETERMINACION DE INCREMENTABLES</h2>
+    <table class="table">
+        <tr>
+            <td>Incrementable</td>
+            <td>USD</td>
+            <td>MX</td>
         </tr>
     </table>
 </body>

@@ -31,16 +31,17 @@ if (!empty($message)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="images/ico.ico">
-    <title>Importacion LTL USA | LYSCE</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+    <title>LTL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
+
     <div class="container-fluid p-5">
-        <form action="codeaereoimportacion.php" method="POST" class="row justify-content-evenly">
+        <form action="codeftl.php" method="POST" class="row justify-content-evenly">
             <div class="col-3 mb-3 text-center">
                 <img style="width: 70%;" src="images/logo.png" alt="">
                 <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
@@ -54,7 +55,7 @@ if (!empty($message)) {
             <div class="col-3 mb-3">
                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
                 <?php
-                $query = "SELECT MAX(id) AS max_id FROM aereoimportacion"; // Consulta para obtener el ID más alto
+                $query = "SELECT MAX(id) AS max_id FROM aereoimportacion";
                 $result = mysqli_query($con, $query);
                 if ($result && $row = $result->fetch_assoc()) {
                     $lastID = $row['max_id'];
@@ -156,28 +157,28 @@ if (!empty($message)) {
                             <b>Distancia:</b>
                             <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="millas" oninput="convertirAMetros()">
                             millas |
-                            <input name="distanciaOrigenDestinoKilometros" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
+                            <input name="distanciaOrigenDestinoKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Tiempo / Recorrido:</b>
-                            <input class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
+                            <input name="tiempoRecorridoOrigenDestino" class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Operador:</b>
-                            <input class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
+                            <input name="servicio" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
                         </p>
                     </div>
                     <div class="col-6">
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Total CFT:</b>
-                            <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
+                            <input name="totalFt3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Total m3:</b>
-                            <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="m3Total" readonly>
+                            <input name="totalM3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="m3Total" readonly>
                         </p>
                     </div>
                 </div>
@@ -186,24 +187,24 @@ if (!empty($message)) {
             <div class="col-4 mt-3 mb-3">
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Distancia:</b>
-                    <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
+                    <input name="distanciaDestinoFinalMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
                     millas |
-                    <input name="distanciaOrigenDestinoKilometros" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
+                    <input name="distanciaDestinoFinalkms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
                 </p><br>
 
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Tiempo / Recorrido:</b>
-                    <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
+                    <input name="tiempoRecorridoDestinoFinal" class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
                 </p><br>
 
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Operador:</b>
-                    <input class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
+                    <input name="operador" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
                 </p>
 
                 <p style="display: inline-block;">
                     <b>Unidad:</b>
-                    <input class="form-control" style="width: 230px; display: inline-block;" type="text" id="servicio" value="Servicio trailer directo FTL">
+                    <input name="unidad" class="form-control" style="width: 230px; display: inline-block;" type="text" id="servicio" value="Servicio trailer directo FTL">
                 </p>
 
             </div>
@@ -218,7 +219,6 @@ if (!empty($message)) {
                         <th>Dimensiones</th>
                         <th>Peso</th>
                         <th>Valor factura</th>
-                        <th>Precio total</th>
                     </tr>
                 </table>
                 <button class="btn btn-danger" type="button" onclick="eliminarUltimaFila()">-</button>
@@ -227,7 +227,10 @@ if (!empty($message)) {
                 <div class="row mt-3 mb-3">
                     <div class="col-3 text-center">
                         <p style="display: inline-block;margin-bottom: 5px;">
-                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="moneda" value="USD"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="18.6" oninput="actualizarTotales()">
+                            Total bultos <input class="form-control" type="text" name="totalBultos" id="totalBultos" style="width: 80px; display: inline-block;">
+                        </p>
+                        <p style="display: inline-block;margin-bottom: 5px;">
+                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" name="moneda" id="moneda" value="USD"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="18.6" oninput="actualizarTotales()">
                         </p>
                     </div>
 
@@ -273,24 +276,24 @@ if (!empty($message)) {
                     <tbody>
                         <!-- Filas predeterminadas -->
                         <tr>
-                            <td>FLETE EXTRANJERO</td>
-                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxn-input" value="0" readonly></td>
+                            <td><input type="text" name="incrementable[]" class="form-control" value="Flete extranjero"></td>
+                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
                         </tr>
                         <tr>
-                            <td>MANIOBRAS</td>
-                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxn-input" value="0" readonly></td>
+                            <td><input type="text" name="incrementable[]" class="form-control" value="Maniobras"></td>
+                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
                         </tr>
                         <tr>
-                            <td>ALMACENAJE</td>
-                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxn-input" value="0" readonly></td>
+                            <td><input type="text" name="incrementable[]" class="form-control" value="Almacenaje"></td>
+                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
                         </tr>
                         <tr>
-                            <td>CANCELACION BOND</td>
-                            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxn-input" value="0" readonly></td>
+                            <td><input type="text" name="incrementable[]" class="form-control" value="Cancelacion bond"></td>
+                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -320,9 +323,9 @@ if (!empty($message)) {
                     function addRow() {
                         const newRow = document.createElement("tr");
                         newRow.innerHTML = `
-            <td><input type="text" placeholder="Incrementable"></td>
-            <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
-            <td><input type="text" class="mxn-input" value="0" readonly></td>
+            <td><input type="text"  name="incrementable[]" class="form-control" placeholder="Incrementable"></td>
+            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
         `;
                         tableBody.appendChild(newRow);
                         updateTotal();
@@ -352,59 +355,137 @@ if (!empty($message)) {
 
                         totalUSD.textContent = `$${totalUSDValue.toFixed(2)}`;
                         totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
+
+                    }
+
+
+                    function sincronizarTotalUSD() {
+                        var totalUSD = document.getElementById("totalUSD");
+                        var totalUSDGasto = document.getElementById("totalUSDGasto");
+
+                        // Si el campo de input se ha modificado, actualizamos el span
+                        totalUSDGasto.addEventListener("input", function() {
+                            var valor = parseFloat(totalUSDGasto.value) || 0;
+                            totalUSD.innerText = "$" + valor.toFixed(2); // Formato en dólares
+                        });
+
+                        // Si el span se modifica, actualizamos el input
+                        // Asumiendo que totalUSD puede cambiar por algún otro proceso en tu código
+                        totalUSD.innerText = "$0.00"; // Aquí es el valor inicial
+                        totalUSD.addEventListener("DOMSubtreeModified", function() {
+                            var valor = parseFloat(totalUSD.innerText.replace('$', '').trim()) || 0;
+                            totalUSDGasto.value = valor.toFixed(2); // Actualizamos el campo input
+                        });
+
+                        actualizarSubtotal();
                     }
 
                     addRowButton.addEventListener("click", addRow);
                     removeRowButton.addEventListener("click", removeRow);
 
                     updateTotal();
+                    sincronizarTotalUSD();
+
                 });
             </script>
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
-                <table class="table table-striped mt-3">
-                    <tr>
-                        <td>Flete Terrestre EUA</td>
-                        <td class="text-end"><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>Cruce de fontera / transfer</td>
-                        <td class="text-end"><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>Flete Terrestre MEXICO</td>
-                        <td class="text-end"><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>Seguro Transito de Mercancias = Valor total MN * .0035</td>
-                        <td class="text-end"><input type="text" name="" value=""></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>Subtotal</td>
-                        <td><span id="">$</span></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>I.V.A 16%</td>
-                        <td><span id="">$</span></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>Retención 4%</td>
-                        <td><span id="">$</span></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>Total</td>
-                        <td><span id="">$</span></td>
-                    </tr>
+                <table class="table table-striped mt-3" id="tablaGasto">
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre EUA"></td>
+                            <td>
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked">
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        IVA 16%
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
+                            <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce de fontera / transfer"></td>
+                            <td>
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        IVA 16%
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre México"></td>
+                            <td>
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        IVA 16%
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <input type="text" class="form-control" name="seguro" value="Seguro transito de mercancia">
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="text" class="form-control" name="porcentajeSeguro" value="37%">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaSeguro" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        IVA 16%
+                                    </label>
+                                </div>
+                            </td>
+                            <td colspan="2" class="text-end"><input type="text" class="form-control" name="montoSeguro" oninput="actualizarSubtotal()"></td>
+                        </tr>
+                        <tr class="text-end">
+                            <td colspan="2">Subtotal</td>
+                            <td style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
+                        </tr>
+                        <tr class="text-end">
+                            <td colspan="2">I.V.A 16%</td>
+                            <td><input class="form-control" name="impuestoFlete" type="text"></td>
+                        </tr>
+                        <tr class="text-end">
+                            <td colspan="2">
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaSeguro" id="flexCheckChecked">
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Retención 4%
+                                    </label>
+                                </div>
+                            </td>
+                            <td><input class="form-control" name="retencionFlete" type="text"></td>
+                        </tr>
+                    </tbody>
                 </table>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
+                </div>
 
                 <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
                     <tr class="text-end">
                         <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
-                        <td><b><span id="">$</span></b></td>
+                        <td style="width: 180px;"><input class="form-control bg-warning" name="totalCotizacionNumero" type="text"></td>
                     </tr>
                     <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
-                        <td colspan="2"><b><span id=""></span> DOLARES /100 USD</b></td>
+                        <td colspan="2"><b><input class="form-control bg-warning" name="totalCotizacionTexto" type="text" value="DOLARES /100 USD"></b></td>
                     </tr>
                 </table>
             </div>
@@ -568,42 +649,40 @@ if (!empty($message)) {
             const nuevaFila = tabla.insertRow();
             nuevaFila.innerHTML = `
                 <td>
-                <input style="width: 60px;" class="form-control" type="text" id="cantidadFila" name="cantidadFila" oninput="actualizarTotales()">
-                <input style="width: 60px;" class="form-control" type="text" id="cantidadCode" name="cantidadCode"></td>
+                <input style="width: 60px;" class="form-control" type="text" id="cantidadFila" name="cantidad[]">
+                <p>NMFC</p></td>
                 <td>
-                    <input class="form-control" type="text">
-                    <input class="form-control" type="text">
+                    <input class="form-control" type="text" name="unidadMedida[]">
+                    <input class="form-control" type="text" name="nmfc[]">
                 </td>
                 <td>
-                    <input class="form-control" type="text">
-                    <input class="form-control" type="text">
+                    <input class="form-control" type="text"  name="descripcion[]">
                 </td>
                 <td>
                     <div class="row">
                         <div class="col-6">
-                            <input class="form-control" type="text" placeholder="Largo (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
-                            <input class="form-control" type="text" placeholder="Ancho (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
-                            <input class="form-control" type="text" placeholder="Alto (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control" type="text" name="largoPlg[]" placeholder="Largo (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control" type="text" name="anchoPlg[]" placeholder="Ancho (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control" type="text" name="altoPlg[]" placeholder="Alto (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
                             <p>pulgadas</p>
-                            <input class="form-control" type="text" placeholder="pies cúbicos" readonly>
+                            <input class="form-control" type="text" name="piesCubicos[]" placeholder="pies cúbicos" readonly>
                             <p>ft³</p>
                         </div>
                         <div class="col-6">
-                            <input class="form-control" type="text" id="altoFilaCm" name="altoFilaCm" placeholder="Largo (cms)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <input class="form-control" type="text" id="anchoFilaCm" name="anchoFilaCm" placeholder="Ancho (cms)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <input class="form-control" type="text" id="profundidadFilaCm" name="profundidadFilaCm" placeholder="Alto (cms)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="altoFilaCm" name="largoCm[]" placeholder="Largo (cms)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="anchoFilaCm" name="anchoCm[]" placeholder="Ancho (cms)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="profundidadFilaCm" name="altoCm[]" placeholder="Alto (cms)" oninput="convertToInchesAndCalculateVolume(this)">
                             <p>cms</p>
-                            <input class="form-control" type="text" placeholder="metros cúbicos" readonly>
+                            <input class="form-control" type="text" name="metrosCubicos[]" placeholder="metros cúbicos" readonly>
                             <p>m³</p>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <input class="form-control" type="text" placeholder="lbs" name="pesoFilaMercanciaLbs" id="pesoFilaMercanciaLbs" oninput="convertToKg(this); actualizarTotales();">
-                    <input class="form-control" type="text" placeholder="kgs" name="pesoFilaMercanciaKgs" id="pesoFilaMercanciaKgs" oninput="convertToLbs(this); actualizarTotales();">
+                    <input class="form-control" type="text" placeholder="lbs" name="libras" id="pesoFilaMercanciaLbs" oninput="convertToKg(this); actualizarTotales();">
+                    <input class="form-control" type="text" placeholder="kgs" name="kilogramos" id="pesoFilaMercanciaKgs" oninput="convertToLbs(this); actualizarTotales();">
                 </td>
-                <td><input class="form-control" type="text"></td>
-                <td><input class="form-control" id="valorFilaMercancia" type="text" placeholder="Precio total" oninput="actualizarTotales()"></td>
+                <td><input class="form-control" id="valorFilaMercancia" type="text" name="valorFactura[]" placeholder="Precio total" oninput="actualizarTotales()"></td>
             `;
             actualizarTotales(); // Actualiza los totales al agregar la fila
         }
@@ -711,8 +790,8 @@ if (!empty($message)) {
                 const fila = tabla.rows[i];
 
                 // Obtener peso en libras, kilogramos, y valor
-                const pesoLbsInput = fila.querySelector("input[name='pesoFilaMercanciaLbs']");
-                const pesoKgsInput = fila.querySelector("input[name='pesoFilaMercanciaKgs']");
+                const pesoLbsInput = fila.querySelector("input[name='libras']");
+                const pesoKgsInput = fila.querySelector("input[name='kilogramos']");
                 const valorInput = fila.querySelector("input[id='valorFilaMercancia']");
                 const ft3Input = fila.querySelector("[placeholder='pies cúbicos']");
                 const m3Input = fila.querySelector("[placeholder='metros cúbicos']");
@@ -758,7 +837,7 @@ if (!empty($message)) {
             document.getElementById("m3Total").value = totalM3.toFixed(2);
 
             // Actualizar el valor comercial
-            actualizarValorComercial(); 
+            actualizarValorComercial();
             actualizarValoresUSD_MXN();
         }
 
@@ -787,18 +866,20 @@ if (!empty($message)) {
             // Actualiza los totales
             updateTotalsinc();
         }
-        function actualizarValoresUSD_MXN() {
-        const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-        const dolarInputs = document.querySelectorAll(".usd-input");
 
-        dolarInputs.forEach((input) => {
-        const row = input.closest("tr");
-        const mxnOutput = row.querySelector(".mxn-input");
-        const dolarValue = parseFloat(input.value) || 0;
-        mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-        });
-        updateTotalsinc();
-}
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".usd-input");
+
+            dolarInputs.forEach((input) => {
+                const row = input.closest("tr");
+                const mxnOutput = row.querySelector(".mxn-input");
+                const dolarValue = parseFloat(input.value) || 0;
+                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+            });
+            updateTotalsinc();
+        }
+
         function updateTotalsinc() {
             const dolarInputs = document.querySelectorAll(".usd-input");
             const mxnOutputs = document.querySelectorAll(".mxn-input");
@@ -817,6 +898,75 @@ if (!empty($message)) {
             // Actualiza los totales en la tabla
             document.getElementById("totalUSD").textContent = `$${totalUSD.toFixed(2)}`;
             document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
+        }
+
+        function nuevoGasto() {
+            var tabla = document.getElementById("tablaGasto");
+            var tbody = tabla.querySelector("tbody"); // Asegurarnos de trabajar con el <tbody> de la tabla
+
+            // Buscar la fila "Subtotal" por su texto en la primera celda
+            var filas = tbody.getElementsByTagName("tr");
+            var filaSubtotal = null;
+
+            // Recorremos las filas para encontrar la fila que contiene "Subtotal"
+            for (var i = 0; i < filas.length; i++) {
+                var celdas = filas[i].getElementsByTagName("td");
+                if (celdas.length > 1 && celdas[0].innerText === "Subtotal") {
+                    filaSubtotal = filas[i];
+                    break;
+                }
+            }
+
+            // Si encontramos la fila "Subtotal", insertamos antes de ella
+            if (filaSubtotal) {
+                var nuevaFila = document.createElement("tr");
+
+                nuevaFila.innerHTML = `
+                    <td><input type="text" class="form-control" name="conceptoGasto[]"></td>
+                    <td>
+                        <div class="form-check float-end">
+                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
+                            <label class="form-check-label" for="flexCheckChecked">IVA 16%</label>
+                        </div>
+                    </td>
+                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                `;
+
+                // Insertar la nueva fila antes de la fila "Subtotal" dentro del tbody
+                tbody.insertBefore(nuevaFila, filaSubtotal);
+            }
+        }
+
+        function eliminarFila(boton) {
+            var fila = boton.closest("tr");
+            fila.remove();
+
+            actualizarSubtotal();
+        }
+
+        function actualizarSubtotal() {
+            var sumaGastos = 0;
+
+            // Obtener todos los inputs de montoGasto y sumar sus valores
+            var montoGastoInputs = document.querySelectorAll("[name='montoGasto[]']");
+            montoGastoInputs.forEach(input => {
+                var valor = parseFloat(input.value) || 0;
+                sumaGastos += valor;
+            });
+
+            // Obtener el valor de montoSeguro y sumarlo
+            var montoSeguroInput = document.querySelector("[name='montoSeguro']");
+            if (montoSeguroInput) {
+                var valorSeguro = parseFloat(montoSeguroInput.value) || 0;
+                sumaGastos += valorSeguro;
+            }
+
+            // Actualizar el campo subtotalFlete con la suma
+            var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
+            if (subtotalFleteInput) {
+                subtotalFleteInput.value = sumaGastos.toFixed(2); // Mostrar el subtotal con dos decimales
+            }
         }
     </script>
 </body>
