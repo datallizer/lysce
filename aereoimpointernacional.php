@@ -513,33 +513,59 @@ if (!empty($message)) {
 
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE EN MEXICO</b></p>
-                <table class="table table-striped mt-3">
-                    <tr>
-                        <td>Gastos en Destino / MANIOBRAS DESCONSOLIDACION</td>
-                        <td class="text-end"><input type="number" id="valorGastos" name="" value="" oninput="calcularValores()"></td>
-                    </tr>
-                    <tr>
-                        <td>Flete Terrestre MEXICO Flete Directo</td>
-                        <td class="text-end"><input type="number" id="valorFlete" name="" value="" oninput="calcularValores()"></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>Subtotal</td>
-                        <td><span id="subtotal">$0.00</span></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>I.V.A 16%</td>
-                        <td><span id="iva">$0.00</span></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>Retención 4%</td>
-                        <td><input type="number" id="retencion" oninput="calcularValores()"></td>
-                    </tr>
-                    <tr class="text-end">
-                        <td>Total</td>
-                        <td><span id="total">$0.00</span></td>
-                    </tr>
+                <table class="table table-striped mt-3" id="tablaGasto">
+                <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Gastos en Destino / MANIOBRAS DESCONSOLIDACION"></td>
+                            <td>
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked">
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        IVA 16%
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
+                            <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>              
+                        <tr>
+                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete Terrestre MEXICO Flete Directo"></td>
+                            <td>
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        IVA 16%
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
+                            <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>                  
+                        <tr class="text-end">
+                            <td colspan="2">Subtotal</td>
+                            <td style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
+                        </tr>
+                        <tr class="text-end">
+                            <td colspan="2">I.V.A 16%</td>
+                            <td><input class="form-control" name="impuestoFlete" type="text"></td>
+                        </tr>
+                        <tr class="text-end">
+                            <td colspan="2">
+                                <div class="form-check float-end">
+                                    <input class="form-check-input" type="checkbox" name="ivaSeguro" id="flexCheckChecked">
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Retención 4%
+                                    </label>
+                                </div>
+                            </td>
+                            <td><input class="form-control" name="retencionFlete" type="text"></td>
+                        </tr>
+                    </tbody>
                 </table>
 
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
+                </div>
                 <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
                     <tr class="text-end">
                         <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
@@ -991,6 +1017,75 @@ if (!empty($message)) {
             const retencion = parseFloat(document.getElementById('retencion').value) || 0;
             const total = subtotal + iva - retencion;
             document.getElementById('total').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function nuevoGasto() {
+            var tabla = document.getElementById("tablaGasto");
+            var tbody = tabla.querySelector("tbody"); // Asegurarnos de trabajar con el <tbody> de la tabla
+
+            // Buscar la fila "Subtotal" por su texto en la primera celda
+            var filas = tbody.getElementsByTagName("tr");
+            var filaSubtotal = null;
+
+            // Recorremos las filas para encontrar la fila que contiene "Subtotal"
+            for (var i = 0; i < filas.length; i++) {
+                var celdas = filas[i].getElementsByTagName("td");
+                if (celdas.length > 1 && celdas[0].innerText === "Subtotal") {
+                    filaSubtotal = filas[i];
+                    break;
+                }
+            }
+
+            // Si encontramos la fila "Subtotal", insertamos antes de ella
+            if (filaSubtotal) {
+                var nuevaFila = document.createElement("tr");
+
+                nuevaFila.innerHTML = `
+                    <td><input type="text" class="form-control" name="conceptoGasto[]"></td>
+                    <td>
+                        <div class="form-check float-end">
+                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
+                            <label class="form-check-label" for="flexCheckChecked">IVA 16%</label>
+                        </div>
+                    </td>
+                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                `;
+
+                // Insertar la nueva fila antes de la fila "Subtotal" dentro del tbody
+                tbody.insertBefore(nuevaFila, filaSubtotal);
+            }
+        }
+
+        function eliminarFila(boton) {
+            var fila = boton.closest("tr");
+            fila.remove();
+
+            actualizarSubtotal();
+        }
+
+        function actualizarSubtotal() {
+            var sumaGastos = 0;
+
+            // Obtener todos los inputs de montoGasto y sumar sus valores
+            var montoGastoInputs = document.querySelectorAll("[name='montoGasto[]']");
+            montoGastoInputs.forEach(input => {
+                var valor = parseFloat(input.value) || 0;
+                sumaGastos += valor;
+            });
+
+            // Obtener el valor de montoSeguro y sumarlo
+            var montoSeguroInput = document.querySelector("[name='montoSeguro']");
+            if (montoSeguroInput) {
+                var valorSeguro = parseFloat(montoSeguroInput.value) || 0;
+                sumaGastos += valorSeguro;
+            }
+
+            // Actualizar el campo subtotalFlete con la suma
+            var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
+            if (subtotalFleteInput) {
+                subtotalFleteInput.value = sumaGastos.toFixed(2); // Mostrar el subtotal con dos decimales
+            }
         }
     </script>
 </body>
