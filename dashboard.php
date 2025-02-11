@@ -1,6 +1,6 @@
 <?php
 session_start();
-//require 'dbcon.php';
+require 'dbcon.php';
 $message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
 if (!empty($message)) {
