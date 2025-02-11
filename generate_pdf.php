@@ -27,7 +27,7 @@ if (isset($_GET['id'])) {
     c.cliente AS cliente_nombre,
     c.calle AS cliente_calle,
     c.colonia AS cliente_colonia,
-    c.municipio AS cliente_municipio,
+    c.city AS cliente_municipio,
     c.telefono AS cliente_telefono,
     c.contacto AS cliente_contacto,
     c.rfc AS cliente_rfc,

@@ -23,27 +23,27 @@ if (!empty($message)) {
     unset($_SESSION['message']); // Limpiar el mensaje de la sesión
 }
 
-// //Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
-// if (isset($_SESSION['username'])) {
-//     $username = $_SESSION['username'];
+//Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
 
-//     // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
-//     $query = "SELECT * FROM user WHERE username = '$username'";
-//     $result = mysqli_query($con, $query);
+    // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
+    $query = "SELECT * FROM user WHERE username = '$username'";
+    $result = mysqli_query($con, $query);
 
-//     // Si se encuentra un registro coincidente, el usuario está autorizado
-//     if (mysqli_num_rows($result) > 0) {
-//         // El usuario está autorizado, se puede acceder al contenido
-//     } else {
-//         // Redirigir al usuario a una página de inicio de sesión
-//         header('Location: login.php');
-//         exit(); // Finalizar el script después de la redirección
-//     }
-// } else {
-//     // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
-//     header('Location: login.php');
-//     exit(); // Finalizar el script después de la redirección
-// }
+    // Si se encuentra un registro coincidente, el usuario está autorizado
+    if (mysqli_num_rows($result) > 0) {
+        // El usuario está autorizado, se puede acceder al contenido
+    } else {
+        // Redirigir al usuario a una página de inicio de sesión
+        header('Location: login.php');
+        exit(); // Finalizar el script después de la redirección
+    }
+} else {
+    // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
+    header('Location: login.php');
+    exit(); // Finalizar el script después de la redirección
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,9 +69,9 @@ if (!empty($message)) {
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">
-                                    <button type="button" class="btn btn-primary btn-sm float-end btn-sm m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <a href="nuevocliente.php" class="btn btn-primary btn-sm float-end btn-sm m-1">
                                         Nuevo cliente
-                                    </button>
+                                    </a>
                                     <a href="proveedores.php" class="btn btn-primary btn-sm float-end btn-sm m-1">
                                         Proveedores
                                     </a>
@@ -84,117 +84,80 @@ if (!empty($message)) {
                                         <tr>
                                             <th>#</th>
                                             <th>Cliente</th>
-                                            <th>Calle</th>
-                                            <th>Colonia</th>
-                                            <th>Municipio</th>
-                                            <th>Teléfono</th>
-                                            <th>Contacto</th>
+                                            <th>Direccion</th>
+                                            <th>Telefono</th>
+                                            <th>Correo</th>
                                             <th>RFC</th>
+                                            <th>Proveedor asociado</th>
                                             <th>Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $query = "SELECT * FROM clientes ORDER BY id DESC";
+                                    <?php
+                                        $query = "SELECT 
+            c.id AS idCliente, 
+            c.cliente, 
+            c.calle, 
+            c.colonia, 
+            c.city, 
+            c.telefono, 
+            c.correo, 
+            c.rfc, 
+            GROUP_CONCAT(p.proveedor SEPARATOR ', ') AS proveedores_asociados
+          FROM clientes c
+          LEFT JOIN proveedorcliente pc ON c.id = pc.idCliente
+          LEFT JOIN proveedores p ON pc.idProveedor = p.id
+          GROUP BY c.id
+          ORDER BY c.id DESC";
+
                                         $query_run = mysqli_query($con, $query);
+
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
                                         ?>
                                                 <tr>
                                                     <td>
-                                                        <p><?= $registro['id']; ?></p>
+                                                        <p><?= $registro['idCliente']; ?></p>
                                                     </td>
                                                     <td>
                                                         <p><?= $registro['cliente']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['calle']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['colonia']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['municipio']; ?></p>
+                                                        <p><?= $registro['calle']; ?>, <?= $registro['colonia']; ?>, <?= $registro['city']; ?></p>
                                                     </td>
                                                     <td>
                                                         <p><?= $registro['telefono']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['contacto']; ?></p>
+                                                        <p><?= $registro['correo']; ?></p>
                                                     </td>
                                                     <td>
                                                         <p><?= $registro['rfc']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <a href="editarcliente.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                        <p><?= !empty($registro['proveedores_asociados']) ? $registro['proveedores_asociados'] : 'Sin proveedores asociados'; ?></p>
+                                                    </td>
+                                                    <td>
+                                                        <a href="editarcliente.php?id=<?= $registro['idCliente']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
                                                         <form action="codecotizaciones.php" method="POST" class="d-inline">
-                                                            <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                            <button type="submit" name="delete" value="<?= $registro['idCliente']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
-
                                                     </td>
                                                 </tr>
                                         <?php
                                             }
                                         } else {
-                                            echo "<td colspan='9'><p> No se encontro ningun registro </p></td>";
+                                            echo "<td colspan='9'><p>No se encontró ningún registro</p></td>";
                                         }
                                         ?>
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">NUEVO CLIENTE</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="clienteForm" action="codeclientes.php" method="POST" class="row">
-
-                        <div class="col-12 col-md-12 form-floating mb-3">
-                            <input type="text" class="form-control" name="cliente" placeholder="Cliete" autocomplete="off" required>
-                            <label for="cliente">Cliente</label>
-                        </div>
-                        <div class="col-12 col-md-6 form-floating mb-3">
-                            <input type="text" class="form-control" name="calle" placeholder="Calle" autocomplete="off" required>
-                            <label for="calle">Calle y número</label>
-                        </div>
-                        <div class="col-12 col-md-6 form-floating mb-3">
-                            <input type="text" class="form-control" name="colonia" placeholder="Colonia" autocomplete="off" required>
-                            <label for="Colonia">Colonia</label>
-                        </div>
-                        <div class="col-12 col-md-7 form-floating mb-3">
-                            <input type="text" class="form-control" name="municipio" placeholder="Municipio" autocomplete="off" required>
-                            <label for="municipio">Municipio</label>
-                        </div>
-                        <div class="col-12 col-md-5 form-floating mb-3">
-                            <input type="text" class="form-control" name="telefono" placeholder="Telefono" autocomplete="off" required>
-                            <label for="telefono">Teléfono</label>
-                        </div>
-                        <div class="col-12 col-md-12 form-floating mb-3">
-                            <input type="text" class="form-control" name="contacto" placeholder="Contacto" autocomplete="off" required>
-                            <label for="contacto">Contacto</label>
-                        </div>
-                        <div class="col-12 col-md-12 form-floating mb-3">
-                            <input type="text" class="form-control" name="rfc" placeholder="RFC" autocomplete="off" required>
-                            <label for="rfc">RFC</label>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary" name="save">Guardar</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
