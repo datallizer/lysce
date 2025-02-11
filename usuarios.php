@@ -23,27 +23,27 @@ if (!empty($message)) {
     unset($_SESSION['message']); // Limpiar el mensaje de la sesión
 }
 
-// //Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
-// if (isset($_SESSION['username'])) {
-//     $username = $_SESSION['username'];
+//Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
 
-//     // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
-//     $query = "SELECT * FROM user WHERE username = '$username'";
-//     $result = mysqli_query($con, $query);
+    // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
+    $query = "SELECT * FROM usuarios WHERE email = '$email'";
+    $result = mysqli_query($con, $query);
 
-//     // Si se encuentra un registro coincidente, el usuario está autorizado
-//     if (mysqli_num_rows($result) > 0) {
-//         // El usuario está autorizado, se puede acceder al contenido
-//     } else {
-//         // Redirigir al usuario a una página de inicio de sesión
-//         header('Location: login.php');
-//         exit(); // Finalizar el script después de la redirección
-//     }
-// } else {
-//     // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
-//     header('Location: login.php');
-//     exit(); // Finalizar el script después de la redirección
-// }
+    // Si se encuentra un registro coincidente, el usuario está autorizado
+    if (mysqli_num_rows($result) > 0) {
+        // El usuario está autorizado, se puede acceder al contenido
+    } else {
+        // Redirigir al usuario a una página de inicio de sesión
+        header('Location: login.php');
+        exit(); // Finalizar el script después de la redirección
+    }
+} else {
+    // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
+    header('Location: login.php');
+    exit(); // Finalizar el script después de la redirección
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,7 +65,7 @@ if (!empty($message)) {
         <div id="layoutSidenav_content">
             <div class="container-fluid">
                 <div class="row mt-4 mb-5">
-                <div class="col-md-12">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">USUARIOS

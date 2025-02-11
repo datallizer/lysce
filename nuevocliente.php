@@ -24,11 +24,11 @@ if (!empty($message)) {
 }
 
 //Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
 
     // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
-    $query = "SELECT * FROM user WHERE username = '$username'";
+    $query = "SELECT * FROM usuarios WHERE email = '$email'";
     $result = mysqli_query($con, $query);
 
     // Si se encuentra un registro coincidente, el usuario está autorizado
