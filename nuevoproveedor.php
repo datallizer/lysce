@@ -213,15 +213,11 @@ if (isset($_SESSION['email'])) {
                                         <input type="text" class="form-control" name="tax" placeholder="Tax" autocomplete="off">
                                         <label for="tax">RFC / Tax ID</label>
                                     </div>
-                                    <div class="col-12 col-md-4 form-floating">
-                                        <input type="text" class="form-control" name="millas" placeholder="Millas" autocomplete="off">
-                                        <label for="millas">Millas</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 form-floating">
+                                    <div class="col-12 col-md-5 form-floating">
                                         <input type="text" class="form-control" name="web" placeholder="Web" autocomplete="off">
                                         <label for="web">Sitio / Web site</label>
                                     </div>
-                                    <div class="col-12 col-md-4 form-floating">
+                                    <div class="col-12 col-md-7 form-floating">
                                         <input type="text" class="form-control" name="contact" placeholder="Contact" autocomplete="off" required>
                                         <label for="contact">Representante / Agent</label>
                                     </div>

@@ -219,9 +219,9 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= !empty($registro['clientes_asociados']) ? $registro['clientes_asociados'] : 'Sin clientes asociados'; ?></p>
                                                     </td>
                                                     <td>
-                                                        <a href="editarcliente.php?id=<?= $registro['idProveedor']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                        <a href="editarproveedor.php?id=<?= $registro['idProveedor']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
-                                                        <form action="codecotizaciones.php" method="POST" class="d-inline">
+                                                        <form action="codeproveedores.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['idProveedor']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
                                                     </td>

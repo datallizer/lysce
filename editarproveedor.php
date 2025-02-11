@@ -70,8 +70,8 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>EDITAR CLIENTE
-                                    <a href="clientes.php" class="btn btn-danger btn-sm float-end">Regresar</a>
+                                <h4>EDITAR PROVEEDOR
+                                    <a href="proveedores.php" class="btn btn-danger btn-sm float-end">Regresar</a>
                                 </h4>
                             </div>
                             <div class="card-body">
@@ -80,7 +80,7 @@ if (isset($_SESSION['email'])) {
 
                                 if (isset($_GET['id'])) {
                                     $registro_id = mysqli_real_escape_string($con, $_GET['id']);
-                                    $query = "SELECT * FROM clientes WHERE id='$registro_id' ";
+                                    $query = "SELECT * FROM proveedores WHERE id='$registro_id' ";
                                     $query_run = mysqli_query($con, $query);
 
                                     if (mysqli_num_rows($query_run) > 0) {
@@ -89,14 +89,14 @@ if (isset($_SESSION['email'])) {
 
                                 ?>
 
-                                        <form action="codeclientes.php" method="POST">
+                                        <form action="codeproveedores.php" method="POST">
                                             <input type="hidden" name="id" value="<?= $registro['id']; ?>">
 
                                             <div class="row mt-1">
 
                                                 <div class="form-floating col-9">
-                                                    <input type="text" class="form-control" name="cliente" id="cliente" value="<?= $registro['cliente']; ?>">
-                                                    <label for="cliente">Cliente / Client name</label>
+                                                    <input type="text" class="form-control" name="proveedor" id="proveedor" value="<?= $registro['proveedor']; ?>">
+                                                    <label for="proveedor">Proveedor / Supplier name</label>
                                                 </div>
 
                                                 <div class="form-floating col-12 col-md-3">
@@ -109,63 +109,68 @@ if (isset($_SESSION['email'])) {
                                                 </div>
 
                                                 <div class="form-floating col-12 col-md-7 mt-3">
-                                                    <input type="text" class="form-control" name="calle" id="calle" value="<?= $registro['calle']; ?>">
-                                                    <label for="calle">Calle / Street</label>
+                                                    <input type="text" class="form-control" name="domicilio" id="domicilio" value="<?= $registro['domicilio']; ?>">
+                                                    <label for="domicilio">Calle / Street</label>
                                                 </div>
 
                                                 <div class="form-floating col-12 col-md-5 mt-3">
-                                                    <input type="text" class="form-control" name="numexterior" id="numexterior" value="<?= $registro['numexterior']; ?>">
-                                                    <label for="numexterior">Número exterior / Outside number</label>
+                                                    <input type="text" class="form-control" name="exterior" id="exterior" value="<?= $registro['exterior']; ?>">
+                                                    <label for="exterior">Número exterior / Outside number</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="numinterior" id="numinterior" value="<?= $registro['numinterior']; ?>">
-                                                    <label for="numinterior">Número interior / Inside number</label>
+                                                    <input type="text" class="form-control" name="interior" id="interior" value="<?= $registro['interior']; ?>">
+                                                    <label for="interior">Número interior / Inside number</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="colonia" id="colonia" value="<?= $registro['colonia']; ?>">
-                                                    <label for="colonia">Colonia / Neighborhood</label>
+                                                    <input type="text" class="form-control" name="fraccionamiento" id="fraccionamiento" value="<?= $registro['fraccionamiento']; ?>">
+                                                    <label for="fraccionamiento">Colonia / Neighborhood</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="city" id="city" value="<?= $registro['city']; ?>">
-                                                    <label for="city">Ciudad / City</label>
+                                                    <input type="text" class="form-control" name="ciudad" id="ciudad" value="<?= $registro['ciudad']; ?>">
+                                                    <label for="ciudad">Ciudad / City</label>
                                                 </div>
 
                                                 <div class="form-floating col-6 mt-3">
-                                                    <input type="text" class="form-control" name="state" id="state" value="<?= $registro['state']; ?>">
-                                                    <label for="state">Estado / State</label>
+                                                    <input type="text" class="form-control" name="estado" id="estado" value="<?= $registro['estado']; ?>">
+                                                    <label for="estado">Estado / State</label>
                                                 </div>
 
                                                 <div class="form-floating col-3 mt-3">
-                                                    <input type="text" class="form-control" name="pais" id="pais" value="<?= $registro['pais']; ?>">
-                                                    <label for="pais">País / Country</label>
+                                                    <input type="text" class="form-control" name="country" id="country" value="<?= $registro['country']; ?>">
+                                                    <label for="country">País / Country</label>
                                                 </div>
 
                                                 <div class="form-floating col-3 mt-3">
-                                                    <input type="text" class="form-control" name="cpostal" id="cpostal" value="<?= $registro['cpostal']; ?>">
-                                                    <label for="cpostal">Código postal / ZIP code</label>
+                                                    <input type="text" class="form-control" name="postal" id="postal" value="<?= $registro['postal']; ?>">
+                                                    <label for="postal">Código postal / ZIP code</label>
                                                 </div>
 
                                                 <div class="form-floating col-3 mt-3">
-                                                    <input type="text" class="form-control" name="telefono" id="telefono" value="<?= $registro['telefono']; ?>">
-                                                    <label for="telefono">Teléfono / Phone</label>
+                                                    <input type="text" class="form-control" name="phone" id="phone" value="<?= $registro['phone']; ?>">
+                                                    <label for="phone">Teléfono / Phone</label>
                                                 </div>
 
                                                 <div class="form-floating col-5 mt-3">
-                                                    <input type="text" class="form-control" name="contacto" id="contacto" value="<?= $registro['contacto']; ?>">
-                                                    <label for="contacto">Representante / Agent</label>
+                                                    <input type="text" class="form-control" name="contact" id="contact" value="<?= $registro['contact']; ?>">
+                                                    <label for="contact">Representante / Agent</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="rfc" id="rfc" value="<?= $registro['rfc']; ?>">
-                                                    <label for="rfc">RFC / Tax ID</label>
+                                                    <input type="text" class="form-control" name="tax" id="tax" value="<?= $registro['tax']; ?>">
+                                                    <label for="tax">RFC / Tax ID</label>
                                                 </div>
 
-                                                <div class="form-floating col-12 mt-3">
-                                                    <input type="text" class="form-control" name="correo" id="correo" value="<?= $registro['correo']; ?>">
-                                                    <label for="correo">Correo / Email</label>
+                                                <div class="form-floating col-7 mt-3">
+                                                    <input type="text" class="form-control" name="email" id="email" value="<?= $registro['email']; ?>">
+                                                    <label for="email">Correo / Email</label>
+                                                </div>
+
+                                                <div class="form-floating col-5 mt-3">
+                                                    <input type="text" class="form-control" name="web" id="web" value="<?= $registro['web']; ?>">
+                                                    <label for="web">Sitio web / Web site</label>
                                                 </div>
 
                                                 <div class="col-12 text-center mt-3">

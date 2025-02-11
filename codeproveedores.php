@@ -22,6 +22,54 @@ if (isset($_POST['asociar'])) {
     }
 }
 
+if (isset($_POST['delete'])) {
+    $registro_id = mysqli_real_escape_string($con, $_POST['delete']);
+
+    $query = "DELETE FROM proveedores WHERE id='$registro_id' ";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        $_SESSION['message'] = "Eliminado exitosamente";
+        header("Location: proveedores.php");
+        exit(0);
+    } else {
+        $_SESSION['message'] = "Error al eliminar, contacte a soporte";
+        header("Location: proveedores.php");
+        exit(0);
+    }
+}
+
+if (isset($_POST['update'])) {
+    $id = mysqli_real_escape_string($con, $_POST['id']);
+    $proveedor = mysqli_real_escape_string($con, $_POST['proveedor']);
+    $domicilio = mysqli_real_escape_string($con, $_POST['domicilio']);
+    $interior = mysqli_real_escape_string($con, $_POST['interior']);
+    $exterior = mysqli_real_escape_string($con, $_POST['exterior']);
+    $estado = mysqli_real_escape_string($con, $_POST['estado']);
+    $fraccionamiento = mysqli_real_escape_string($con, $_POST['fraccionamiento']);
+    $ciudad = mysqli_real_escape_string($con, $_POST['ciudad']);
+    $phone = mysqli_real_escape_string($con, $_POST['phone']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $postal = mysqli_real_escape_string($con, $_POST['postal']);
+    $tax = mysqli_real_escape_string($con, $_POST['tax']);
+    $country = mysqli_real_escape_string($con, $_POST['country']);
+    $contact = mysqli_real_escape_string($con, $_POST['contact']);
+    $web = mysqli_real_escape_string($con, $_POST['web']);
+    $estatus = mysqli_real_escape_string($con, $_POST['estatus']);
+    
+    $query = "UPDATE proveedores SET proveedor = '$proveedor', domicilio = '$domicilio', interior = '$interior', exterior = '$exterior', postal = '$postal', estado = '$estado', fraccionamiento = '$fraccionamiento', ciudad = '$ciudad', phone = '$phone', email = '$email', tax = '$tax', country = '$country', contact = '$contact', web = '$web', estatus = '$estatus' WHERE id = '$id'";
+    $query_run = mysqli_query($con, $query);
+    
+    if ($query_run) {
+        $_SESSION['message'] = "Cliente actualizado exitosamente";
+        header("Location: proveedores.php");
+        exit(0);
+    } else {
+        $_SESSION['message'] = "Error al actualizar el cliente, contacte a soporte";
+        header("Location: proveedores.php");
+        exit(0);
+    }
+}
 
 
 if (isset($_POST['save'])) {
@@ -37,15 +85,14 @@ if (isset($_POST['save'])) {
     $email = mysqli_real_escape_string($con, $_POST['email']);
     $postal = mysqli_real_escape_string($con, $_POST['postal']);
     $tax = mysqli_real_escape_string($con, $_POST['tax']);
-    $millas = mysqli_real_escape_string($con, $_POST['millas']);
     $web = mysqli_real_escape_string($con, $_POST['web']);
     $contact = mysqli_real_escape_string($con, $_POST['contact']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $estatus = '1';
 
     // Insertar el proveedor en la tabla proveedores
-    $query = "INSERT INTO proveedores (proveedor, domicilio, interior, exterior, postal, estado, fraccionamiento, ciudad, country, phone, email, tax, millas, web, contact, estatus) 
-              VALUES ('$proveedor', '$domicilio', '$interior', '$exterior', '$postal', '$estado', '$fraccionamiento', '$ciudad', '$country', '$phone', '$email', '$tax', '$millas', '$web', '$contact', '$estatus')";
+    $query = "INSERT INTO proveedores (proveedor, domicilio, interior, exterior, postal, estado, fraccionamiento, ciudad, country, phone, email, tax, web, contact, estatus) 
+              VALUES ('$proveedor', '$domicilio', '$interior', '$exterior', '$postal', '$estado', '$fraccionamiento', '$ciudad', '$country', '$phone', '$email', '$tax', '$web', '$contact', '$estatus')";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {

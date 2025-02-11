@@ -72,9 +72,6 @@ if (isset($_SESSION['email'])) {
                                     <a href="nuevocliente.php" class="btn btn-primary btn-sm float-end btn-sm m-1">
                                         Nuevo cliente
                                     </a>
-                                    <a href="proveedores.php" class="btn btn-primary btn-sm float-end btn-sm m-1">
-                                        Proveedores
-                                    </a>
                                     CLIENTES
                                 </h4>
                             </div>
@@ -140,7 +137,7 @@ if (isset($_SESSION['email'])) {
                                                     <td>
                                                         <a href="editarcliente.php?id=<?= $registro['idCliente']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
-                                                        <form action="codecotizaciones.php" method="POST" class="d-inline">
+                                                        <form action="codeclientes.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['idCliente']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
                                                     </td>
