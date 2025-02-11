@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); 
 require 'dbcon.php';
 $message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
@@ -495,6 +495,56 @@ if (isset($_SESSION['email'])) {
                         </tr>
                     </tbody>
                 </table>
+
+                <script>
+                  function actualizarSubtotal() {
+    let subtotal = 0;
+    let impuesto = 0;
+    let retencion = 0;
+
+    // Obtener todas las filas de la tabla
+    const filas = document.querySelectorAll("#tablaGasto tbody tr");
+
+    filas.forEach((fila) => {
+        const inputMonto = fila.querySelector('input[name="montoGasto[]"], input[name="montoSeguro"]');
+        const checkboxIVA = fila.querySelector('input[name="ivaGasto[]"], input[name="ivaSeguro"]');
+
+        if (inputMonto) {
+            let monto = parseFloat(inputMonto.value) || 0;
+            subtotal += monto; // El monto siempre se suma al subtotal
+
+            // Si el checkbox de IVA está marcado, se suma el 16% de ese monto
+            if (checkboxIVA && checkboxIVA.checked) {
+                impuesto += monto * 0.16;
+            }
+        }
+    });
+
+    // Obtener el checkbox de retención del 4%
+    const retencionCheckbox = document.querySelector('input[name="ivaSeguro"]:not([type="hidden"])');
+    if (retencionCheckbox && retencionCheckbox.checked) {
+        retencion = subtotal * 0.04;
+    }
+
+    // Asignar los valores calculados a los inputs correspondientes
+    document.querySelector('input[name="subtotalFlete"]').value = subtotal.toFixed(2);
+    document.querySelector('input[name="impuestoFlete"]').value = impuesto.toFixed(2);
+    document.querySelector('input[name="retencionFlete"]').value = retencion.toFixed(2);
+}
+
+// Event listeners para actualizar los valores en tiempo real
+document.querySelectorAll('input[name="montoGasto[]"], input[name="montoSeguro"]').forEach(input => {
+    input.addEventListener('input', actualizarSubtotal);
+});
+
+document.querySelectorAll('input[name="ivaGasto[]"], input[name="ivaSeguro"]').forEach(checkbox => {
+    checkbox.addEventListener('change', actualizarSubtotal);
+});
+
+// Ejecutar una vez al inicio para calcular los valores iniciales
+actualizarSubtotal();
+
+                </script>
 
                 <div class="text-center">
                     <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
