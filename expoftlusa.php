@@ -410,141 +410,118 @@ if (isset($_SESSION['email'])) {
                 });
             </script>
 
-            <div class="col-12 mt-5">
-                <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
-                <table class="table table-striped mt-3" id="tablaGasto">
-                    <tbody>
-                        <tr>
-                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre EUA"></td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked">
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        IVA 16%
-                                    </label>
-                                </div>
-                            </td>
-                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
-                            <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce de fontera / transfer"></td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        IVA 16%
-                                    </label>
-                                </div>
-                            </td>
-                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre México"></td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        IVA 16%
-                                    </label>
-                                </div>
-                            </td>
-                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" name="seguro" value="Seguro transito de mercancia">
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="text" class="form-control" name="porcentajeSeguro" value="37%">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaSeguro" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        IVA 16%
-                                    </label>
-                                </div>
-                            </td>
-                            <td colspan="2" class="text-end"><input type="text" class="form-control" name="montoSeguro" oninput="actualizarSubtotal()"></td>
-                        </tr>
-                        <tr class="text-end">
-                            <td colspan="2">Subtotal</td>
-                            <td style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
-                        </tr>
-                        <tr class="text-end">
-                            <td colspan="2">I.V.A 16%</td>
-                            <td><input class="form-control" name="impuestoFlete" type="text"></td>
-                        </tr>
-                        <tr class="text-end">
-                            <td colspan="2">
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaSeguro" id="flexCheckChecked">
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Retención 4%
-                                    </label>
-                                </div>
-                            </td>
-                            <td><input class="form-control" name="retencionFlete" type="text"></td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="col-12 mt-5">
+    <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
+    <table class="table table-striped mt-3" id="tablaGasto">
+        <tbody>
+            <tr>
+                <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre EUA"></td>
+                <td>
+                    <div class="form-check float-end">
+                        <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck1">
+                        <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
+                    </div>
+                </td>
+                <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce de frontera / transfer"></td>
+                <td>
+                    <div class="form-check float-end">
+                        <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck2" checked>
+                        <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
+                    </div>
+                </td>
+                <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre México"></td>
+                <td>
+                    <div class="form-check float-end">
+                        <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck3" checked>
+                        <label class="form-check-label" for="flexCheck3"> IVA 16% </label>
+                    </div>
+                </td>
+                <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-9">
+                            <input type="text" class="form-control" name="seguro" value="Seguro tránsito de mercancía">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" name="porcentajeSeguro" value="37%">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check float-end">
+                        <input class="form-check-input" type="checkbox" name="ivaSeguro" id="flexCheck4" checked>
+                        <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
+                    </div>
+                </td>
+                <td colspan="2" class="text-end"><input type="text" class="form-control" name="montoSeguro" oninput="actualizarSubtotal()"></td>
+            </tr>
+            <tr class="text-end">
+                <td colspan="2">Subtotal</td>
+                <td style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
+            </tr>
+            <tr class="text-end">
+                <td colspan="2">I.V.A 16%</td>
+                <td><input class="form-control" name="impuestoFlete" type="text"></td>
+            </tr>
+            <tr class="text-end">
+                <td colspan="2">
+                    <div class="form-check float-end">
+                        <input class="form-check-input" type="checkbox" name="ivaSeguro" id="retencionCheck">
+                        <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
+                    </div>
+                </td>
+                <td><input class="form-control" name="retencionFlete" type="text" value="0.00"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-                <script>
-                  function actualizarSubtotal() {
+<script>
+function actualizarSubtotal() {
     let subtotal = 0;
-    let impuesto = 0;
+    let iva = 0;
     let retencion = 0;
 
-    // Obtener todas las filas de la tabla
-    const filas = document.querySelectorAll("#tablaGasto tbody tr");
+    document.querySelectorAll("#tablaGasto tbody tr").forEach((fila) => {
+        let montoInput = fila.querySelector('input[name="montoGasto[]"]');
+        let checkboxIVA = fila.querySelector('input[name="ivaGasto[]"]');
 
-    filas.forEach((fila) => {
-        const inputMonto = fila.querySelector('input[name="montoGasto[]"], input[name="montoSeguro"]');
-        const checkboxIVA = fila.querySelector('input[name="ivaGasto[]"], input[name="ivaSeguro"]');
+        if (montoInput) {
+            let monto = parseFloat(montoInput.value) || 0;
+            subtotal += monto;
 
-        if (inputMonto) {
-            let monto = parseFloat(inputMonto.value) || 0;
-            subtotal += monto; // El monto siempre se suma al subtotal
-
-            // Si el checkbox de IVA está marcado, se suma el 16% de ese monto
             if (checkboxIVA && checkboxIVA.checked) {
-                impuesto += monto * 0.16;
+                iva += monto * 0.16;
             }
         }
     });
 
-    // Obtener el checkbox de retención del 4%
-    const retencionCheckbox = document.querySelector('input[name="ivaSeguro"]:not([type="hidden"])');
-    if (retencionCheckbox && retencionCheckbox.checked) {
+    let checkboxRetencion = document.querySelector('#retencionCheck');
+    if (checkboxRetencion && checkboxRetencion.checked) {
         retencion = subtotal * 0.04;
+    } else {
+        retencion = 0;
     }
 
-    // Asignar los valores calculados a los inputs correspondientes
     document.querySelector('input[name="subtotalFlete"]').value = subtotal.toFixed(2);
-    document.querySelector('input[name="impuestoFlete"]').value = impuesto.toFixed(2);
+    document.querySelector('input[name="impuestoFlete"]').value = iva.toFixed(2);
     document.querySelector('input[name="retencionFlete"]').value = retencion.toFixed(2);
 }
 
-// Event listeners para actualizar los valores en tiempo real
-document.querySelectorAll('input[name="montoGasto[]"], input[name="montoSeguro"]').forEach(input => {
-    input.addEventListener('input', actualizarSubtotal);
-});
-
-document.querySelectorAll('input[name="ivaGasto[]"], input[name="ivaSeguro"]').forEach(checkbox => {
-    checkbox.addEventListener('change', actualizarSubtotal);
-});
-
-// Ejecutar una vez al inicio para calcular los valores iniciales
-actualizarSubtotal();
-
-                </script>
+document.addEventListener("input", actualizarSubtotal);
+document.addEventListener("change", actualizarSubtotal);
+</script>
 
                 <div class="text-center">
                     <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
