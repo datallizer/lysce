@@ -59,6 +59,87 @@ if (isset($_SESSION['email'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/logo.png" />
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBynovZcvSlXHZvqYnF3NXE6TWR3reHUFc&libraries=places&callback=initMap" async defer loading="async"></script>
+    <script>
+        let autocompleteInstances = {}; // Objeto para guardar las instancias de Autocomplete
+
+        function initMap() {
+            const addressInputs = document.querySelectorAll('input[name="domicilio"]');
+            const postalCodeInput = document.getElementById('postal');
+
+            addressInputs.forEach(input => {
+                if (!autocompleteInstances[input.name]) { // Verifica si ya existe una instancia para este input
+                    autocompleteInstances[input.name] = new google.maps.places.Autocomplete(input, {
+                        fields: ["place_id", "address_components"],
+                        componentRestrictions: {
+                            country: ["mx", "us", "ca"]
+                        }
+                    });
+
+                    console.log(autocompleteInstances);
+                    autocompleteInstances[input.name].addListener("place_changed", () => {
+                        const place = autocompleteInstances[input.name].getPlace();
+                        handlePlaceChange(place);
+                        console.log(place)
+                    });
+                }
+            });
+        }
+
+        function handlePlaceChange(place) {
+            const addressInputs = document.querySelectorAll('input[name="domicilio"]');
+            const postalCodeInput = document.getElementById('postal');
+
+            if (!place.address_components) {
+                console.log("No se encontró información para este lugar.");
+                addressInputs.forEach(input => input.value = '');
+                postalCodeInput.value = '';
+                return;
+            }
+
+            place.address_components.forEach(component => {
+
+                console.log(place);
+                const type = component.types[0];
+                const longName = component.long_name;
+
+                switch (type) {
+                    case "street_number":
+                        document.querySelector('input[name="exterior"]').value = longName;
+                        break;
+                    case "route":
+                        document.querySelector('input[name="domicilio"]').value = longName;
+                        break;
+                    case "sublocality_level_1":
+                        document.querySelector('input[name="fraccionamiento"]').value = longName;
+                        break;
+                    case "locality":
+                        document.querySelector('input[name="ciudad"]').value = longName;
+                        break;
+                    case "administrative_area_level_1":
+                        document.querySelector('input[name="estado"]').value = longName;
+                        break;
+                    case "country":
+                        document.querySelector('input[name="country"]').value = longName;
+                        break;
+                    case "postal_code":
+                        postalCodeInput.value = longName;
+                        break;
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initMap(); // Inicializa el mapa y los autocompletes UNA VEZ
+
+            const modal = document.getElementById('exampleModal');
+            if (modal) {
+                modal.addEventListener('shown.bs.modal', () => {
+                    // NO necesitas volver a inicializar aquí.  El autocompletado ya está listo.
+                });
+            }
+        });
+    </script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -95,7 +176,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="row mt-1">
 
                                                 <div class="form-floating col-9">
-                                                    <input type="text" class="form-control" name="proveedor" id="proveedor" value="<?= $registro['proveedor']; ?>">
+                                                    <input type="text" class="form-control" name="proveedor" id="proveedor" value="<?= $registro['proveedor']; ?>" autocomplete="off">
                                                     <label for="proveedor">Proveedor / Supplier name</label>
                                                 </div>
 
@@ -109,67 +190,67 @@ if (isset($_SESSION['email'])) {
                                                 </div>
 
                                                 <div class="form-floating col-12 col-md-7 mt-3">
-                                                    <input type="text" class="form-control" name="domicilio" id="domicilio" value="<?= $registro['domicilio']; ?>">
+                                                    <input type="text" class="form-control" name="domicilio" id="domicilio" value="<?= $registro['domicilio']; ?>" autocomplete="off">
                                                     <label for="domicilio">Calle / Street</label>
                                                 </div>
 
                                                 <div class="form-floating col-12 col-md-5 mt-3">
-                                                    <input type="text" class="form-control" name="exterior" id="exterior" value="<?= $registro['exterior']; ?>">
+                                                    <input type="text" class="form-control" name="exterior" id="exterior" value="<?= $registro['exterior']; ?>" autocomplete="off">
                                                     <label for="exterior">Número exterior / Outside number</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="interior" id="interior" value="<?= $registro['interior']; ?>">
+                                                    <input type="text" class="form-control" name="interior" id="interior" value="<?= $registro['interior']; ?>" autocomplete="off">
                                                     <label for="interior">Número interior / Inside number</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="fraccionamiento" id="fraccionamiento" value="<?= $registro['fraccionamiento']; ?>">
+                                                    <input type="text" class="form-control" name="fraccionamiento" id="fraccionamiento" value="<?= $registro['fraccionamiento']; ?>" autocomplete="off">
                                                     <label for="fraccionamiento">Colonia / Neighborhood</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="ciudad" id="ciudad" value="<?= $registro['ciudad']; ?>">
+                                                    <input type="text" class="form-control" name="ciudad" id="ciudad" value="<?= $registro['ciudad']; ?>" autocomplete="off">
                                                     <label for="ciudad">Ciudad / City</label>
                                                 </div>
 
                                                 <div class="form-floating col-6 mt-3">
-                                                    <input type="text" class="form-control" name="estado" id="estado" value="<?= $registro['estado']; ?>">
+                                                    <input type="text" class="form-control" name="estado" id="estado" value="<?= $registro['estado']; ?>" autocomplete="off">
                                                     <label for="estado">Estado / State</label>
                                                 </div>
 
                                                 <div class="form-floating col-3 mt-3">
-                                                    <input type="text" class="form-control" name="country" id="country" value="<?= $registro['country']; ?>">
+                                                    <input type="text" class="form-control" name="country" id="country" value="<?= $registro['country']; ?>" autocomplete="off">
                                                     <label for="country">País / Country</label>
                                                 </div>
 
                                                 <div class="form-floating col-3 mt-3">
-                                                    <input type="text" class="form-control" name="postal" id="postal" value="<?= $registro['postal']; ?>">
+                                                    <input type="text" class="form-control" name="postal" id="postal" value="<?= $registro['postal']; ?>" autocomplete="off">
                                                     <label for="postal">Código postal / ZIP code</label>
                                                 </div>
 
                                                 <div class="form-floating col-3 mt-3">
-                                                    <input type="text" class="form-control" name="phone" id="phone" value="<?= $registro['phone']; ?>">
+                                                    <input type="text" class="form-control" name="phone" id="phone" value="<?= $registro['phone']; ?>" autocomplete="off">
                                                     <label for="phone">Teléfono / Phone</label>
                                                 </div>
 
                                                 <div class="form-floating col-5 mt-3">
-                                                    <input type="text" class="form-control" name="contact" id="contact" value="<?= $registro['contact']; ?>">
+                                                    <input type="text" class="form-control" name="contact" id="contact" value="<?= $registro['contact']; ?>" autocomplete="off">
                                                     <label for="contact">Representante / Agent</label>
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="text" class="form-control" name="tax" id="tax" value="<?= $registro['tax']; ?>">
+                                                    <input type="text" class="form-control" name="tax" id="tax" value="<?= $registro['tax']; ?>" autocomplete="off">
                                                     <label for="tax">RFC / Tax ID</label>
                                                 </div>
 
                                                 <div class="form-floating col-7 mt-3">
-                                                    <input type="text" class="form-control" name="email" id="email" value="<?= $registro['email']; ?>">
+                                                    <input type="text" class="form-control" name="email" id="email" value="<?= $registro['email']; ?>" autocomplete="off">
                                                     <label for="email">Correo / Email</label>
                                                 </div>
 
                                                 <div class="form-floating col-5 mt-3">
-                                                    <input type="text" class="form-control" name="web" id="web" value="<?= $registro['web']; ?>">
+                                                    <input type="text" class="form-control" name="web" id="web" value="<?= $registro['web']; ?>" autocomplete="off">
                                                     <label for="web">Sitio web / Web site</label>
                                                 </div>
 
