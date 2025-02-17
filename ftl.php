@@ -69,9 +69,8 @@ if (isset($_SESSION['email'])) {
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">
-                                    <a class="btn btn-sm btn-primary float-end" href="expoftlusa.php">Nueva cotización</a>
+                                    <a class="btn btn-sm btn-primary float-end" href="ftl-form.php">Nueva cotización</a>
                                     FTL - COTIZACIONES
-                                    <a href="expoftlusa.php"></a>
                                 </h4>
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
@@ -118,7 +117,7 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['idDestino']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <a href="generate_pdf.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                        <a href="generate_ftl.php?id=<?= $registro['id']; ?>" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
 
                                                         <form action="codecotizaciones.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>

@@ -8,8 +8,8 @@ if (isset($_POST['save'])) {
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $idOrigen = mysqli_real_escape_string($con, $_POST['idOrigen']);
-    $idDestino = mysqli_real_escape_string($con, $_POST['idDestino']);
-    $idDestinoFinal = mysqli_real_escape_string($con, $_POST['idDestinoFinal']);
+    $idDestino = mysqli_real_escape_string($con, $_POST['idAduana']);
+    $idDestinoFinal = mysqli_real_escape_string($con, $_POST['idDestino']);
     $distanciaOrigenDestinoMillas = mysqli_real_escape_string($con, $_POST['distanciaOrigenDestinoMillas']);
     $distanciaOrigenDestinoKms = mysqli_real_escape_string($con, $_POST['distanciaOrigenDestinoKms']);
     $tiempoRecorridoOrigenDestino = mysqli_real_escape_string($con, $_POST['tiempoRecorridoOrigenDestino']);
@@ -25,7 +25,7 @@ if (isset($_POST['save'])) {
     $valorMoneda = mysqli_real_escape_string($con, $_POST['valorMoneda']);
     $pesoMercanciaLbs = mysqli_real_escape_string($con, $_POST['pesoMercanciaLbs']);
     $pesoMercanciaKgs = mysqli_real_escape_string($con, $_POST['pesoMercanciaKgs']);
-    $pesoCargableKgs = mysqli_real_escape_string($con, $_POST['totalBultos']);
+    $totalBultos = mysqli_real_escape_string($con, $_POST['totalBultos']);
     $valorMercancia = mysqli_real_escape_string($con, $_POST['valorMercancia']);
     $valorComercial = mysqli_real_escape_string($con, $_POST['valorComercial']);
     $fleteTerrestre = mysqli_real_escape_string($con, $_POST['fleteTerrestre']);
@@ -34,19 +34,22 @@ if (isset($_POST['save'])) {
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
     $totalCotizacionNumero = mysqli_real_escape_string($con, $_POST['totalCotizacionNumero']);
     $totalCotizacionTexto = mysqli_real_escape_string($con, $_POST['totalCotizacionTexto']);
-
+    $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
+    $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
+    $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
+    
     $sql = "INSERT INTO ftl (
         fecha, idCliente, idOrigen, idDestino, idDestinoFinal,
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
         totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
         operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, totalBultos, 
-        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto
+        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx'
     )";
 
     $query_run = mysqli_query($con, $sql);
@@ -119,6 +122,22 @@ if (isset($_POST['save'])) {
                 mysqli_query($con, $sql_incrementable);
             }
         }
+
+        if (!empty($_POST['conceptoGasto'])) {
+            $conceptoGasto = $_POST['conceptoGasto'];
+            $montoGasto = $_POST['montoGasto'];
+            $ivaGasto = isset($_POST['ivaGasto']) ? $_POST['ivaGasto'] : [];
+
+            for ($i = 0; $i < count($conceptoGasto); $i++) {
+                $concepto = mysqli_real_escape_string($con, $conceptoGasto[$i]);
+                $monto = mysqli_real_escape_string($con, $montoGasto[$i]);
+                $iva = isset($ivaGasto[$i]) ? 1 : 0; // Si el checkbox está marcado
+
+                $sql_gasto = "INSERT INTO gastosftl (idFtl, conceptoGasto, montoGasto, ivaGasto) VALUES ('$idFtl', '$concepto', '$monto', '$iva')";
+                mysqli_query($con, $sql_gasto);
+            }
+        }
+
 
         $_SESSION['message'] = "Se registró exitosamente";
         header("Location: ftl.php");

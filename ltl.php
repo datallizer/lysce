@@ -69,7 +69,7 @@ if (isset($_SESSION['email'])) {
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">
-                                    <a class="btn btn-sm btn-primary float-end" href="expoftlusa.php">Nueva cotización</a>
+                                    <a class="btn btn-sm btn-primary float-end" href="ftl-form.php">Nueva cotización</a>
                                     LTL - COTIZACIONES
                                 </h4>
                             </div>

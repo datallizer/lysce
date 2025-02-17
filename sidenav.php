@@ -74,7 +74,7 @@ require 'dbcon.php';
                                 </a>
                                 <div class="collapse" id="ftlUsa" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="expoftlusa.php">Dry van 53 ft</a>
+                                        <a class="nav-link" href="ftl-form.php">Dry van 53 ft</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlMex" aria-expanded="false" aria-controls="ftlMex">

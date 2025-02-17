@@ -11,15 +11,21 @@ if (isset($_POST['idCliente'])) {
         $registro = mysqli_fetch_assoc($result);
         $cliente = $registro['cliente'];
         $calle = $registro['calle'];
+        $numexterior = $registro['numexterior'];
+        $numinterior = $registro['numinterior'];
         $colonia = $registro['colonia'];
-        $municipio = $registro['municipio'];
+        $city = $registro['city'];
+        $state = $registro['state'];
+        $pais = $registro['pais'];
+        $cpostal = $registro['cpostal'];
         $telefono = $registro['telefono'];
         $contacto = $registro['contacto'];
         $rfc = $registro['rfc'];
+        $correo = $registro['correo'];
 
         echo "$cliente<br>";
-        echo "$calle, $colonia, $municipio<br>";
-        echo "<div class='row justify-content-evenly'><div class='col-4'><b>Teléfono:</b> $telefono</div><div class='col-4'><b>Contacto:</b> $contacto</div><div class='col-4'><b>RFC:</b> $rfc</div></div>";
+        echo "$calle $numexterior $numinterior, $colonia, $city, $state, $pais, CP $cpostal<br>";
+        echo "<div class='row justify-content-evenly'><div class='col-3'><b>Teléfono:</b> $telefono</div><div class='col-3'><b>Contacto:</b> $contacto</div><div class='col-2'><b>RFC:</b> $rfc</div><div class='col-4'><b>Email:</b> $correo</div></div>";
     } else {
         echo "No se encontraron datos.";
     }
