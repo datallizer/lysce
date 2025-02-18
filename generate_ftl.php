@@ -202,17 +202,20 @@ WHERE
             <td style="width: 40%;border: 0px;">
                 <h2><b>GRUPO LYSCE S.C.</b></h2>
                 <p style="margin: 0;">R.F.C GLY170421ES6</p>
-                <p style="margin: 0;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte, Aguascalientes, Ags. C.P. 20127</p>
+                <p style="margin: 0;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte,<br> Aguascalientes, Ags. C.P. 20127</p>
                 <p style="margin: 0;">Tel / Fax +52 (449) 300 3265</p>
             </td>
             <td style="width: 30%;border: 0px;">
                 <h2 style="margin-bottom:10px;"><b>COTIZACIÓN</b></h2>
-                <p>LYSCE-' . $registro['id'] . '</p>
+                <p>LYSCE-' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '</p>
                 <p>Aguascalientes, Ags a ' . $registro['fecha'] . '</p>
+                <br>
+                <br>
             </td>
         </tr>
     </table>
-    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>COTIZACION DE FLETE TRAILER COMPLETO / FTL USA / DRY VAN 53 FT</b></p>
+    <br>
+    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoFtl'] . '</b></p>
     <table class="table">
         <tr>
             <td colspan="3"><b>Cliente</b>
@@ -262,11 +265,14 @@ WHERE
                         <p><b>Distancia:</b> ' . $registro['distanciaOrigenDestinoMillas'] . ' millas | ' . $registro['distanciaOrigenDestinoKms'] . ' kms</p>
                         <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . ' hrs</p>
                         <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
+                        <br>
                     </td>
                     
                     <td style="width:33%;border: 0px;">
                         <p><b>Total CFT:</b> ' . $registro['totalFt3'] . '</p>
                         <p><b>Total m3:</b> ' . $registro['totalM3'] . '</p>
+                        <br>
+                        <br>
                     </td>
                     
                     <td style="width:33%;border: 0px;">
@@ -329,8 +335,8 @@ WHERE
             ' . $incrementables_html . '
             <tr class="bg-secondary">
                 <td style="text-align:right;"><b>Total</b></td>
-                <td><b>' . $registro['totalIncrementableUsd'] . '</b></td>
-                <td><b>' . $registro['totalIncrementableMx'] . '</b></td>
+                <td><b>$' . $registro['totalIncrementableUsd'] . ' USD</b></td>
+                <td><b>$' . $registro['totalIncrementableMx'] . ' MXN</b></td>
             </tr>
         </tbody>
     </table><h3>GASTOS POR FLETE TERRESTRE</h3>
@@ -345,21 +351,21 @@ WHERE
             ' . $gasto_html . '
             <tr class="bg-secondary">
                 <td style="text-align:right;">Subtotal</td>
-                <td>$' . $registro['subtotalFlete'] . '</td>
+                <td>$' . $registro['subtotalFlete'] . ' USD</td>
             </tr>
             <tr class="bg-secondary">
                 <td style="text-align:right;">IVA</td>
-                <td>$' . $registro['impuestosFlete'] . '</td>
+                <td>$' . $registro['impuestosFlete'] . ' USD</td>
             </tr>
             <tr class="bg-secondary">
                 <td style="text-align:right;">Retención</td>
-                <td>$' . $registro['retencionFlete'] . '</td>
+                <td>$' . $registro['retencionFlete'] . ' USD</td>
             </tr><tr class="bg-warning">
                 <td style="text-align:right;"><b>TOTAL USD</b></td>
-                <td><b>$' . $registro['totalCotizacionNumero'] . '</b></td>
+                <td><b>$' . $registro['totalCotizacionNumero'] . ' USD</b></td>
             </tr>
             <tr class="bg-warning" style="text-align:center;">
-                <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . '</b></td>
+                <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . ' USD</b></td>
             </tr>
         </tbody>
     </table>
@@ -379,5 +385,6 @@ WHERE
     $dompdf->render();
 
     // Salida del PDF (descarga)
-    $dompdf->stream('cotizacion.pdf', ['Attachment' => true]);
+    $cliente_nombre_sin_espacios = str_replace(' ', '', $registro['cliente_nombre']);
+    $dompdf->stream('cotizacionFTL' . $cliente_nombre_sin_espacios . '_' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '.pdf', ['Attachment' => true]);
 }

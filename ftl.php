@@ -78,18 +78,33 @@ if (isset($_SESSION['email'])) {
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Cotizacion</th>
                                             <th>Cliente</th>
-                                            <th>Medio</th>
-                                            <th>Tipo</th>
-                                            <th>Actividad</th>
-                                            <th>Modalidad</th>
+                                            <th>Origen</th>
+                                            <th>Destino</th>
+                                            <th>Destino final</th>
+                                            <th>Fecha</th>
                                             <th>Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT * FROM ftl ORDER BY id DESC";
+                                        $query = "SELECT 
+    a.*,
+    c.cliente AS cliente_nombre,
+    p_origen.proveedor AS origen_nombre,
+    p_destino.proveedor AS destino_nombre,
+    p_final.proveedor AS final_nombre
+FROM 
+    ftl a
+LEFT JOIN 
+    clientes c ON a.idCliente = c.id
+LEFT JOIN 
+    proveedores p_origen ON a.idOrigen = p_origen.id
+LEFT JOIN 
+    proveedores p_destino ON a.idDestino = p_destino.id
+LEFT JOIN
+    proveedores p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+";
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
@@ -99,22 +114,19 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idCliente']; ?></p>
+                                                        <p><?= $registro['cliente_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['operador']; ?></p>
+                                                        <p><?= $registro['origen_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['unidad']; ?></p>
+                                                        <p><?= $registro['destino_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['moneda']; ?></p>
+                                                        <p><?= $registro['final_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idOrigen']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['idDestino']; ?></p>
+                                                        <p><?= $registro['fecha']; ?></p>
                                                     </td>
                                                     <td>
                                                         <a href="generate_ftl.php?id=<?= $registro['id']; ?>" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>

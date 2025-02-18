@@ -69,7 +69,7 @@ if (isset($_SESSION['email'])) {
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">
-                                    <a href="nuevocliente.php" class="btn btn-primary btn-sm float-end btn-sm m-1">
+                                    <a href="nuevocliente.php" class="btn btn-primary btn-sm float-end btn-sm mb-1">
                                         Nuevo cliente
                                     </a>
                                     CLIENTES

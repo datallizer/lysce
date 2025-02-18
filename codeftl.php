@@ -37,19 +37,21 @@ if (isset($_POST['save'])) {
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
     $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
+    $impuestoFlete = mysqli_real_escape_string($con, $_POST['impuestoFlete']);
+    $tipoFtl = mysqli_real_escape_string($con, $_POST['tipoFtl']);
     
     $sql = "INSERT INTO ftl (
         fecha, idCliente, idOrigen, idDestino, idDestinoFinal,
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
         totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
         operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, totalBultos, 
-        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx
+        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, impuestoFlete, tipoFtl
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$impuestoFlete', '$tipoFtl'
     )";
 
     $query_run = mysqli_query($con, $sql);

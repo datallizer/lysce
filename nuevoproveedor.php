@@ -213,16 +213,16 @@ if (isset($_SESSION['email'])) {
                                         <input type="text" class="form-control" name="tax" placeholder="Tax" autocomplete="off">
                                         <label for="tax">RFC / Tax ID</label>
                                     </div>
-                                    <div class="col-12 col-md-5 form-floating">
+                                    <div class="col-12 col-md-5 form-floating mb-3">
                                         <input type="text" class="form-control" name="web" placeholder="Web" autocomplete="off">
                                         <label for="web">Sitio / Web site</label>
                                     </div>
-                                    <div class="col-12 col-md-7 form-floating">
+                                    <div class="col-12 col-md-7 form-floating mb-3">
                                         <input type="text" class="form-control" name="contact" placeholder="Contact" autocomplete="off" required>
                                         <label for="contact">Representante / Agent</label>
                                     </div>
 
-                                    <div class="form-floating mt-3 mb-3">
+                                    <div class="form-floating mb-3">
                                         <select class="form-select" name="idCliente" id="floatingSelect">
                                             <option selected>Selecciona un cliente para asociar</option>
                                             <?php
@@ -243,7 +243,7 @@ if (isset($_SESSION['email'])) {
                                     </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <a href="proveedores.php" class="btn btn-secondary">Cerrar</a>
                                 <button type="submit" class="btn btn-primary" name="save">Guardar</button>
                             </div>
                             </form>

@@ -146,13 +146,13 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 style="color:#fff" class="m-1">PROVEEDOR / AGENTE ADUANAL
+                                <h4 style="color:#fff">PROVEEDOR / AGENTE ADUANAL
 
                                     <div class="float-end">
-                                        <a href="nuevoproveedor.php" class="btn btn-primary btn-sm me-2">
+                                        <a href="nuevoproveedor.php" class="btn btn-primary btn-sm m-1">
                                             Nuevo proveedor / agente aduanal
                                         </a>
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#asociarModal">
+                                        <button type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal" data-bs-target="#asociarModal">
                                             Asociar
                                         </button>
                                     </div>

@@ -53,567 +53,518 @@ if (isset($_SESSION['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
-    <title>LTL | LYSCE</title>
+    <title>FTL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
-
-    <div class="container-fluid p-5">
-        <form action="codeftl.php" method="POST" class="row justify-content-evenly">
-            <div class="col-3 mb-3 text-center">
-                <img style="width: 70%;" src="images/logo.png" alt="">
-                <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
-            </div>
-            <div class="col-4 mb-3">
-                <h2><b>GRUPO LYSCE S.C.</b></h2>
-                <p style="margin: 0px;">R.F.C GLY170421ES6</p>
-                <p style="margin: 0px;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte, Aguascalientes, Ags. C.P. 20127</p>
-                <p style="margin: 0px;">Tel / Fax +52 (449) 300 3265</p>
-            </div>
-            <div class="col-3 mb-3">
-                <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                <?php
-                $query = "SELECT MAX(id) AS max_id FROM aereoimportacion";
-                $result = mysqli_query($con, $query);
-                if ($result && $row = $result->fetch_assoc()) {
-                    $lastID = $row['max_id'];
-                } else {
-                    $lastID = 0;
-                }
-                $newNumber = $lastID + 1;
-                ?>
-                <input class="form-control" value="<?php echo "LYSCE-" . str_pad($newNumber, 5, "0", STR_PAD_LEFT); ?>" disabled>
-                <p style="margin: 5px;">Aguascalientes, Ags a</p>
-                <input class="form-control" type="text" name="fecha" id="expedicion" value="">
-            </div>
-            <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                <p><b>COTIZACION DE FLETE TRAILER COMPLETO / FTL USA / DRY VAN 53 FT</b></p>
-            </div>
-            <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
-                <p class="mb-1"><b>Cliente</b></p>
-                <select class="form-select mb-3" name="idCliente" id="cliente">
-                    <option selected>Selecciona un cliente</option>
-                    <?php
-                    $query = "SELECT * FROM clientes WHERE estatus = 1";
-                    $result = mysqli_query($con, $query);
-
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($registro = mysqli_fetch_assoc($result)) {
-                            $nombre = $registro['cliente'];
-                            $idCliente = $registro['id'];
-                            echo "<option value='$idCliente'>" . $nombre . "</option>";
+<body class="sb-nav-fixed">
+    <?php include 'sidenav.php'; ?>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_content">
+            <div class="container-fluid p-5">
+                <form action="codeftl.php" method="POST" class="row justify-content-evenly">
+                    <div class="col-3 mb-3 text-center">
+                        <img style="width: 70%;" src="images/logo.png" alt="">
+                        <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <h2><b>GRUPO LYSCE S.C.</b></h2>
+                        <p style="margin: 0px;">R.F.C GLY170421ES6</p>
+                        <p style="margin: 0px;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte, Aguascalientes, Ags. C.P. 20127</p>
+                        <p style="margin: 0px;">Tel / Fax +52 (449) 300 3265</p>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
+                        <?php
+                        $query = "SELECT MAX(id) AS max_id FROM aereoimportacion";
+                        $result = mysqli_query($con, $query);
+                        if ($result && $row = $result->fetch_assoc()) {
+                            $lastID = $row['max_id'];
+                        } else {
+                            $lastID = 0;
                         }
-                    }
-                    ?>
-                </select>
-                <p id="detalleCliente"></p>
-            </div>
-            <div class="col-4 p-3" style="border: 1px solid #666666;">
-                <p class="mb-1"><b>Origen</b></p>
-                <select class="form-select" name="idOrigen" id="origen">
-                    <option selected>Selecciona el origen</option>
-                    <?php
-                    $query = "SELECT * FROM proveedores WHERE estatus = 1";
-                    $result = mysqli_query($con, $query);
+                        $newNumber = $lastID + 1;
+                        ?>
+                        <input class="form-control" value="<?php echo "LYSCE-" . str_pad($newNumber, 5, "0", STR_PAD_LEFT); ?>" disabled>
+                        <p style="margin: 5px;">Aguascalientes, Ags a</p>
+                        <input class="form-control" type="text" name="fecha" id="expedicion" value="">
+                    </div>
+                    <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
+                        <select class="form-select bg-warning" name="tipoFtl">
+                            <option value="COTIZACION DE FLETE TRAILER COMPLETO / FTL USA / DRY VAN 53 FT">COTIZACION DE FLETE TRAILER COMPLETO / FTL USA / DRY VAN 53 FT</option>
+                            <option value="COTIZACION DE FLETE PLATAFORMA CON SOBREPESOS / FTL USA / FLATBED OVERWEIGHT FREIGHT">COTIZACION DE FLETE PLATAFORMA CON SOBREPESOS / FTL USA / FLATBED OVERWEIGHT FREIGHT</option>
+                            <option value="COTIZACION DE FLETE PLATAFORMA CON SOBREDIMENSIONADO / FTL USA / FLATBED OVERSIZED FREIGHT">COTIZACION DE FLETE PLATAFORMA CON SOBREDIMENSIONADO / FTL USA / FLATBED OVERSIZED FREIGHT</option>
+                        </select>
+                    </div>
+                    <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
+                        <p class="mb-1"><b>Cliente</b></p>
+                        <select class="form-select mb-3" name="idCliente" id="cliente">
+                            <option selected>Selecciona un cliente</option>
+                            <?php
+                            $query = "SELECT * FROM clientes WHERE estatus = 1";
+                            $result = mysqli_query($con, $query);
 
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($registro = mysqli_fetch_assoc($result)) {
-                            $nombre = $registro['proveedor'];
-                            $idOrigen = $registro['id'];
-                            echo "<option value='$idOrigen'>" . $nombre . "</option>";
-                        }
-                    }
-                    ?>
-                </select>
-                <p id="detalleOrigen"></p>
-            </div>
-            <div class="col-4 p-3" style="border: 1px solid #666666;">
-                <p class="mb-1"><b>Destino en frontera</b></p>
-                <select class="form-select" name="idAduana" id="aduana">
-                    <option selected>Selecciona el destino en frontera</option>
-                    <?php
-                    $query = "SELECT * FROM proveedores WHERE estatus = 1";
-                    $result = mysqli_query($con, $query);
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($registro = mysqli_fetch_assoc($result)) {
+                                    $nombre = $registro['cliente'];
+                                    $idCliente = $registro['id'];
+                                    echo "<option value='$idCliente'>" . $nombre . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                        <p id="detalleCliente"></p>
+                    </div>
+                    <div class="col-4 p-3" style="border: 1px solid #666666;">
+                        <p class="mb-1"><b>Origen</b></p>
+                        <select class="form-select" name="idOrigen" id="origen">
+                            <option selected>Selecciona el origen</option>
+                            <?php
+                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                            $result = mysqli_query($con, $query);
 
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($registro = mysqli_fetch_assoc($result)) {
-                            $nombre = $registro['proveedor'];
-                            $idOrigen = $registro['id'];
-                            echo "<option value='$idOrigen'>" . $nombre . "</option>";
-                        }
-                    }
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($registro = mysqli_fetch_assoc($result)) {
+                                    $nombre = $registro['proveedor'];
+                                    $idOrigen = $registro['id'];
+                                    echo "<option value='$idOrigen'>" . $nombre . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                        <p id="detalleOrigen"></p>
+                    </div>
+                    <div class="col-4 p-3" style="border: 1px solid #666666;">
+                        <p class="mb-1"><b>Destino en frontera</b></p>
+                        <select class="form-select" name="idAduana" id="aduana">
+                            <option selected>Selecciona el destino en frontera</option>
+                            <?php
+                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                            $result = mysqli_query($con, $query);
 
-                    ?>
-                </select>
-                <p id="detalleAduana"></p>
-            </div>
-            <div class="col-4 p-3" style="border: 1px solid #666666;">
-                <p class="mb-1"><b>Destino Final</b></p>
-                <select class="form-select" name="idDestino" id="destino">
-                    <option selected>Selecciona el destino final</option>
-                    <?php
-                    $query = "SELECT * FROM proveedores WHERE estatus = 1";
-                    $result = mysqli_query($con, $query);
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($registro = mysqli_fetch_assoc($result)) {
+                                    $nombre = $registro['proveedor'];
+                                    $idOrigen = $registro['id'];
+                                    echo "<option value='$idOrigen'>" . $nombre . "</option>";
+                                }
+                            }
 
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($registro = mysqli_fetch_assoc($result)) {
-                            $nombre = $registro['proveedor'];
-                            $idOrigen = $registro['id'];
-                            echo "<option value='$idOrigen'>" . $nombre . "</option>";
-                        }
-                    }
+                            ?>
+                        </select>
+                        <p id="detalleAduana"></p>
+                    </div>
+                    <div class="col-4 p-3" style="border: 1px solid #666666;">
+                        <p class="mb-1"><b>Destino Final</b></p>
+                        <select class="form-select" name="idDestino" id="destino">
+                            <option selected>Selecciona el destino final</option>
+                            <?php
+                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                            $result = mysqli_query($con, $query);
 
-                    ?>
-                </select>
-                <p id="detalleDestino"></p>
-            </div>
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($registro = mysqli_fetch_assoc($result)) {
+                                    $nombre = $registro['proveedor'];
+                                    $idOrigen = $registro['id'];
+                                    echo "<option value='$idOrigen'>" . $nombre . "</option>";
+                                }
+                            }
 
-            <div class="col-8 mt-3 mb-3">
-                <div class="row justify-content-start">
-                    <div class="col-6">
+                            ?>
+                        </select>
+                        <p id="detalleDestino"></p>
+                    </div>
+
+                    <div class="col-8 mt-3 mb-3">
+                        <div class="row justify-content-start">
+                            <div class="col-6">
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    <b>Distancia:</b>
+                                    <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="millas" oninput="convertirAMetros()">
+                                    millas |
+                                    <input name="distanciaOrigenDestinoKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
+                                </p><br>
+
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    <b>Tiempo / Recorrido:</b>
+                                    <input name="tiempoRecorridoOrigenDestino" class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
+                                </p><br>
+
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    <b>Operador:</b>
+                                    <input name="servicio" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    <b>Total CFT:</b>
+                                    <input name="totalFt3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
+                                </p><br>
+
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    <b>Total m3:</b>
+                                    <input name="totalM3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="m3Total" readonly>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4 mt-3 mb-3">
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Distancia:</b>
-                            <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="millas" oninput="convertirAMetros()">
+                            <input name="distanciaDestinoFinalMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
                             millas |
-                            <input name="distanciaOrigenDestinoKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
+                            <input name="distanciaDestinoFinalKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Tiempo / Recorrido:</b>
-                            <input name="tiempoRecorridoOrigenDestino" class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
+                            <input name="tiempoRecorridoDestinoFinal" class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Operador:</b>
-                            <input name="servicio" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
+                            <input name="operador" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
                         </p>
-                    </div>
-                    <div class="col-6">
-                        <p style="display: inline-block;margin-bottom: 5px;">
-                            <b>Total CFT:</b>
-                            <input name="totalFt3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
-                        </p><br>
 
-                        <p style="display: inline-block;margin-bottom: 5px;">
-                            <b>Total m3:</b>
-                            <input name="totalM3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="m3Total" readonly>
+                        <p style="display: inline-block;">
+                            <b>Unidad:</b>
+                            <input name="unidad" class="form-control" style="width: 230px; display: inline-block;" type="text" id="servicio" value="Servicio trailer directo FTL">
                         </p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-4 mt-3 mb-3">
-                <p style="display: inline-block;margin-bottom: 5px;">
-                    <b>Distancia:</b>
-                    <input name="distanciaDestinoFinalMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
-                    millas |
-                    <input name="distanciaDestinoFinalKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
-                </p><br>
-
-                <p style="display: inline-block;margin-bottom: 5px;">
-                    <b>Tiempo / Recorrido:</b>
-                    <input name="tiempoRecorridoDestinoFinal" class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
-                </p><br>
-
-                <p style="display: inline-block;margin-bottom: 5px;">
-                    <b>Operador:</b>
-                    <input name="operador" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
-                </p>
-
-                <p style="display: inline-block;">
-                    <b>Unidad:</b>
-                    <input name="unidad" class="form-control" style="width: 230px; display: inline-block;" type="text" id="servicio" value="Servicio trailer directo FTL">
-                </p>
-
-            </div>
-
-            <div class="col-12 bg-light text-center p-2">
-                <p><b>DESCRIPCIÓN DE LAS MERCANCIAS</b></p>
-                <table class="table table-striped" id="miTablaCotizacion">
-                    <tr>
-                        <th>Cantidad</th>
-                        <th>Unidad medida</th>
-                        <th>Descripción</th>
-                        <th>Dimensiones</th>
-                        <th>Peso</th>
-                        <th>Valor factura</th>
-                    </tr>
-                </table>
-                <button class="btn btn-danger" type="button" onclick="eliminarUltimaFila()">-</button>
-                <button class="btn btn-secondary" type="button" onclick="agregarFila()">+</button>
-
-                <div class="row mt-3 mb-3">
-                    <div class="col-3 text-center">
-                        <p style="display: inline-block;margin-bottom: 5px;">
-                            Total bultos <input class="form-control" type="text" name="totalBultos" id="totalBultos" style="width: 80px; display: inline-block;">
-                        </p>
-                        <p style="display: inline-block;margin-bottom: 5px;">
-                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" name="moneda" id="moneda" value="USD"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="18.6" oninput="actualizarTotales()">
-                        </p>
                     </div>
 
-                    <div class="col-4">
-                        <table class="text-end">
+                    <div class="col-12 bg-light text-center p-2">
+                        <p><b>DESCRIPCIÓN DE LAS MERCANCIAS</b></p>
+                        <table class="table table-striped" id="miTablaCotizacion">
                             <tr>
-                                <td>Peso total de la mercancia</td>
-                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaLbs" name="pesoMercanciaLbs" readonly> lbs</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
+                                <th>Cantidad</th>
+                                <th>Unidad medida</th>
+                                <th>Descripción</th>
+                                <th>Dimensiones</th>
+                                <th>Peso</th>
+                                <th>Valor factura</th>
                             </tr>
                         </table>
+                        <button class="btn btn-danger" type="button" onclick="eliminarUltimaFila()">-</button>
+                        <button class="btn btn-secondary" type="button" onclick="agregarFila()">+</button>
+
+                        <div class="row mt-3 mb-3">
+                            <div class="col-3 text-center">
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    Total bultos <input class="form-control" type="text" name="totalBultos" id="totalBultos" style="width: 80px; display: inline-block;" readonly>
+                                </p>
+                                <p style="display: inline-block;margin-bottom: 5px;">
+                                    1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" name="moneda" id="moneda" value="USD"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="18.6" oninput="actualizarTotales()">
+                                </p>
+                            </div>
+
+                            <div class="col-4">
+                                <table class="text-end">
+                                    <tr>
+                                        <td>Peso total de la mercancia</td>
+                                        <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaLbs" name="pesoMercanciaLbs" readonly> lbs</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="col-5">
+                                <table class="text-end w-100">
+                                    <tr>
+                                        <td>Valor total de la mercancia USD</td>
+                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td>VALOR TOTAL COMERCIAL PESOS</td>
+                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="col-5">
-                        <table class="text-end w-100">
-                            <tr>
-                                <td>Valor total de la mercancia USD</td>
-                                <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly></td>
-                            </tr>
-                            <tr>
-                                <td>VALOR TOTAL COMERCIAL PESOS</td>
-                                <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
-                            </tr>
+                    <div class="col-12 mt-5">
+                        <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
+                        <table class="table table-striped mt-3" id="incrementableTable">
+                            <thead>
+                                <tr>
+                                    <th>Incrementable</th>
+                                    <th>USD</th>
+                                    <th>MXN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filas predeterminadas -->
+                                <tr>
+                                    <td><input type="text" name="incrementable[]" class="form-control" value="Flete extranjero"></td>
+                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this);updateTotal();"></td>
+                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="incrementable[]" class="form-control" value="Maniobras"></td>
+                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="incrementable[]" class="form-control" value="Almacenaje"></td>
+                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="incrementable[]" class="form-control" value="Cancelacion bond"></td>
+                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr id="totalRow">
+                                    <td><b>TOTAL</b></td>
+                                    <td><input type="text" id="totalUSD" name="totalIncrementableUsd" class="form-control" value="0" readonly></td>
+                                    <td><input type="text" id="totalMXN" name="totalIncrementableMx" class="form-control" value="0" readonly></td>
+                                </tr>
+                            </tfoot>
                         </table>
+                        <div class="col-12 text-center">
+                            <button class="btn btn-secondary" id="addRowButton" type="button">+</button>
+                            <button class="btn btn-danger" id="removeRowButton" type="button">-</button>
+                        </div>
                     </div>
-                </div>
-
-            </div>
-
-            <div class="col-12 mt-5">
-                <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
-                <table class="table table-striped mt-3" id="incrementableTable">
-                    <thead>
-                        <tr>
-                            <th>Incrementable</th>
-                            <th>USD</th>
-                            <th>MXN</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Filas predeterminadas -->
-                        <tr>
-                            <td><input type="text" name="incrementable[]" class="form-control" value="Flete extranjero"></td>
-                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" name="incrementable[]" class="form-control" value="Maniobras"></td>
-                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" name="incrementable[]" class="form-control" value="Almacenaje"></td>
-                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" name="incrementable[]" class="form-control" value="Cancelacion bond"></td>
-                            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr id="totalRow">
-                            <td><b>TOTAL</b></td>
-                            <td><span id="totalUSD">$0.00</span></td>
-                            <td><span id="totalMXN">$0.00</span></td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div class="col-12 text-center">
-                    <button class="btn btn-secondary" id="addRowButton" type="button">+</button>
-                    <button class="btn btn-danger" id="removeRowButton" type="button">-</button>
-                </div>
-            </div>
 
 
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
 
-                    const tableBody = document.querySelector("#incrementableTable tbody");
-                    const totalUSD = document.getElementById("totalUSD");
-                    const totalMXN = document.getElementById("totalMXN");
-                    const addRowButton = document.getElementById("addRowButton");
-                    const removeRowButton = document.getElementById("removeRowButton");
+                            const tableBody = document.querySelector("#incrementableTable tbody");
+                            const totalUSD = document.getElementById("totalUSD");
+                            const totalMXN = document.getElementById("totalMXN");
+                            const addRowButton = document.getElementById("addRowButton");
+                            const removeRowButton = document.getElementById("removeRowButton");
+                            const fleteUSDGasto = document.getElementById("fleteUSDGasto");
 
-                    function addRow() {
-                        const newRow = document.createElement("tr");
-                        newRow.innerHTML = `
+                            function addRow() {
+                                const newRow = document.createElement("tr");
+                                newRow.innerHTML = `
             <td><input type="text"  name="incrementable[]" class="form-control" placeholder="Incrementable"></td>
-            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
+            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this);updateTotal();"></td>
             <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
         `;
-                        tableBody.appendChild(newRow);
-                        updateTotal();
-                    }
+                                tableBody.appendChild(newRow);
+                                updateTotal();
+                            }
 
-                    function removeRow() {
-                        const rows = tableBody.getElementsByTagName("tr");
-                        if (rows.length > 4) {
-                            tableBody.removeChild(rows[rows.length - 1]);
+
+
+                            addRowButton.addEventListener("click", addRow);
+                            removeRowButton.addEventListener("click", removeRow);
+
                             updateTotal();
-                        } else {
-                            alert("No puedes eliminar más filas predeterminadas.");
-                        }
-                    }
 
-                    function updateTotal() {
-                        let totalUSDValue = 0;
-                        let totalMXNValue = 0;
-
-                        document.querySelectorAll(".usd-input").forEach(input => {
-                            totalUSDValue += parseFloat(input.value) || 0;
                         });
+                    </script>
 
-                        document.querySelectorAll(".mxn-input").forEach(input => {
-                            totalMXNValue += parseFloat(input.value) || 0;
-                        });
+                    <div class="col-12 mt-5">
+                        <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
+                        <table class="table table-striped mt-3" id="tablaGasto">
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre EUA"></td>
+                                    <td>
+                                        <div class="form-check float-end">
+                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck1">
+                                            <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-end"><input type="text" class="form-control" id="fleteUSDGasto" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                    <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce de frontera / transfer"></td>
+                                    <td>
+                                        <div class="form-check float-end">
+                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck2" checked>
+                                            <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre México"></td>
+                                    <td>
+                                        <div class="form-check float-end">
+                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck3" checked>
+                                            <label class="form-check-label" for="flexCheck3"> IVA 16% </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro tránsito de mercancía">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="text" class="form-control" name="porcentajeSeguro" value="37%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-check float-end">
+                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4" checked>
+                                            <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
+                                        </div>
+                                    </td>
+                                    <td colspan="2" class="text-end">
+                                        <input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()">
+                                    </td>
+                                </tr>
+                                <tr class="text-end">
+                                    <td colspan="2">Subtotal</td>
+                                    <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
+                                </tr>
+                                <tr class="text-end">
+                                    <td colspan="2">I.V.A 16%</td>
+                                    <td colspan="2"><input class="form-control" name="impuestoFlete" type="text"></td>
+                                </tr>
+                                <tr class="text-end">
+                                    <td colspan="2">
+                                        <div class="form-check float-end">
+                                            <input class="form-check-input" type="checkbox" name="retencionFleteCheck" id="retencionCheck">
+                                            <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
+                                        </div>
+                                    </td>
+                                    <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        totalUSD.textContent = `$${totalUSDValue.toFixed(2)}`;
-                        totalMXN.textContent = `$${totalMXNValue.toFixed(2)}`;
+                    <script>
+                        function actualizarSubtotal() {
+                            let subtotal = 0;
+                            let iva = 0;
+                            let retencion = 0;
 
-                    }
+                            document.querySelectorAll("#tablaGasto tbody tr").forEach((fila) => {
+                                let montoInput = fila.querySelector('input[name="montoGasto[]"]');
+                                let checkboxIVA = fila.querySelector('input[name="ivaGasto[]"]');
 
+                                if (montoInput) {
+                                    let monto = parseFloat(montoInput.value) || 0;
+                                    subtotal += monto;
 
-                    function sincronizarTotalUSD() {
-                        var totalUSD = document.getElementById("totalUSD");
-                        var totalUSDGasto = document.getElementById("totalUSDGasto");
+                                    if (checkboxIVA && checkboxIVA.checked) {
+                                        iva += monto * 0.16;
+                                    }
+                                }
+                            });
 
-                        // Si el campo de input se ha modificado, actualizamos el span
-                        totalUSDGasto.addEventListener("input", function() {
-                            var valor = parseFloat(totalUSDGasto.value) || 0;
-                            totalUSD.innerText = "$" + valor.toFixed(2); // Formato en dólares
-                        });
+                            let checkboxRetencion = document.querySelector('#retencionCheck');
+                            if (checkboxRetencion && checkboxRetencion.checked) {
+                                retencion = subtotal * 0.04;
+                            } else {
+                                retencion = 0;
+                            }
 
-                        // Si el span se modifica, actualizamos el input
-                        // Asumiendo que totalUSD puede cambiar por algún otro proceso en tu código
-                        totalUSD.innerText = "$0.00"; // Aquí es el valor inicial
-                        totalUSD.addEventListener("DOMSubtreeModified", function() {
-                            var valor = parseFloat(totalUSD.innerText.replace('$', '').trim()) || 0;
-                            totalUSDGasto.value = valor.toFixed(2); // Actualizamos el campo input
-                        });
+                            document.querySelector('input[name="subtotalFlete"]').value = subtotal.toFixed(2);
+                            document.querySelector('input[name="impuestoFlete"]').value = iva.toFixed(2);
+                            document.querySelector('input[name="retencionFlete"]').value = retencion.toFixed(2);
 
-                        actualizarSubtotal();
-                    }
+                            var sumaGastos = 0;
 
-                    addRowButton.addEventListener("click", addRow);
-                    removeRowButton.addEventListener("click", removeRow);
+                            // Obtener todos los inputs de montoGasto y sumar sus valores
+                            var montoGastoInputs = document.querySelectorAll("[name='montoGasto[]']");
+                            montoGastoInputs.forEach(input => {
+                                var valor = parseFloat(input.value) || 0;
+                                sumaGastos += valor;
+                            });
 
-                    updateTotal();
-                    sincronizarTotalUSD();
+                            // Obtener el valor de montoSeguro y sumarlo
+                            var montoSeguroInput = document.querySelector("[name='montoSeguro']");
+                            if (montoSeguroInput) {
+                                var valorSeguro = parseFloat(montoSeguroInput.value) || 0;
+                                sumaGastos += valorSeguro;
+                            }
 
-                });
-            </script>
-
-            <div class="col-12 mt-5">
-                <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
-                <table class="table table-striped mt-3" id="tablaGasto">
-                    <tbody>
-                        <tr>
-                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre EUA"></td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck1">
-                                    <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
-                                </div>
-                            </td>
-                            <td class="text-end"><input type="text" class="form-control" id="totalUSDGasto" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                            <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce de frontera / transfer"></td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck2" checked>
-                                    <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
-                                </div>
-                            </td>
-                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre México"></td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck3" checked>
-                                    <label class="form-check-label" for="flexCheck3"> IVA 16% </label>
-                                </div>
-                            </td>
-                            <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro tránsito de mercancía">
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="text" class="form-control" name="porcentajeSeguro" value="37%">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4" checked>
-                                    <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
-                                </div>
-                            </td>
-                            <td colspan="2" class="text-end">
-                                <input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()">
-                            </td>
-                        </tr>
-                        <tr class="text-end">
-                            <td colspan="2">Subtotal</td>
-                            <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
-                        </tr>
-                        <tr class="text-end">
-                            <td colspan="2">I.V.A 16%</td>
-                            <td colspan="2"><input class="form-control" name="impuestoFlete" type="text"></td>
-                        </tr>
-                        <tr class="text-end">
-                            <td colspan="2">
-                                <div class="form-check float-end">
-                                    <input class="form-check-input" type="checkbox" name="retencionFleteCheck" id="retencionCheck">
-                                    <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
-                                </div>
-                            </td>
-                            <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <script>
-                function actualizarSubtotal() {
-                    let subtotal = 0;
-                    let iva = 0;
-                    let retencion = 0;
-
-                    document.querySelectorAll("#tablaGasto tbody tr").forEach((fila) => {
-                        let montoInput = fila.querySelector('input[name="montoGasto[]"]');
-                        let checkboxIVA = fila.querySelector('input[name="ivaGasto[]"]');
-
-                        if (montoInput) {
-                            let monto = parseFloat(montoInput.value) || 0;
-                            subtotal += monto;
-
-                            if (checkboxIVA && checkboxIVA.checked) {
-                                iva += monto * 0.16;
+                            // Actualizar el campo subtotalFlete con la suma
+                            var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
+                            if (subtotalFleteInput) {
+                                subtotalFleteInput.value = sumaGastos.toFixed(2); // Mostrar el subtotal con dos decimales
                             }
                         }
-                    });
 
-                    let checkboxRetencion = document.querySelector('#retencionCheck');
-                    if (checkboxRetencion && checkboxRetencion.checked) {
-                        retencion = subtotal * 0.04;
-                    } else {
-                        retencion = 0;
-                    }
+                        document.addEventListener("input", actualizarSubtotal);
+                        document.addEventListener("change", actualizarSubtotal);
+                    </script>
 
-                    document.querySelector('input[name="subtotalFlete"]').value = subtotal.toFixed(2);
-                    document.querySelector('input[name="impuestoFlete"]').value = iva.toFixed(2);
-                    document.querySelector('input[name="retencionFlete"]').value = retencion.toFixed(2);
-                }
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
+                    </div>
 
-                document.addEventListener("input", actualizarSubtotal);
-                document.addEventListener("change", actualizarSubtotal);
-            </script>
-
-            <div class="text-center">
-                <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
-            </div>
-
-            <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
-                <tr class="text-end">
-                    <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
-                    <td style="width: 180px;"><input class="form-control bg-warning" name="totalCotizacionNumero" type="text"></td>
-                </tr>
-                <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
-                    <td colspan="2"><b><input class="form-control bg-warning" name="totalCotizacionTexto" type="text" value="DOLARES /100 USD"></b></td>
-                </tr>
-            </table>
+                    <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
+                        <tr class="text-end">
+                            <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
+                            <td style="width: 180px;"><input class="form-control bg-warning" name="totalCotizacionNumero" type="text"></td>
+                        </tr>
+                        <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
+                            <td colspan="2"><b><input class="form-control bg-warning" name="totalCotizacionTexto" type="text" value="DOLARES /100 USD"></b></td>
+                        </tr>
+                    </table>
 
 
-            <div class="col-12 p-0">
-                <table class="mt-3 w-100" style="border: 1px solid #000000;">
-                    <tr class="text-center bg-secondary">
-                        <td colspan="2" style="border-bottom: 1px solid #000000;padding:5px;color:#fff;"><b>OBSERVACIONES</b></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <textarea value="" class="form-control" name="observaciones" style="min-height: 200px;" id="observaciones">-Se recomienda servicio de seguro de transito de mercancías
+                    <div class="col-12 p-0">
+                        <table class="mt-3 w-100" style="border: 1px solid #000000;">
+                            <tr class="text-center bg-secondary">
+                                <td colspan="2" style="border-bottom: 1px solid #000000;padding:5px;color:#fff;"><b>OBSERVACIONES</b></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea value="" class="form-control" name="observaciones" style="min-height: 200px;" id="observaciones">-Se recomienda servicio de seguro de transito de mercancías
 -Precio valido por 30 días
 -Solicitar equipo con 24 horas de anticipación
 -Precio sujeto a cambio a base de disponibilidad
 -La mercancía viaja por cuenta y riesgo del cliente 
 -Costo del seguro .0035% sobre valor mercancías / mínimo $ 120.00 USD
                             </textarea>
-                        </td>
-                    </tr>
-                    <tr style="padding:5px;">
-                        <td> </td>
-                        <td></td>
-                    </tr>
-                    <tr style="padding:5px;">
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr style="padding:5px;">
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
+                                </td>
+                            </tr>
+                            <tr style="padding:5px;">
+                                <td> </td>
+                                <td></td>
+                            </tr>
+                            <tr style="padding:5px;">
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="padding:5px;">
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
 
-            <div class="modal-footer mt-5">
-                <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
-                <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
-            </div>
-        </form>
+                    <div class="modal-footer mt-5">
+                        <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
+                        <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
+                    </div>
+                </form>
 
+            </div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script>
-        function updateTotals() {
-            const dolarInputs = document.querySelectorAll(".dolarInput");
-            const mxnOutputs = document.querySelectorAll(".mxnOutput");
-
-            let totalUSD = 0;
-            let totalMXN = 0;
-
-            dolarInputs.forEach((input) => {
-                totalUSD += parseFloat(input.value) || 0;
-            });
-            mxnOutputs.forEach((output) => {
-                totalMXN += parseFloat(output.value) || 0;
-            });
-
-            document.getElementById("totalDolar").textContent = `$${totalUSD.toFixed(2)}`;
-            document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
-        }
-
-        function addRow() {
-            const tabla = document.getElementById("incrementableTable").querySelector("tbody"); // Selecciona <tbody>
-            const totalRow = document.getElementById("totalRow"); // Fila del total
-            const newRow = document.createElement("tr");
-
-            newRow.innerHTML = `
-    <td><input type="text" placeholder="Incrementable"></td>
-    <td><input type="number" class="usd-input" value="" oninput="updateRow(this)"></td>
-    <td><input type="text" class="mxn-input" value="0" readonly></td>
-  `;
-
-            tabla.insertBefore(newRow, totalRow); // Inserta la nueva fila antes de la fila de totales
-        }
-
         function removeRow() {
             const tabla = document.getElementById("incrementableTable");
             const rows = tabla.querySelectorAll("tr");
@@ -622,6 +573,57 @@ if (isset($_SESSION['email'])) {
             } else {
                 alert("No hay más filas para eliminar.");
             }
+
+            updateTotal();
+        }
+
+        function updateRow(input) {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarValue = parseFloat(input.value) || 0;
+
+            // Encuentra la fila actual y el campo de salida (MXN)
+            const row = input.closest("tr");
+            const mxnOutput = row.querySelector(".mxn-input");
+
+            // Calcula y actualiza el valor en MXN
+            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+
+            // Actualiza los totales
+            updateTotal(); // Llamada a la función de actualización de totales
+        }
+
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".usd-input");
+
+            dolarInputs.forEach((input) => {
+                const row = input.closest("tr");
+                const mxnOutput = row.querySelector(".mxn-input");
+                const dolarValue = parseFloat(input.value) || 0;
+                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+            });
+            updateTotalsinc();
+        }
+
+        function updateTotalsinc() {
+            const dolarInputs = document.querySelectorAll(".usd-input");
+            const mxnOutputs = document.querySelectorAll(".mxn-input");
+
+            let totalUSD = 0;
+            let totalMXN = 0;
+
+            // Suma todos los valores USD y MXN
+            dolarInputs.forEach((input) => {
+                totalUSD += parseFloat(input.value) || 0;
+            });
+            mxnOutputs.forEach((output) => {
+                totalMXN += parseFloat(output.value) || 0;
+            });
+
+            // Actualiza los totales en la tabla
+            totalUSD.value = `$${totalUSD.toFixed(2)}`; // Cambiar textContent a value
+            totalMXN.value = `$${totalMXN.toFixed(2)}`; // Cambiar textContent a value
+
         }
 
 
@@ -711,11 +713,11 @@ if (isset($_SESSION['email'])) {
             const nuevaFila = tabla.insertRow();
             nuevaFila.innerHTML = `
                 <td>
-                <input style="width: 60px;" class="form-control" type="text" id="cantidadFila" name="cantidad[]">
+                <input style="width: 60px;" class="form-control" type="text" name="cantidad[]" oninput="convertToCmAndCalculateVolume(this)">
                 <p>NMFC</p></td>
                 <td>
                     <input class="form-control" type="text" name="unidadMedida[]">
-                    <input class="form-control" type="text" name="nmfc[]">
+                    <input class="form-control" type="text" name="nmfc[]" readonly>
                 </td>
                 <td>
                     <input class="form-control" type="text"  name="descripcion[]">
@@ -731,9 +733,9 @@ if (isset($_SESSION['email'])) {
                             <p>ft³</p>
                         </div>
                         <div class="col-6">
-                            <input class="form-control" type="text" id="altoFilaCm" name="largoCm[]" placeholder="Largo (cms)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <input class="form-control" type="text" id="anchoFilaCm" name="anchoCm[]" placeholder="Ancho (cms)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <input class="form-control" type="text" id="profundidadFilaCm" name="altoCm[]" placeholder="Alto (cms)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="altoFilaCm" name="largoCm[]" placeholder="Largo (mts)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="anchoFilaCm" name="anchoCm[]" placeholder="Ancho (mts)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control" type="text" id="profundidadFilaCm" name="altoCm[]" placeholder="Alto (mts)" oninput="convertToInchesAndCalculateVolume(this)">
                             <p>mts</p>
                             <input class="form-control" type="text" name="metrosCubicos[]" placeholder="metros cúbicos" readonly>
                             <p>m³</p>
@@ -790,12 +792,12 @@ if (isset($_SESSION['email'])) {
             const height = parseFloat(row.querySelector("[placeholder='Largo (pulgadas)']").value) || 0;
             const width = parseFloat(row.querySelector("[placeholder='Ancho (pulgadas)']").value) || 0;
             const deep = parseFloat(row.querySelector("[placeholder='Alto (pulgadas)']").value) || 0;
-            const cantidad = parseFloat(row.querySelector("input[id='cantidadFila']").value) || 1;
+            const cantidad = parseFloat(row.querySelector("input[name='cantidad[]']").value) || 1;
 
             // Convertir pulgadas a centímetros y calcular volumen
-            row.querySelector("[placeholder='Largo (cms)']").value = (height * 0.0254).toFixed(2);
-            row.querySelector("[placeholder='Ancho (cms)']").value = (width * 0.0254).toFixed(2);
-            row.querySelector("[placeholder='Alto (cms)']").value = (deep * 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Largo (mts)']").value = (height * 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Ancho (mts)']").value = (width * 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Alto (mts)']").value = (deep * 0.0254).toFixed(2);
             const volumeFt3 = ((height * 0.08333) * (width * 0.08333) * (deep * 0.08333)) * cantidad;
             row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
             const volumeM3 = volumeFt3 * 0.0283168;
@@ -806,9 +808,9 @@ if (isset($_SESSION['email'])) {
 
         function convertToInchesAndCalculateVolume(element) {
             const row = element.closest('tr');
-            const altura = parseFloat(row.querySelector("[placeholder='Largo (cms)']").value) || 0;
-            const ancho = parseFloat(row.querySelector("[placeholder='Ancho (cms)']").value) || 0;
-            const profundidad = parseFloat(row.querySelector("[placeholder='Alto (cms)']").value) || 0;
+            const altura = parseFloat(row.querySelector("[placeholder='Largo (mts)']").value) || 0;
+            const ancho = parseFloat(row.querySelector("[placeholder='Ancho (mts)']").value) || 0;
+            const profundidad = parseFloat(row.querySelector("[placeholder='Alto (mts)']").value) || 0;
 
             // Convertir centímetros a pulgadas y calcular volumen
             row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 2.54).toFixed(2);
@@ -846,49 +848,62 @@ if (isset($_SESSION['email'])) {
             let totalValor = 0;
             let totalFt3 = 0;
             let totalM3 = 0;
+            let totalCantidad = 0;
 
-            // Iterar sobre cada fila para sumar los totales
             for (let i = 1; i < tabla.rows.length; i++) {
                 const fila = tabla.rows[i];
 
-                // Obtener peso en libras, kilogramos, y valor
+                // Obtener elementos de la fila
                 const pesoLbsInput = fila.querySelector("input[name='libras']");
                 const pesoKgsInput = fila.querySelector("input[name='kilogramos']");
                 const valorInput = fila.querySelector("input[id='valorFilaMercancia']");
                 const ft3Input = fila.querySelector("[placeholder='pies cúbicos']");
                 const m3Input = fila.querySelector("[placeholder='metros cúbicos']");
+                const cantidadInput = fila.querySelector("input[name='cantidad[]']");
+                const nmfcInput = fila.querySelector("input[name='nmfc[]']");
 
-                // Obtener las dimensiones y cantidad de la fila
-                const altoCm = parseFloat(fila.querySelector("input[id='altoFilaCm']").value) || 0;
-                const anchoCm = parseFloat(fila.querySelector("input[id='anchoFilaCm']").value) || 0;
-                const profundidadCm = parseFloat(fila.querySelector("input[id='profundidadFilaCm']").value) || 0;
-                const cantidad = parseFloat(fila.querySelector("input[id='cantidadFila']").value) || 1; // Default a 1 si no hay cantidad
+                // Obtener valores de la fila
+                let pesoLbs = parseFloat(pesoLbsInput.value) || 0;
+                let pesoKgs = parseFloat(pesoKgsInput.value) || 0;
+                let valor = parseFloat(valorInput.value) || 0;
+                let ft3 = parseFloat(ft3Input.value) || 0;
+                let m3 = parseFloat(m3Input.value) || 0;
+                let cantidad = parseFloat(cantidadInput.value) || 0;
 
-                // Sumar valores de peso, volumen, y valor
-                if (pesoLbsInput) {
-                    const pesoLbs = parseFloat(pesoLbsInput.value) || 0;
-                    totalLbs += pesoLbs;
-                }
+                // Sumar totales correctamente (solo una vez)
+                totalLbs += pesoLbs;
+                totalKgs += pesoKgs;
+                totalValor += valor;
+                totalFt3 += ft3;
+                totalM3 += m3;
+                totalCantidad += cantidad;
 
-                if (pesoKgsInput) {
-                    const pesoKgs = parseFloat(pesoKgsInput.value) || 0;
-                    totalKgs += pesoKgs;
-                }
+                // Calcular la relación pies cúbicos / peso en libras
+                let ratio = pesoLbs > 0 ? pesoLbs / ft3 : 0;
+                let nmfc = '';
 
-                if (valorInput) {
-                    const valor = parseFloat(valorInput.value) || 0;
-                    totalValor += valor;
-                }
+                // Asignar el valor de NMFC según la tabla
+                if (ratio >= 50) nmfc = 50;
+                else if (ratio >= 35) nmfc = 55;
+                else if (ratio >= 30) nmfc = 60;
+                else if (ratio >= 22.5) nmfc = 65;
+                else if (ratio >= 15) nmfc = 70;
+                else if (ratio >= 13.5) nmfc = 77.5;
+                else if (ratio >= 12) nmfc = 85;
+                else if (ratio >= 10.5) nmfc = 92.5;
+                else if (ratio >= 9) nmfc = 100;
+                else if (ratio >= 8) nmfc = 110;
+                else if (ratio >= 7) nmfc = 125;
+                else if (ratio >= 6) nmfc = 150;
+                else if (ratio >= 5) nmfc = 175;
+                else if (ratio >= 4) nmfc = 200;
+                else if (ratio >= 3) nmfc = 250;
+                else if (ratio >= 2) nmfc = 300;
+                else if (ratio >= 1) nmfc = 400;
+                else if (ratio > 0) nmfc = 500;
 
-                if (ft3Input) {
-                    const ft3 = parseFloat(ft3Input.value) || 0;
-                    totalFt3 += ft3;
-                }
-
-                if (m3Input) {
-                    const m3 = parseFloat(m3Input.value) || 0;
-                    totalM3 += m3;
-                }
+                // Asignar el valor calculado al campo NMFC
+                if (nmfcInput) nmfcInput.value = nmfc;
             }
 
             // Mostrar los totales en los inputs correspondientes
@@ -897,10 +912,12 @@ if (isset($_SESSION['email'])) {
             document.getElementById("valorMercancia").value = totalValor.toFixed(2);
             document.getElementById("ft3Total").value = totalFt3.toFixed(2);
             document.getElementById("m3Total").value = totalM3.toFixed(2);
+            document.getElementById("totalBultos").value = totalCantidad; // Ahora totalBultos es correcto
 
-            // Actualizar el valor comercial
+            // Actualizar otros cálculos
             actualizarValorComercial();
             actualizarValoresUSD_MXN();
+            updateTotal();
         }
 
         function actualizarValorComercial() {
@@ -914,52 +931,27 @@ if (isset($_SESSION['email'])) {
             document.getElementById("valorComercial").value = valorComercial.toFixed(2);
         }
 
-        function updateRow(input) {
-            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-            const dolarValue = parseFloat(input.value) || 0;
+        function updateTotal() {
+            let totalUSDValue = 0;
+            let totalMXNValue = 0;
 
-            // Encuentra la fila actual y el campo de salida (MXN)
-            const row = input.closest("tr");
-            const mxnOutput = row.querySelector(".mxn-input");
-
-            // Calcula y actualiza el valor en MXN
-            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-
-            // Actualiza los totales
-            updateTotalsinc();
-        }
-
-        function actualizarValoresUSD_MXN() {
-            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-            const dolarInputs = document.querySelectorAll(".usd-input");
-
-            dolarInputs.forEach((input) => {
-                const row = input.closest("tr");
-                const mxnOutput = row.querySelector(".mxn-input");
-                const dolarValue = parseFloat(input.value) || 0;
-                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-            });
-            updateTotalsinc();
-        }
-
-        function updateTotalsinc() {
-            const dolarInputs = document.querySelectorAll(".usd-input");
-            const mxnOutputs = document.querySelectorAll(".mxn-input");
-
-            let totalUSD = 0;
-            let totalMXN = 0;
-
-            // Suma todos los valores USD y MXN
-            dolarInputs.forEach((input) => {
-                totalUSD += parseFloat(input.value) || 0;
-            });
-            mxnOutputs.forEach((output) => {
-                totalMXN += parseFloat(output.value) || 0;
+            // Actualizar totalUSD
+            document.querySelectorAll(".usd-input").forEach(input => {
+                totalUSDValue += parseFloat(input.value) || 0;
             });
 
-            // Actualiza los totales en la tabla
-            document.getElementById("totalUSD").textContent = `$${totalUSD.toFixed(2)}`;
-            document.getElementById("totalMXN").textContent = `$${totalMXN.toFixed(2)}`;
+            // Actualizar totalMXN
+            document.querySelectorAll(".mxn-input").forEach(input => {
+                totalMXNValue += parseFloat(input.value) || 0;
+            });
+
+            // Actualizar los inputs de totales con el valor calculado
+            totalUSD.value = totalUSDValue.toFixed(2); // Cambiar textContent a value
+            totalMXN.value = totalMXNValue.toFixed(2); // Cambiar textContent a value
+            fleteUSDGasto.value = totalUSDValue.toFixed(2);
+
+
+
         }
 
         function nuevoGasto() {
@@ -1005,30 +997,6 @@ if (isset($_SESSION['email'])) {
             fila.remove();
 
             actualizarSubtotal();
-        }
-
-        function actualizarSubtotal() {
-            var sumaGastos = 0;
-
-            // Obtener todos los inputs de montoGasto y sumar sus valores
-            var montoGastoInputs = document.querySelectorAll("[name='montoGasto[]']");
-            montoGastoInputs.forEach(input => {
-                var valor = parseFloat(input.value) || 0;
-                sumaGastos += valor;
-            });
-
-            // Obtener el valor de montoSeguro y sumarlo
-            var montoSeguroInput = document.querySelector("[name='montoSeguro']");
-            if (montoSeguroInput) {
-                var valorSeguro = parseFloat(montoSeguroInput.value) || 0;
-                sumaGastos += valorSeguro;
-            }
-
-            // Actualizar el campo subtotalFlete con la suma
-            var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
-            if (subtotalFleteInput) {
-                subtotalFleteInput.value = sumaGastos.toFixed(2); // Mostrar el subtotal con dos decimales
-            }
         }
     </script>
 </body>
