@@ -93,9 +93,18 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
                         <select class="form-select bg-warning" name="tipoFtl">
-                            <option value="COTIZACION DE FLETE TRAILER COMPLETO / FTL USA / DRY VAN 53 FT">COTIZACION DE FLETE TRAILER COMPLETO / FTL USA / DRY VAN 53 FT</option>
-                            <option value="COTIZACION DE FLETE PLATAFORMA CON SOBREPESOS / FTL USA / FLATBED OVERWEIGHT FREIGHT">COTIZACION DE FLETE PLATAFORMA CON SOBREPESOS / FTL USA / FLATBED OVERWEIGHT FREIGHT</option>
-                            <option value="COTIZACION DE FLETE PLATAFORMA CON SOBREDIMENSIONADO / FTL USA / FLATBED OVERSIZED FREIGHT">COTIZACION DE FLETE PLATAFORMA CON SOBREDIMENSIONADO / FTL USA / FLATBED OVERSIZED FREIGHT</option>
+                            <option selected>Selecciona un servicio</option>
+                            <?php
+                            $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
+                            $result = mysqli_query($con, $query);
+
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($registro = mysqli_fetch_assoc($result)) {
+                                    $nombre = $registro['nombreServicio'];
+                                    echo "<option value='$nombre'>" . $nombre . "</option>";
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
@@ -177,13 +186,13 @@ if (isset($_SESSION['email'])) {
                         <p id="detalleDestino"></p>
                     </div>
 
-                    <div class="col-8 mt-3 mb-3">
+                    <div class="col-7 mt-3 mb-3">
                         <div class="row justify-content-start">
-                            <div class="col-6">
+                            <div class="col-8">
                                 <p style="display: inline-block;margin-bottom: 5px;">
                                     <b>Distancia:</b>
                                     <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="millas" oninput="convertirAMetros()">
-                                    millas |
+                                    millas
                                     <input name="distanciaOrigenDestinoKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
                                 </p><br>
 
@@ -197,7 +206,7 @@ if (isset($_SESSION['email'])) {
                                     <input name="servicio" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
                                 </p>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <p style="display: inline-block;margin-bottom: 5px;">
                                     <b>Total CFT:</b>
                                     <input name="totalFt3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
@@ -211,11 +220,11 @@ if (isset($_SESSION['email'])) {
                         </div>
                     </div>
 
-                    <div class="col-4 mt-3 mb-3">
+                    <div class="col-5 mt-3 mb-3 text-end">
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Distancia:</b>
                             <input name="distanciaDestinoFinalMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
-                            millas |
+                            millas
                             <input name="distanciaDestinoFinalKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
                         </p><br>
 
@@ -231,13 +240,13 @@ if (isset($_SESSION['email'])) {
 
                         <p style="display: inline-block;">
                             <b>Unidad:</b>
-                            <input name="unidad" class="form-control" style="width: 230px; display: inline-block;" type="text" id="servicio" value="Servicio trailer directo FTL">
+                            <input name="unidad" class="form-control" style="width: 230px; display: inline-block;" type="text" id="servicio" value="Servicio tráiler directo FTL">
                         </p>
 
                     </div>
 
                     <div class="col-12 bg-light text-center p-2">
-                        <p><b>DESCRIPCIÓN DE LAS MERCANCIAS</b></p>
+                        <p><b>DESCRIPCION DE LAS MERCANCIAS</b></p>
                         <table class="table table-striped" id="miTablaCotizacion">
                             <tr>
                                 <th>Cantidad</th>
@@ -264,7 +273,7 @@ if (isset($_SESSION['email'])) {
                             <div class="col-4">
                                 <table class="text-end">
                                     <tr>
-                                        <td>Peso total de la mercancia</td>
+                                        <td>Peso total de la mercancía</td>
                                         <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaLbs" name="pesoMercanciaLbs" readonly> lbs</td>
                                     </tr>
                                     <tr>
@@ -277,8 +286,8 @@ if (isset($_SESSION['email'])) {
                             <div class="col-5">
                                 <table class="text-end w-100">
                                     <tr>
-                                        <td>Valor total de la mercancia USD</td>
-                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly></td>
+                                        <td>Valor total de la mercancía USD</td>
+                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly oninput="actualizarSubtotal();"></td>
                                     </tr>
                                     <tr>
                                         <td>VALOR TOTAL COMERCIAL PESOS</td>
@@ -318,7 +327,7 @@ if (isset($_SESSION['email'])) {
                                     <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" name="incrementable[]" class="form-control" value="Cancelacion bond"></td>
+                                    <td><input type="text" name="incrementable[]" class="form-control" value="Cancelación bond"></td>
                                     <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
                                     <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
                                 </tr>
@@ -413,7 +422,7 @@ if (isset($_SESSION['email'])) {
                                                 <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro tránsito de mercancía">
                                             </div>
                                             <div class="col-3">
-                                                <input type="text" class="form-control" name="porcentajeSeguro" value="37%">
+                                                <input type="text" class="form-control" name="porcentajeSeguro" value="38%" oninput="actualizarSubtotal();">
                                             </div>
                                         </div>
                                     </td>
@@ -424,16 +433,16 @@ if (isset($_SESSION['email'])) {
                                         </div>
                                     </td>
                                     <td colspan="2" class="text-end">
-                                        <input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()">
+                                        <input type="text" id="montoSeguro" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()" readonly>
                                     </td>
                                 </tr>
                                 <tr class="text-end">
                                     <td colspan="2">Subtotal</td>
-                                    <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
+                                    <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
                                 </tr>
                                 <tr class="text-end">
                                     <td colspan="2">I.V.A 16%</td>
-                                    <td colspan="2"><input class="form-control" name="impuestoFlete" type="text"></td>
+                                    <td colspan="2"><input class="form-control" name="impuestoFlete" type="text" readonly></td>
                                 </tr>
                                 <tr class="text-end">
                                     <td colspan="2">
@@ -442,7 +451,7 @@ if (isset($_SESSION['email'])) {
                                             <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
                                         </div>
                                     </td>
-                                    <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00"></td>
+                                    <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00" readonly></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -475,6 +484,7 @@ if (isset($_SESSION['email'])) {
                                 retencion = 0;
                             }
 
+                            // Actualizar los valores de los inputs
                             document.querySelector('input[name="subtotalFlete"]').value = subtotal.toFixed(2);
                             document.querySelector('input[name="impuestoFlete"]').value = iva.toFixed(2);
                             document.querySelector('input[name="retencionFlete"]').value = retencion.toFixed(2);
@@ -488,8 +498,19 @@ if (isset($_SESSION['email'])) {
                                 sumaGastos += valor;
                             });
 
-                            // Obtener el valor de montoSeguro y sumarlo
-                            var montoSeguroInput = document.querySelector("[name='montoSeguro']");
+                            // Calcular el monto del seguro
+                            let valorMercancia = parseFloat(document.querySelector('input[name="valorMercancia"]').value) || 0;
+                            let porcentajeSeguroInput = document.querySelector('input[name="porcentajeSeguro"]').value;
+                            let montoSeguroInput = document.querySelector('input[id="montoSeguro"]');
+
+                            // Convertir porcentaje a decimal (ejemplo: "38%" -> 0.38)
+                            let porcentajeSeguro = parseFloat(porcentajeSeguroInput.replace('%', '')) / 100;
+                            let montoSeguro = valorMercancia * porcentajeSeguro;
+
+
+                            montoSeguroInput.value = montoSeguro.toFixed(2);
+
+
                             if (montoSeguroInput) {
                                 var valorSeguro = parseFloat(montoSeguroInput.value) || 0;
                                 sumaGastos += valorSeguro;
@@ -498,13 +519,20 @@ if (isset($_SESSION['email'])) {
                             // Actualizar el campo subtotalFlete con la suma
                             var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
                             if (subtotalFleteInput) {
-                                subtotalFleteInput.value = sumaGastos.toFixed(2); // Mostrar el subtotal con dos decimales
+                                subtotalFleteInput.value = sumaGastos.toFixed(2);
                             }
+
+                            // Calcular el total de la cotización
+                            let totalCotizacion = (subtotal + iva - retencion).toFixed(2);
+                            document.querySelector('input[name="totalCotizacionNumero"]').value = totalCotizacion;
                         }
 
                         document.addEventListener("input", actualizarSubtotal);
                         document.addEventListener("change", actualizarSubtotal);
                     </script>
+
+
+
 
                     <div class="text-center">
                         <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
@@ -513,7 +541,9 @@ if (isset($_SESSION['email'])) {
                     <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
                         <tr class="text-end">
                             <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
-                            <td style="width: 180px;"><input class="form-control bg-warning" name="totalCotizacionNumero" type="text"></td>
+                            <td style="width: 180px;">
+                                <input class="form-control bg-warning" name="totalCotizacionNumero" type="text" readonly>
+                            </td>
                         </tr>
                         <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
                             <td colspan="2"><b><input class="form-control bg-warning" name="totalCotizacionTexto" type="text" value="DOLARES /100 USD"></b></td>
@@ -529,12 +559,12 @@ if (isset($_SESSION['email'])) {
                             <tr>
                                 <td>
                                     <textarea value="" class="form-control" name="observaciones" style="min-height: 200px;" id="observaciones">-Se recomienda servicio de seguro de transito de mercancías
--Precio valido por 30 días
+-Precio válido por 30 días
 -Solicitar equipo con 24 horas de anticipación
 -Precio sujeto a cambio a base de disponibilidad
 -La mercancía viaja por cuenta y riesgo del cliente 
--Costo del seguro .0035% sobre valor mercancías / mínimo $ 120.00 USD
-                            </textarea>
+-Costo del seguro .0038% sobre valor mercancías / mínimo $ 120.00 USD
+</textarea>
                                 </td>
                             </tr>
                             <tr style="padding:5px;">

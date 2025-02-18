@@ -129,6 +129,10 @@ require 'dbcon.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Proveedores
                         </a>
+                        <a class="nav-link" href="alta-servicio.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Servicios
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
