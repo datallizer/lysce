@@ -44,8 +44,8 @@ require 'dbcon.php';
                         </a>
                         <div class="collapse" id="collapseAereo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="aereoimpointernacional.php">Importación carga internacional</a>
-                                <a class="nav-link" href="cotizaciones.php">Exportación carga internacional</a>
+                                <a class="nav-link" href="aereoimpointernacional.php">Importación</a>
+                                <a class="nav-link" href="cotizaciones.php">Exportación</a>
                             </nav>
                         </div>
 
