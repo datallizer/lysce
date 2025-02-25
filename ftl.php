@@ -58,6 +58,30 @@ if (isset($_SESSION['email'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
+<style>
+    .spinner-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+    }
+
+    .spinner-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .spinner {
+        width: 3rem;
+        height: 3rem;
+    }
+</style>
 
 <body class="sb-nav-fixed">
     <?php include 'sidenav.php'; ?>
@@ -129,9 +153,12 @@ LEFT JOIN
                                                         <p><?= $registro['fecha']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <a href="generate_ftl.php?id=<?= $registro['id']; ?>" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
+                                                        <a href="generate_ftl.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1">
+                                                            <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                                                        </a>
 
-                                                        <form action="codecotizaciones.php" method="POST" class="d-inline">
+
+                                                        <form action="codeftl.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
 
@@ -166,11 +193,43 @@ LEFT JOIN
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="spinner-overlay" style="z-index: 9999;">
+        <div class="spinner-container">
+            <div class="spinner-grow text-primary spinner" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
+    <script src="js/js.js"></script>
+    <script>
+        $(document).ready(function() {
+            const downloadButtons = document.querySelectorAll(".file-download");
+            const spinnerOverlay = document.querySelector(".spinner-overlay");
+
+            downloadButtons.forEach(button => {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    $('.spinner-overlay').show();
+
+                    const url = button.href;
+
+                    setTimeout(() => {
+                        window.location.href = url;
+                        setTimeout(() => {
+                            spinnerOverlay.style.display = "none"; // Oculta el spinner después de un tiempo
+                        }, 8000); // Ajusta el tiempo según sea necesario
+                    }, 500);
+                });
+            });
+        });
+    </script>
+
 
 </body>
 

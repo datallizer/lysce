@@ -1,20 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-.navbar{
-    height: 85px;
-    z-index: 999999 !important;
-    transition: 0.4s ease-out;
-    background-color: #ffffff;
-  }
-  .navbar.scrolled {
-    height: 80px;
-  }
- 
-.offcanvas-body {
-  padding: 0; 
+.navbar {
+  height: 85px;
+  z-index: 999999 !important;
+  transition: 0.4s ease-out;
+  background-color: #ffffff;
 }
 
-.navbar-nav a{
+.navbar.scrolled {
+  height: 80px;
+}
+
+.offcanvas-body {
+  padding: 0;
+}
+
+.navbar-nav a {
   font-family: "Poppins", sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -22,45 +23,48 @@
   margin: 0px 9px;
 }
 
-.loginBody{
-    background-image: url(https://img.freepik.com/foto-gratis/logistica-transporte-buques-carga-contenedores-aviones-carga-puente-grua-funcionamiento-astillero-al-amanecer-antecedentes-logisticos-industria-importacion-exportacion-transporte-ai-generativo_123827-24177.jpg?t=st=1727215473~exp=1727219073~hmac=c53b3fbda05111c589d1932a5e45246e5f9b774a9d457853a5ae817b8ce0499d&w=740);background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
+.loginBody {
+  background-image: url(https://img.freepik.com/foto-gratis/logistica-transporte-buques-carga-contenedores-aviones-carga-puente-grua-funcionamiento-astillero-al-amanecer-antecedentes-logisticos-industria-importacion-exportacion-transporte-ai-generativo_123827-24177.jpg?t=st=1727215473~exp=1727219073~hmac=c53b3fbda05111c589d1932a5e45246e5f9b774a9d457853a5ae817b8ce0499d&w=740);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
-.card-header{
-    background-color: #222222 !important;
+.card-header {
+  background-color: #222222 !important;
 }
-.card-header h4{
+
+.card-header h4 {
   color: #ffffff !important;
 }
-.modal{
-    z-index: 99999999 !important;
+
+.modal {
+  z-index: 99999999 !important;
+}
+
+p {
+  margin-bottom: 0px;
+}
+
+.gastos-table input {
+  width: 80px !important;
+}
+
+@media screen and (max-width: 1000px) {
+  .offcanvas {
+    width: 70vw !important;
   }
 
-  p {
-    margin-bottom: 0px;
+  .offcanvas-body a {
+    color: #222222 !important;
   }
 
-  .gastos-table input{
-    width: 80px !important;
+  .nav-link {
+    border-bottom: 1px solid #f3f3f3;
   }
 
-@media screen and (max-width: 1000px){
-    .offcanvas{
-      width: 70vw !important;
-    }
-
-    .offcanvas-body a{
-      color: #222222 !important;
-    }
-
-    .nav-link{
-      border-bottom: 1px solid #f3f3f3;
-    }
-
-    .btnregistro{
-      background-color: #e7e7e7;
-    }
-
+  .btnregistro {
+    background-color: #e7e7e7;
   }
+
+}

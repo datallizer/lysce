@@ -87,7 +87,7 @@ if (isset($_SESSION['email'])) {
                                     </thead>
                                     <tbody>
                                     <?php
-                                        $query = "SELECT * FROM tipoServicio ORDER BY id DESC";
+                                        $query = "SELECT * FROM tiposervicio ORDER BY id DESC";
 
                                         $query_run = mysqli_query($con, $query);
 

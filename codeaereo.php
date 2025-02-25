@@ -4,6 +4,23 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (isset($_POST['delete'])) {
+    $registro_id = mysqli_real_escape_string($con, $_POST['delete']);
+
+    $query = "DELETE FROM aereoimportacion WHERE id='$registro_id' ";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        $_SESSION['message'] = "Usuario eliminado exitosamente";
+        header("Location: aereoimpointernacional.php");
+        exit(0);
+    } else {
+        $_SESSION['message'] = "Error al eliminar el usuario, contácte a soporte";
+        header("Location: aereoimpointernacional.php");
+        exit(0);
+    }
+}
+
 if (isset($_POST['save'])) { 
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
@@ -122,7 +139,7 @@ if (isset($_POST['save'])) {
     exportsCustomsUno, exportsCustomsDos, exportsCustomsTotal, exportsCustomsTotalUsd, xRayUno, xRayDos, xRayTotal, xRayTotalUsd, airportTaxUno, airportTaxDos, airportTaxTotal, airportTaxTotalUsd, amsFeeOrigenUno, amsFeeOrigenDos, amsFeeOrigenTotal, amsFeeOrigenTotalUsd, adicionalOrigenUnoTitle, adicionalOrigenUnoUno, adicionalOrigenUnoDos, 
     adicionalOrigenUnoTotal, adicionalOrigenUnoTotalUsd, adicionalOrigenDosTitle, adicionalOrigenDosUno, adicionalOrigenDosDos, adicionalOrigenDosTotal, adicionalOrigenDosTotalUsd, hawbDos, hawbTotal, hawbTotalUSD, fscADos, fscATotal, fscATotalUsd, sscADos, sscATotal, sscATotalUsd, subtotalOrigen, totalOrigen, lugarDestino, 
     handlingUsd, handlingMx, desconsolUsd, desconsolMx, collectionFeeUsd, collectionFeeMx, amsFeeUsd, amsFeeMx, adicionalDestinoUno, adicionalDestinoUnoUsd, adicionalDestinoUnoMx, adicionalDestinoDos, adicionalDestinoDosUsd, adicionalDestinoDosMx, subtotalDestinoUsd, subtotalDestinoMx, impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd,
-    totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, totalIncrementableMx, subtotalFlete, , retencionFlete
+    totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, totalIncrementableMx, subtotalFlete, retencionFlete
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$pesoCargableKgs', '$pesoCotizacion', '$valorMercancia',
     '$valorComercial', '$collectionFeeOrigenUno', '$collectionFeeOrigenDos', '$collectionFeeOrigenTotal', '$collectionFeeOrigenTotalUsd', '$screeningChargeUno', '$screeningChargeDos', '$screeningChargeTotal', '$screeningChargeTotalUsd', '$terminalHandlingUno', '$terminalHandlingDos', '$terminalHandlingTotal', '$terminalHandlingTotalUsd', '$airportTransferUno', '$airportTransferDos', '$airportTransferTotal', '$airportTransferTotalUsd',
@@ -139,11 +156,11 @@ if (isset($_POST['save'])) {
         $id = mysqli_insert_id($con);
 
         $_SESSION['message'] = "Se registró exitosamente";
-        header("Location: aereoimportacion.php");
+        header("Location: aereoimpointernacional.php");
         exit(0);
     } else {
         $_SESSION['message'] = "Error, contacte a soporte";
-        header("Location: aereoimportacion.php");
+        header("Location: aereoimpointernacional.php");
         exit(0);
     }
 }

@@ -4,6 +4,23 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (isset($_POST['delete'])) {
+    $registro_id = mysqli_real_escape_string($con, $_POST['delete']);
+
+    $query = "DELETE FROM ftl WHERE id='$registro_id' ";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        $_SESSION['message'] = "Usuario eliminado exitosamente";
+        header("Location: ftl.php");
+        exit(0);
+    } else {
+        $_SESSION['message'] = "Error al eliminar el usuario, contácte a soporte";
+        header("Location: ftl.php");
+        exit(0);
+    }
+}
+
 if (isset($_POST['save'])) {
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
@@ -28,7 +45,6 @@ if (isset($_POST['save'])) {
     $totalBultos = mysqli_real_escape_string($con, $_POST['totalBultos']);
     $valorMercancia = mysqli_real_escape_string($con, $_POST['valorMercancia']);
     $valorComercial = mysqli_real_escape_string($con, $_POST['valorComercial']);
-    $fleteTerrestre = mysqli_real_escape_string($con, $_POST['fleteTerrestre']);
     $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
     $impuestosFlete = mysqli_real_escape_string($con, $_POST['impuestosFlete']);
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
@@ -37,7 +53,6 @@ if (isset($_POST['save'])) {
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
     $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
-    $impuestoFlete = mysqli_real_escape_string($con, $_POST['impuestoFlete']);
     $tipoFtl = mysqli_real_escape_string($con, $_POST['tipoFtl']);
     
     $sql = "INSERT INTO ftl (
@@ -45,13 +60,13 @@ if (isset($_POST['save'])) {
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
         totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
         operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, totalBultos, 
-        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, impuestoFlete, tipoFtl
+        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, tipoFtl
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$impuestoFlete', '$tipoFtl'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoFtl'
     )";
 
     $query_run = mysqli_query($con, $sql);

@@ -442,7 +442,7 @@ if (isset($_SESSION['email'])) {
                                 </tr>
                                 <tr class="text-end">
                                     <td colspan="2">I.V.A 16%</td>
-                                    <td colspan="2"><input class="form-control" name="impuestoFlete" type="text" readonly></td>
+                                    <td colspan="2"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
                                 </tr>
                                 <tr class="text-end">
                                     <td colspan="2">
@@ -486,7 +486,7 @@ if (isset($_SESSION['email'])) {
 
                             // Actualizar los valores de los inputs
                             document.querySelector('input[name="subtotalFlete"]').value = subtotal.toFixed(2);
-                            document.querySelector('input[name="impuestoFlete"]').value = iva.toFixed(2);
+                            document.querySelector('input[name="impuestosFlete"]').value = iva.toFixed(2);
                             document.querySelector('input[name="retencionFlete"]').value = retencion.toFixed(2);
 
                             var sumaGastos = 0;
