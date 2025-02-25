@@ -89,8 +89,21 @@ if (!empty($message)) {
                 <input class="form-control" type="text" name="fecha" id="expedicion" value="">
             </div>
             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                <p><b>COTIZACION DE FLETE ÁEREO / CARGA INTERNACIONAL</b></p>
-            </div>
+                        <select class="form-select bg-warning" name="tipoAereoImpo">
+                            <option selected>Selecciona un servicio</option>
+                            <?php
+                            $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereo'";
+                            $result = mysqli_query($con, $query);
+
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($registro = mysqli_fetch_assoc($result)) {
+                                    $nombre = $registro['nombreServicio'];
+                                    echo "<option value='$nombre'>" . $nombre . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
             <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                 <p class="mb-1"><b>Cliente</b></p>
                 <select class="form-select mb-3" name="idCliente" id="cliente">

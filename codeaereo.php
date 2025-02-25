@@ -131,6 +131,8 @@ if (isset($_POST['save'])) {
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
     $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
+    $tipoAereoImpo = mysqli_real_escape_string($con, $_POST['tipoAereoImpo']);
+
     
     
     $sql = "INSERT INTO aereoimportacion (
@@ -139,14 +141,14 @@ if (isset($_POST['save'])) {
     exportsCustomsUno, exportsCustomsDos, exportsCustomsTotal, exportsCustomsTotalUsd, xRayUno, xRayDos, xRayTotal, xRayTotalUsd, airportTaxUno, airportTaxDos, airportTaxTotal, airportTaxTotalUsd, amsFeeOrigenUno, amsFeeOrigenDos, amsFeeOrigenTotal, amsFeeOrigenTotalUsd, adicionalOrigenUnoTitle, adicionalOrigenUnoUno, adicionalOrigenUnoDos, 
     adicionalOrigenUnoTotal, adicionalOrigenUnoTotalUsd, adicionalOrigenDosTitle, adicionalOrigenDosUno, adicionalOrigenDosDos, adicionalOrigenDosTotal, adicionalOrigenDosTotalUsd, hawbDos, hawbTotal, hawbTotalUSD, fscADos, fscATotal, fscATotalUsd, sscADos, sscATotal, sscATotalUsd, subtotalOrigen, totalOrigen, lugarDestino, 
     handlingUsd, handlingMx, desconsolUsd, desconsolMx, collectionFeeUsd, collectionFeeMx, amsFeeUsd, amsFeeMx, adicionalDestinoUno, adicionalDestinoUnoUsd, adicionalDestinoUnoMx, adicionalDestinoDos, adicionalDestinoDosUsd, adicionalDestinoDosMx, subtotalDestinoUsd, subtotalDestinoMx, impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd,
-    totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, totalIncrementableMx, subtotalFlete, retencionFlete
+    totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, totalIncrementableMx, subtotalFlete, retencionFlete, tipoAereoImpo
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$pesoCargableKgs', '$pesoCotizacion', '$valorMercancia',
     '$valorComercial', '$collectionFeeOrigenUno', '$collectionFeeOrigenDos', '$collectionFeeOrigenTotal', '$collectionFeeOrigenTotalUsd', '$screeningChargeUno', '$screeningChargeDos', '$screeningChargeTotal', '$screeningChargeTotalUsd', '$terminalHandlingUno', '$terminalHandlingDos', '$terminalHandlingTotal', '$terminalHandlingTotalUsd', '$airportTransferUno', '$airportTransferDos', '$airportTransferTotal', '$airportTransferTotalUsd',
     '$exportsCustomsUno', '$exportsCustomsDos', '$exportsCustomsTotal', '$exportsCustomsTotalUsd', '$xRayUno', '$xRayDos', '$xRayTotal', '$xRayTotalUsd', '$airportTaxUno', '$airportTaxDos', '$airportTaxTotal', '$airportTaxTotalUsd', '$amsFeeOrigenUno', '$amsFeeOrigenDos', '$amsFeeOrigenTotal', '$amsFeeOrigenTotalUsd', '$adicionalOrigenUnoTitle', '$adicionalOrigenUnoUno', '$adicionalOrigenUnoDos', 
     '$adicionalOrigenUnoTotal', '$adicionalOrigenUnoTotalUsd', '$adicionalOrigenDosTitle', '$adicionalOrigenDosUno', '$adicionalOrigenDosDos', '$adicionalOrigenDosTotal', '$adicionalOrigenDosTotalUsd', '$hawbDos', '$hawbTotal', '$hawbTotalUSD', '$fscADos', '$fscATotal', '$fscATotalUsd', '$sscADos', '$sscATotal', '$sscATotalUsd', '$subtotalOrigen', '$totalOrigen', '$lugarDestino',
     '$handlingUsd', '$handlingMx', '$desconsolUsd', '$desconsolMx', '$collectionFeeUsd', '$collectionFeeMx', '$amsFeeUsd', '$amsFeeMx', '$adicionalDestinoUno', '$adicionalDestinoUnoUsd', '$adicionalDestinoUnoMx', '$adicionalDestinoDos', '$adicionalDestinoDosUsd', '$adicionalDestinoDosMx', '$subtotalDestinoUsd', '$subtotalDestinoMx', '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd',
-    '$totalDestinoMx', '$valorTotalFlete', '$fleteExtranjeroUsd', '$fleteExtranjeroMx', '$maniobrasUsd', '$maniobrasMx', '$almacenajeUsd', '$almacenajeMx', '$totalIncrementableUsd', '$totalIncrementableMx', '$subtotalFlete', '$retencionFlete'
+    '$totalDestinoMx', '$valorTotalFlete', '$fleteExtranjeroUsd', '$fleteExtranjeroMx', '$maniobrasUsd', '$maniobrasMx', '$almacenajeUsd', '$almacenajeMx', '$totalIncrementableUsd', '$totalIncrementableMx', '$subtotalFlete', '$retencionFlete', '$tipoAereoImpo'
     )";
 
     $query_run = mysqli_query($con, $sql);
