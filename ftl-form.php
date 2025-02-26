@@ -310,27 +310,7 @@ if (isset($_SESSION['email'])) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Filas predeterminadas -->
-                                <tr>
-                                    <td><input type="text" name="incrementable[]" class="form-control" value="Flete extranjero"></td>
-                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this);updateTotal();"></td>
-                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" name="incrementable[]" class="form-control" value="Maniobras"></td>
-                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" name="incrementable[]" class="form-control" value="Almacenaje"></td>
-                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" name="incrementable[]" class="form-control" value="Cancelación bond"></td>
-                                    <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this)"></td>
-                                    <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-                                </tr>
+
                             </tbody>
                             <tfoot>
                                 <tr id="totalRow">
@@ -341,60 +321,28 @@ if (isset($_SESSION['email'])) {
                             </tfoot>
                         </table>
                         <div class="col-12 text-center">
-                            <button class="btn btn-secondary" id="addRowButton" type="button">+</button>
+                            <button class="btn btn-secondary" id="addRowButton" type="button" onclick="agregarIncrementable()">+</button>
                             <button class="btn btn-danger" id="removeRowButton" type="button">-</button>
                         </div>
                     </div>
-
-
-                    <script>
-                        document.addEventListener("DOMContentLoaded", () => {
-
-                            const tableBody = document.querySelector("#incrementableTable tbody");
-                            const totalUSD = document.getElementById("totalUSD");
-                            const totalMXN = document.getElementById("totalMXN");
-                            const addRowButton = document.getElementById("addRowButton");
-                            const removeRowButton = document.getElementById("removeRowButton");
-                            const fleteUSDGasto = document.getElementById("fleteUSDGasto");
-
-                            function addRow() {
-                                const newRow = document.createElement("tr");
-                                newRow.innerHTML = `
-            <td><input type="text"  name="incrementable[]" class="form-control" placeholder="Incrementable"></td>
-            <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="updateRow(this);updateTotal();"></td>
-            <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
-        `;
-                                tableBody.appendChild(newRow);
-                                updateTotal();
-                            }
-
-
-
-                            addRowButton.addEventListener("click", addRow);
-                            removeRowButton.addEventListener("click", removeRow);
-
-                            updateTotal();
-
-                        });
-                    </script>
 
                     <div class="col-12 mt-5">
                         <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
                         <table class="table table-striped mt-3" id="tablaGasto">
                             <tbody>
                                 <tr>
-                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre EUA"></td>
+                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce fronterizo"></td>
                                     <td>
                                         <div class="form-check float-end">
                                             <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck1">
                                             <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
                                         </div>
                                     </td>
-                                    <td class="text-end"><input type="text" class="form-control" id="fleteUSDGasto" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
                                     <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce de frontera / transfer"></td>
+                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete en país destino"></td>
                                     <td>
                                         <div class="form-check float-end">
                                             <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck2" checked>
@@ -405,21 +353,10 @@ if (isset($_SESSION['email'])) {
                                     <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete terrestre México"></td>
-                                    <td>
-                                        <div class="form-check float-end">
-                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck3" checked>
-                                            <label class="form-check-label" for="flexCheck3"> IVA 16% </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                                </tr>
-                                <tr>
                                     <td>
                                         <div class="row">
                                             <div class="col-9">
-                                                <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro tránsito de mercancía">
+                                                <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro de tránsito de mercancía">
                                             </div>
                                             <div class="col-3">
                                                 <input type="text" class="form-control" name="porcentajeSeguro" value="38%" oninput="actualizarSubtotal();">
@@ -511,10 +448,7 @@ if (isset($_SESSION['email'])) {
                             montoSeguroInput.value = montoSeguro.toFixed(2);
 
 
-                            if (montoSeguroInput) {
-                                var valorSeguro = parseFloat(montoSeguroInput.value) || 0;
-                                sumaGastos += valorSeguro;
-                            }
+                           
 
                             // Actualizar el campo subtotalFlete con la suma
                             var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
@@ -595,68 +529,6 @@ if (isset($_SESSION['email'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script>
-        function removeRow() {
-            const tabla = document.getElementById("incrementableTable");
-            const rows = tabla.querySelectorAll("tr");
-            if (rows.length > 2) {
-                tabla.deleteRow(rows.length - 2);
-            } else {
-                alert("No hay más filas para eliminar.");
-            }
-
-            updateTotal();
-        }
-
-        function updateRow(input) {
-            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-            const dolarValue = parseFloat(input.value) || 0;
-
-            // Encuentra la fila actual y el campo de salida (MXN)
-            const row = input.closest("tr");
-            const mxnOutput = row.querySelector(".mxn-input");
-
-            // Calcula y actualiza el valor en MXN
-            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-
-            // Actualiza los totales
-            updateTotal(); // Llamada a la función de actualización de totales
-        }
-
-        function actualizarValoresUSD_MXN() {
-            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-            const dolarInputs = document.querySelectorAll(".usd-input");
-
-            dolarInputs.forEach((input) => {
-                const row = input.closest("tr");
-                const mxnOutput = row.querySelector(".mxn-input");
-                const dolarValue = parseFloat(input.value) || 0;
-                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-            });
-            updateTotalsinc();
-        }
-
-        function updateTotalsinc() {
-            const dolarInputs = document.querySelectorAll(".usd-input");
-            const mxnOutputs = document.querySelectorAll(".mxn-input");
-
-            let totalUSD = 0;
-            let totalMXN = 0;
-
-            // Suma todos los valores USD y MXN
-            dolarInputs.forEach((input) => {
-                totalUSD += parseFloat(input.value) || 0;
-            });
-            mxnOutputs.forEach((output) => {
-                totalMXN += parseFloat(output.value) || 0;
-            });
-
-            // Actualiza los totales en la tabla
-            totalUSD.value = `$${totalUSD.toFixed(2)}`; // Cambiar textContent a value
-            totalMXN.value = `$${totalMXN.toFixed(2)}`; // Cambiar textContent a value
-
-        }
-
-
         // Obtiene la fecha actual para la cotizacion
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
@@ -961,72 +833,230 @@ if (isset($_SESSION['email'])) {
             document.getElementById("valorComercial").value = valorComercial.toFixed(2);
         }
 
+
+
+
+
+        const tableBody = document.querySelector("#incrementableTable tbody");
+        const totalUSD = document.getElementById("totalUSD");
+        const totalMXN = document.getElementById("totalMXN");
+        const addRowButton = document.getElementById("addRowButton");
+        const removeRowButton = document.getElementById("removeRowButton");
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("removeRowButton").addEventListener("click", removeRow);
+            document.getElementById("valorMoneda").addEventListener("input", actualizarValoresUSD_MXN);
+            agregarIncrementable();
+        });
+
+        // Función para agregar una nueva fila de incrementables
+        function agregarIncrementable() {
+            var tabla = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
+
+            // Crear nueva fila
+            var nuevaFila = document.createElement("tr");
+
+            nuevaFila.innerHTML = `
+        <td>
+            <select class="form-select conceptoIncrementable" name="incrementable[]" onchange="actualizarConceptoGasto(this)">
+                <option selected>Selecciona un incrementable</option>
+                <?php
+                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
+                $result = mysqli_query($con, $query);
+
+                if (mysqli_num_rows($result) > 0) {
+                    while ($registro = mysqli_fetch_assoc($result)) {
+                        $nombre = $registro['incrementable'];
+                        echo "<option value='$nombre'>" . $nombre . "</option>";
+                    }
+                }
+                ?>
+            </select>
+        </td>
+        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="actualizarMontoGasto(this); updateRow(this);"></td>
+        <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
+    `;
+
+            // Agregar la nueva fila a la tabla de incrementables
+            tabla.appendChild(nuevaFila);
+
+            // Llamar a nuevoGasto solo una vez
+            setTimeout(nuevoGasto, 10);
+
+            updateTotal();
+        }
+
+        // Función para actualizar el valor en MXN cuando cambia USD
+        function updateRow(input) {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarValue = parseFloat(input.value) || 0;
+
+            // Encuentra la fila actual y el campo de salida (MXN)
+            const row = input.closest("tr");
+            const mxnOutput = row.querySelector(".mxn-input");
+
+            // Calcula y actualiza el valor en MXN
+            mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+
+            // Actualiza los totales
+            updateTotal();
+        }
+
+        // Función para actualizar todos los valores USD-MXN cuando cambia el tipo de cambio
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".usd-input");
+
+            dolarInputs.forEach((input) => {
+                const row = input.closest("tr");
+                const mxnOutput = row.querySelector(".mxn-input");
+                const dolarValue = parseFloat(input.value) || 0;
+                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+            });
+
+            updateTotal();
+        }
+
+        // Función para actualizar los totales en la tabla
         function updateTotal() {
             let totalUSDValue = 0;
             let totalMXNValue = 0;
 
-            // Actualizar totalUSD
             document.querySelectorAll(".usd-input").forEach(input => {
                 totalUSDValue += parseFloat(input.value) || 0;
             });
 
-            // Actualizar totalMXN
             document.querySelectorAll(".mxn-input").forEach(input => {
                 totalMXNValue += parseFloat(input.value) || 0;
             });
 
-            // Actualizar los inputs de totales con el valor calculado
-            totalUSD.value = totalUSDValue.toFixed(2); // Cambiar textContent a value
-            totalMXN.value = totalMXNValue.toFixed(2); // Cambiar textContent a value
-            fleteUSDGasto.value = totalUSDValue.toFixed(2);
-
-
-
+            // Actualizar los inputs de totales
+            document.getElementById("totalUSD").value = totalUSDValue.toFixed(2);
+            document.getElementById("totalMXN").value = totalMXNValue.toFixed(2);
         }
 
-        function nuevoGasto() {
-            var tabla = document.getElementById("tablaGasto");
-            var tbody = tabla.querySelector("tbody"); // Asegurarnos de trabajar con el <tbody> de la tabla
+        // Función para actualizar el concepto del gasto al seleccionar un incrementable
+        function actualizarConceptoGasto(selectElement) {
+            var index = Array.from(document.querySelectorAll(".conceptoIncrementable")).indexOf(selectElement);
+            var conceptoGastoInputs = document.querySelectorAll(".conceptoGasto");
+            if (conceptoGastoInputs[index]) {
+                conceptoGastoInputs[index].value = selectElement.value;
+            }
+        }
 
-            // Buscar la fila "Subtotal" por su texto en la primera celda
-            var filas = tbody.getElementsByTagName("tr");
+        // Función para actualizar el monto del gasto cuando cambia el valor en USD
+        function actualizarMontoGasto(inputElement) {
+            const row = inputElement.closest("tr"); // Encuentra la fila actual
+            const index = Array.from(document.querySelectorAll(".usd-input")).indexOf(inputElement);
+
+            if (index !== -1) {
+                const montoGastoInputs = document.querySelectorAll(".montoGasto");
+
+                if (montoGastoInputs[index]) {
+                    montoGastoInputs[index].value = inputElement.value; // Pasa el valor de USD a montoGasto
+                } else {
+                    console.warn("No se encontró el campo correspondiente en montoGasto[]");
+                }
+            }
+        }
+
+
+        // Función para agregar una nueva fila en la tabla de gastos
+        function nuevoGasto() {
+            var tabla = document.getElementById("tablaGasto").getElementsByTagName("tbody")[0];
+
+            var filas = tabla.getElementsByTagName("tr");
             var filaSubtotal = null;
 
-            // Recorremos las filas para encontrar la fila que contiene "Subtotal"
             for (var i = 0; i < filas.length; i++) {
                 var celdas = filas[i].getElementsByTagName("td");
-                if (celdas.length > 1 && celdas[0].innerText === "Subtotal") {
+                if (celdas.length > 1 && celdas[0].innerText.trim() === "Subtotal") {
                     filaSubtotal = filas[i];
                     break;
                 }
             }
 
-            // Si encontramos la fila "Subtotal", insertamos antes de ella
             if (filaSubtotal) {
                 var nuevaFila = document.createElement("tr");
 
                 nuevaFila.innerHTML = `
-                    <td><input type="text" class="form-control" name="conceptoGasto[]"></td>
-                    <td>
-                        <div class="form-check float-end">
-                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheckChecked" checked>
-                            <label class="form-check-label" for="flexCheckChecked">IVA 16%</label>
-                        </div>
-                    </td>
-                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                `;
+            <td><input type="text" class="form-control conceptoGasto" name="conceptoGasto[]"></td>
+            <td>
+                <div class="form-check float-end">
+                    <input class="form-check-input" type="checkbox" name="ivaGasto[]" checked>
+                    <label class="form-check-label">IVA 16%</label>
+                </div>
+            </td>
+            <td class="text-end"><input type="text" class="form-control montoGasto" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+            <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
+        `;
 
-                // Insertar la nueva fila antes de la fila "Subtotal" dentro del tbody
-                tbody.insertBefore(nuevaFila, filaSubtotal);
+                tabla.insertBefore(nuevaFila, filaSubtotal);
             }
         }
 
+        // Función para eliminar una fila de la tabla de gastos
         function eliminarFila(boton) {
             var fila = boton.closest("tr");
-            fila.remove();
+            var conceptoGasto = fila.querySelector(".conceptoGasto").value; // Obtener el concepto del gasto
+            fila.remove(); // Eliminar la fila del gasto
 
-            actualizarSubtotal();
+            eliminarIncrementable(conceptoGasto); // Llamar a la función para eliminar el incrementable correspondiente
+            actualizarSubtotal(); // Actualizar subtotal después de eliminar la fila
+        }
+
+        function eliminarIncrementable(conceptoGasto) {
+            const tablaIncrementables = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
+            const filasIncrementables = tablaIncrementables.getElementsByTagName("tr");
+
+            for (let i = 0; i < filasIncrementables.length; i++) {
+                const filaIncrementable = filasIncrementables[i];
+                const conceptoIncrementable = filaIncrementable.querySelector(".conceptoIncrementable").value;
+
+                // Si el concepto del incrementable coincide con el concepto del gasto, lo eliminamos
+                if (conceptoIncrementable === conceptoGasto) {
+                    filaIncrementable.remove();
+                    break; // Salir del bucle después de eliminar la fila correspondiente
+                }
+            }
+        }
+
+
+        function removeRow() {
+            const tablaIncrementables = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
+            const filasIncrementables = tablaIncrementables.getElementsByTagName("tr");
+
+            if (filasIncrementables.length > 0) {
+                // Obtener la última fila de incrementables
+                const filaAEliminar = filasIncrementables[filasIncrementables.length - 1];
+
+                // Obtener el concepto del incrementable que se va a eliminar
+                const conceptoIncrementable = filaAEliminar.querySelector(".conceptoIncrementable").value;
+
+                // Eliminar la fila de la tabla de incrementables
+                filaAEliminar.remove();
+
+                // Buscar y eliminar la fila correspondiente en la tabla de gastos
+                eliminarFilaGasto(conceptoIncrementable);
+
+                // Actualizar totales
+                updateTotal();
+            } else {
+                alert("No hay más filas para eliminar.");
+            }
+        }
+
+        function eliminarFilaGasto(concepto) {
+            const tablaGasto = document.getElementById("tablaGasto").getElementsByTagName("tbody")[0];
+            const filasGasto = tablaGasto.getElementsByTagName("tr");
+
+            for (let i = 0; i < filasGasto.length; i++) {
+                let inputConcepto = filasGasto[i].querySelector("input[name='conceptoGasto[]']");
+                if (inputConcepto && inputConcepto.value.trim() === concepto.trim()) {
+                    filasGasto[i].remove();
+                    break; // Salir del bucle después de eliminar la fila correspondiente
+                }
+            }
         }
     </script>
 </body>

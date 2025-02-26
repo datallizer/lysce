@@ -53,7 +53,7 @@ if (isset($_SESSION['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/x-icon" href="images/ico.ico">
-    <title>Importaciones aéreas | LYSCE</title>
+    <title>Alta incrementables | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -69,8 +69,10 @@ if (isset($_SESSION['email'])) {
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">
-                                    <a class="btn btn-sm btn-primary float-end" href="aereo-importacion-form.php">Nueva cotización</a>
-                                    AÉREO IMPORTACIONES - COTIZACIONES
+                                <button type="button" class="btn btn-primary btn-sm mb-1 float-end" data-bs-toggle="modal" data-bs-target="#servicioModal">
+                                            Nuevo incrementable
+                                        </button>
+                                    ALTA DE INCREMENTABLES
                                 </h4>
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
@@ -78,34 +80,17 @@ if (isset($_SESSION['email'])) {
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Cliente</th>
-                                            <th>Origen</th>
-                                            <th>Destino</th>
-                                            <th>Destino final</th>
-                                            <th>Fecha</th>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
                                             <th>Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $query = "SELECT 
-    a.*,
-    c.cliente AS cliente_nombre,
-    p_origen.proveedor AS origen_nombre,
-    p_destino.proveedor AS destino_nombre,
-    p_final.proveedor AS final_nombre
-FROM 
-    aereoimportacion a
-LEFT JOIN 
-    clientes c ON a.idCliente = c.id
-LEFT JOIN 
-    proveedores p_origen ON a.idOrigen = p_origen.id
-LEFT JOIN 
-    proveedores p_destino ON a.idDestino = p_destino.id
-LEFT JOIN
-    proveedores p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
-";
+                                    <?php
+                                        $query = "SELECT * FROM tipoIncrementable ORDER BY id DESC";
+
                                         $query_run = mysqli_query($con, $query);
+
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
                                         ?>
@@ -114,33 +99,23 @@ LEFT JOIN
                                                         <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['cliente_nombre']; ?></p>
+                                                        <p><?= $registro['incrementable']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['origen_nombre']; ?></p>
+                                                        <p style="text-transform: uppercase;"><?= $registro['tipo']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['destino_nombre']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['final_nombre']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['fecha']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <a href="generate_ftl.php?id=<?= $registro['id']; ?>" id="file-download" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
+                                                        <a href="editarincrementable.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
-                                                        <form action="codeaereo.php" method="POST" class="d-inline">
+                                                        <form action="codeincrementables.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
-
                                                     </td>
                                                 </tr>
                                         <?php
                                             }
                                         } else {
-                                            echo "<td colspan='7'><p> No se encontro ningun registro </p></td>";
+                                            echo "<td colspan='4'><p>No se encontró ningún registro</p></td>";
                                         }
                                         ?>
                                     </tbody>
@@ -153,25 +128,51 @@ LEFT JOIN
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+     <!-- Modal servicio -->
+     <div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">NUEVA COTIZACIÓN</h1>
+                    <h5 class="modal-title" id="servicioLabel">NUEVO SERVICIO</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
 
-                </div>
+                <form action="codeincrementables.php" method="post">
+                    <div class="modal-body row">
+
+                    <div class="col-12 form-floating mb-3">
+                            <input type="text" class="form-control" name="incrementable" placeholder="Nombre incrementable" autocomplete="off" required>
+                            <label for="incrementable">Incrementable</label>
+                        </div>
+
+                        <div class="form-floating mt-3 mb-3 col-12">
+                            <select class="form-select" name="tipo" id="tipo">
+                                <option selected>Selecciona la modalidad</option>
+                                <option value="aereoimpo">Aéreo importación</option>
+                                <option value="aereoexpo">Aéreo exportación</option>
+                                <option value="ltl">Terrestre LTL</option>
+                                <option value="ftl">Terrestre FTL</option>
+                                <option value="lcl">Marítimo LCL</option>
+                                <option value="fcl">Marítimo FCL</option>
+                            </select>
+                            <label for="tipoServicio">Modalidad</label>
+                        </div>
+
+                    
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" name="save">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
-        <script src="js/js.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
 
 </body>
 

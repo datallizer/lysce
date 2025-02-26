@@ -133,6 +133,10 @@ require 'dbcon.php';
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Servicios
                         </a>
+                        <a class="nav-link" href="alta-incrementables.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Incrementables
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
