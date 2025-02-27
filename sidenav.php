@@ -58,6 +58,7 @@ require 'dbcon.php';
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="ltl.php">- LTL</a>
                                 <a class="nav-link" href="ftl.php">- FTL</a>
+                                <a class="nav-link" href="terrestre2stops.php">- 2 stops</a>
                             </nav>
                         </div>
 
