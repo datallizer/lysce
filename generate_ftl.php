@@ -281,7 +281,7 @@ WHERE
                 <tr style="width:100%;border: 0px;">
                     <td style="width:33%;border: 0px;">
                         <p><b>Distancia:</b> ' . $registro['distanciaOrigenDestinoMillas'] . ' millas | ' . $registro['distanciaOrigenDestinoKms'] . ' kms</p>
-                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . ' hrs</p>
+                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . '</p>
                         <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
                         <br>
                     </td>
@@ -295,7 +295,7 @@ WHERE
                     
                     <td style="width:33%;border: 0px;">
                         <p><b>Distancia:</b> ' . $registro['distanciaDestinoFinalMillas'] . ' millas | ' . $registro['distanciaDestinoFinalKms'] . ' kms</p>
-                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . ' hrs</p>
+                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . '</p>
                         <p><b>Operador:</b> ' . $registro['operador'] . '</p>
                         <p><b>Unidad:</b> ' . $registro['unidad'] . '</p>
                     </td>

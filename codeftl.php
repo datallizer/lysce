@@ -4,6 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 if (isset($_POST['delete'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
 
@@ -127,7 +131,7 @@ if (isset($_POST['save'])) {
             $kilogramos_val = mysqli_real_escape_string($con, $kilogramos[$i]);
             $valorFactura_val = mysqli_real_escape_string($con, $valorFactura[$i]);
 
-            $sql_detalle = "INSERT INTO descripcionMercanciasFtl (
+            $sql_detalle = "INSERT INTO descripcionmercanciasftl (
                 idFtl, cantidad, unidadMedida, nmfc, descripcion, 
                 largoCm, anchoCm, altoCm, largoPlg, anchoPlg, altoPlg, 
                 piesCubicos, metrosCubicos, libras, kilogramos, valorFactura
@@ -165,7 +169,7 @@ if (isset($_POST['save'])) {
                 $incrementableUsd = mysqli_real_escape_string($con, $incrementablesUsd[$i]);
                 $incrementableMx = mysqli_real_escape_string($con, $incrementablesMx[$i]);
 
-                $sql_incrementable = "INSERT INTO incrementablesFtl (idFtl, incrementable, incrementableUsd, incrementableMx) 
+                $sql_incrementable = "INSERT INTO incrementablesftl (idFtl, incrementable, incrementableUsd, incrementableMx) 
                                       VALUES ('$idFtl', '$incrementable', '$incrementableUsd', '$incrementableMx')";
 
                 mysqli_query($con, $sql_incrementable);
