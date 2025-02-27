@@ -1,17 +1,20 @@
 <?php
 session_start();
 require 'dbcon.php';
-$message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
-if (!empty($message)) {
-    // HTML y JavaScript para mostrar la alerta...
+$alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
+
+if (!empty($alert)) {
+    $title = isset($alert['title']) ? json_encode($alert['title']) : '"Notificación"';
+    $message = isset($alert['message']) ? json_encode($alert['message']) : '""';
+    $icon = isset($alert['icon']) ? json_encode($alert['icon']) : '"info"';
+
     echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
-                const message = " . json_encode($message) . ";
                 Swal.fire({
-                    title: 'NOTIFICACIÓN',
-                    text: message,
-                    icon: 'info',
+                    title: $title,
+                    " . (!empty($alert['message']) ? "text: $message," : "") . "
+                    icon: $icon,
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -20,29 +23,32 @@ if (!empty($message)) {
                 });
             });
         </script>";
-    unset($_SESSION['message']); // Limpiar el mensaje de la sesión
+    unset($_SESSION['alert']);
 }
 
-//Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
 
-    // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
     $query = "SELECT * FROM usuarios WHERE email = '$email'";
     $result = mysqli_query($con, $query);
 
-    // Si se encuentra un registro coincidente, el usuario está autorizado
     if (mysqli_num_rows($result) > 0) {
-        // El usuario está autorizado, se puede acceder al contenido
     } else {
-        // Redirigir al usuario a una página de inicio de sesión
+        $_SESSION['alert'] = [
+            'title' => 'USUARIO NO ENCONTRADO',
+            'icon' => 'ERROR'
+        ];
         header('Location: login.php');
-        exit(); // Finalizar el script después de la redirección
+        exit();
     }
 } else {
-    // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
+        $_SESSION['alert'] = [
+            'message' => 'Para acceder debes iniciar sesión primero',
+            'title' => 'SESIÓN NO INICIADA',
+            'icon' => 'info'
+        ];
     header('Location: login.php');
-    exit(); // Finalizar el script después de la redirección
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -52,8 +58,8 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="images/ico.ico">
-    <title>Cotizaciones | LYSCE</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
+    <title>Importaciones aéreas | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -68,25 +74,43 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 style="color:#fff" class="m-1">COTIZACIONES</h4>
+                                <h4 style="color:#fff" class="m-1">
+                                    <a class="btn btn-sm btn-primary float-end" href="form-aereo-importacion.php">Nueva cotización</a>
+                                    AÉREO IMPORTACIONES - COTIZACIONES
+                                </h4>
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
                                 <table id="miTabla" class="table table-bordered table-striped" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Cotizacion</th>
                                             <th>Cliente</th>
-                                            <th>Medio</th>
-                                            <th>Tipo</th>
-                                            <th>Actividad</th>
-                                            <th>Modalidad</th>
+                                            <th>Origen</th>
+                                            <th>Destino</th>
+                                            <th>Destino final</th>
+                                            <th>Fecha</th>
                                             <th>Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT * FROM aereoimportacion ORDER BY id DESC";
+                                        $query = "SELECT 
+    a.*,
+    c.cliente AS cliente_nombre,
+    p_origen.proveedor AS origen_nombre,
+    p_destino.proveedor AS destino_nombre,
+    p_final.proveedor AS final_nombre
+FROM 
+    aereoimportacion a
+LEFT JOIN 
+    clientes c ON a.idCliente = c.id
+LEFT JOIN 
+    proveedores p_origen ON a.idOrigen = p_origen.id
+LEFT JOIN 
+    proveedores p_destino ON a.idDestino = p_destino.id
+LEFT JOIN
+    proveedores p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+";
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
@@ -96,27 +120,24 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idCliente']; ?></p>
+                                                        <p><?= $registro['cliente_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['operador']; ?></p>
+                                                        <p><?= $registro['origen_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['unidad']; ?></p>
+                                                        <p><?= $registro['destino_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['moneda']; ?></p>
+                                                        <p><?= $registro['final_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idOrigen']; ?></p>
+                                                        <p><?= $registro['fecha']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idDestino']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <a href="generate_pdf.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                        <a href="generate_ftl.php?id=<?= $registro['id']; ?>" id="file-download" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
 
-                                                        <form action="codecotizaciones.php" method="POST" class="d-inline">
+                                                        <form action="codeaereo.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
 
@@ -125,7 +146,7 @@ if (isset($_SESSION['email'])) {
                                         <?php
                                             }
                                         } else {
-                                            echo "<td colspan='8'><p> No se encontro ningun registro </p></td>";
+                                            echo "<td colspan='7'><p> No se encontro ningun registro </p></td>";
                                         }
                                         ?>
                                     </tbody>
@@ -156,6 +177,7 @@ if (isset($_SESSION['email'])) {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
+        <script src="js/js.js"></script>
 
 </body>
 

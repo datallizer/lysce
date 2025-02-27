@@ -29,7 +29,7 @@ require 'dbcon.php';
                             Dashboard
                         </a>
                         <a class="nav-link" href="usuarios.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-person-fill"></i></div>
                             Usuarios
                         </a>
                         <!-- <a class="nav-link" href="cotizaciones.php">
@@ -38,19 +38,19 @@ require 'dbcon.php';
                         </a> -->
                         <div class="sb-sidenav-menu-heading">Modulos</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAereo" aria-expanded="false" aria-controls="collapseAereo">
-                            <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-airplane-fill"></i></div>
                             Aéreo
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseAereo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="aereoimpointernacional.php">Importación</a>
-                                <a class="nav-link" href="cotizaciones.php">Exportación</a>
+                                <a class="nav-link" href="aereo-importacion.php">- Importación</a>
+                                <a class="nav-link" href="aereo-exportacion.php">- Exportación</a>
                             </nav>
                         </div>
 
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTerrestre" aria-expanded="false" aria-controls="collapseTerrestre">
-                            <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-truck-front-fill"></i></div>
                             Terrestre
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
@@ -61,80 +61,36 @@ require 'dbcon.php';
                             </nav>
                         </div>
 
-                        <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Terrestre
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlUsa" aria-expanded="false" aria-controls="ftlUsa">
-                                    FTL
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="ftlUsa" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="ftl-form.php">Dry van 53 ft</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ftlMex" aria-expanded="false" aria-controls="ftlMex">
-                                    LTL
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="ftlMex" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="dashboard.php">Camioneta dedicada, operador sencillo</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ltlImpo" aria-expanded="false" aria-controls="ltlImpo">
-                                    LTL IMPO
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="ltlImpo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="impoterrestreltlusa.php">Flete consolidado USA</a>
-                                        <a class="nav-link" href="dashboard.php">In bond freight Canada</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ltlExpo" aria-expanded="false" aria-controls="ltlExpo">
-                                    LTL EXPO
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="ltlExpo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="dashboard.php">Flete consolidado USA</a>
-                                        <a class="nav-link" href="dashboard.php">Flete directo Hotshot USA</a>
-                                    </nav>
-                                </div>
-                            </nav>
-                        </div> -->
-
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaritimo" aria-expanded="false" aria-controls="collapseMaritimo">
-                            <div class="sb-nav-link-icon"><i class="bi bi-shield-fill-check"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-tsunami"></i></div>
                             Marítimo
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseMaritimo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="dashboard.php">LCL Contenedor importación</a>
-                                <a class="nav-link" href="dashboard.php">FCL Contenedor completo 40 ft</a>
+                                <a class="nav-link" href="lcl.php">- LCL</a>
+                                <a class="nav-link" href="fcl.php">- FCL</a>
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Panel de control</div>
                         <a class="nav-link" href="clientes.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-person-vcard-fill"></i></div>
                             Clientes
                         </a>
                         <a class="nav-link" href="proveedores.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-box-fill"></i></div>
                             Proveedores
                         </a>
+                        <a class="nav-link" href="alta-cotizaciones.php">
+                            <div class="sb-nav-link-icon"><i class="bi bi-clipboard-fill"></i></div>
+                            Cotizaciones
+                        </a>
                         <a class="nav-link" href="alta-servicio.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-plus-square-dotted"></i></div>
                             Servicios
                         </a>
                         <a class="nav-link" href="alta-incrementables.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <div class="sb-nav-link-icon"><i class="bi bi-graph-up-arrow"></i></div>
                             Incrementables
                         </a>
                     </div>

@@ -10,8 +10,8 @@ use Dompdf\Options;
 
 if (isset($_GET['id'])) {
     ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
     $id = mysqli_real_escape_string($con, $_GET['id']);
     // Configurar opciones de DomPDF
@@ -120,6 +120,20 @@ WHERE
         }
     }
 
+    $query_servicios = "SELECT conceptoServicio, tiempoServicio FROM servicioftl WHERE idFtl = $id";
+    $resultado_servicios = mysqli_query($con, $query_servicios);
+
+    $servicios_html = '';
+    if (mysqli_num_rows($resultado_servicios) > 0) {
+        while ($row = mysqli_fetch_assoc($resultado_servicios)) {
+            $servicios_html .= '
+        <tr>
+            <td>' . htmlspecialchars($row['conceptoServicio']) . '</td>
+            <td>' . htmlspecialchars($row['tiempoServicio']) . '</td>
+        </tr>';
+        }
+    }
+
     $query_incrementables = "SELECT incrementable, incrementableUSD, incrementableMx FROM incrementablesftl WHERE idFtl = $id";
     $resultado_incrementables = mysqli_query($con, $query_incrementables);
 
@@ -159,7 +173,8 @@ WHERE
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización LYSCE</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://lysce.com.mx/images/ics.ico">
+    <title>Cotización FTL | LYSCE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -325,6 +340,18 @@ WHERE
             </tr>
         </tbody>
     </table>
+    <h3>TIPO DE SERVICIO</h3>
+  <table id="servicios" class="table">
+        <thead>
+            <tr style="background-color:#e7e7e7;">
+                <td>Servicio</td>
+                <td>Tiempo de servicio</td>
+            </tr>
+        </thead>
+        <tbody>
+            ' . $servicios_html . '
+        </tbody>
+    </table>
     <h3>DETERMINACION DE INCREMENTABLES</h3>
   <table id="incrementables" class="table">
         <thead>
@@ -342,7 +369,8 @@ WHERE
                 <td><b>$' . $registro['totalIncrementableMx'] . ' MXN</b></td>
             </tr>
         </tbody>
-    </table><h3>GASTOS POR FLETE TERRESTRE</h3>
+    </table>
+    <h3>GASTOS POR FLETE TERRESTRE</h3>
   <table id="gastos" class="table">
         <thead>
             <tr style="background-color:#e7e7e7;">
@@ -368,7 +396,7 @@ WHERE
                 <td><b>$' . $registro['totalCotizacionNumero'] . ' USD</b></td>
             </tr>
             <tr class="bg-warning" style="text-align:center;">
-                <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . ' USD</b></td>
+                <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . '</b></td>
             </tr>
         </tbody>
     </table>

@@ -1,17 +1,20 @@
 <?php
 session_start();
 require 'dbcon.php';
-$message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
-if (!empty($message)) {
-    // HTML y JavaScript para mostrar la alerta...
+$alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
+
+if (!empty($alert)) {
+    $title = isset($alert['title']) ? json_encode($alert['title']) : '"Notificación"';
+    $message = isset($alert['message']) ? json_encode($alert['message']) : '""';
+    $icon = isset($alert['icon']) ? json_encode($alert['icon']) : '"info"';
+
     echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
-                const message = " . json_encode($message) . ";
                 Swal.fire({
-                    title: 'NOTIFICACIÓN',
-                    text: message,
-                    icon: 'info',
+                    title: $title,
+                    " . (!empty($alert['message']) ? "text: $message," : "") . "
+                    icon: $icon,
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -20,30 +23,33 @@ if (!empty($message)) {
                 });
             });
         </script>";
-    unset($_SESSION['message']); // Limpiar el mensaje de la sesión
+    unset($_SESSION['alert']);
 }
 
-// //Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
-// if (isset($_SESSION['username'])) {
-//     $username = $_SESSION['username'];
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
 
-//     // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
-//     $query = "SELECT * FROM user WHERE username = '$username'";
-//     $result = mysqli_query($con, $query);
+    $query = "SELECT * FROM usuarios WHERE email = '$email'";
+    $result = mysqli_query($con, $query);
 
-//     // Si se encuentra un registro coincidente, el usuario está autorizado
-//     if (mysqli_num_rows($result) > 0) {
-//         // El usuario está autorizado, se puede acceder al contenido
-//     } else {
-//         // Redirigir al usuario a una página de inicio de sesión
-//         header('Location: login.php');
-//         exit(); // Finalizar el script después de la redirección
-//     }
-// } else {
-//     // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
-//     header('Location: login.php');
-//     exit(); // Finalizar el script después de la redirección
-// }
+    if (mysqli_num_rows($result) > 0) {
+    } else {
+        $_SESSION['alert'] = [
+            'title' => 'USUARIO NO ENCONTRADO',
+            'icon' => 'ERROR'
+        ];
+        header('Location: login.php');
+        exit();
+    }
+} else {
+        $_SESSION['alert'] = [
+            'message' => 'Para acceder debes iniciar sesión primero',
+            'title' => 'SESIÓN NO INICIADA',
+            'icon' => 'info'
+        ];
+    header('Location: login.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +58,7 @@ if (!empty($message)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="images/ico.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
     <title>Áereo importación nacional | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -89,21 +95,21 @@ if (!empty($message)) {
                 <input class="form-control" type="text" name="fecha" id="expedicion" value="">
             </div>
             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                        <select class="form-select bg-warning" name="tipoAereoImpo">
-                            <option selected>Selecciona un servicio</option>
-                            <?php
-                            $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereo'";
-                            $result = mysqli_query($con, $query);
+                <select class="form-select bg-warning" name="tipoAereoImpo">
+                    <option selected>Selecciona un servicio</option>
+                    <?php
+                    $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereo'";
+                    $result = mysqli_query($con, $query);
 
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['nombreServicio'];
-                                    echo "<option value='$nombre'>" . $nombre . "</option>";
-                                }
-                            }
-                            ?>
-                        </select>
-                    </div>
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($registro = mysqli_fetch_assoc($result)) {
+                            $nombre = $registro['nombreServicio'];
+                            echo "<option value='$nombre'>" . $nombre . "</option>";
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
             <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                 <p class="mb-1"><b>Cliente</b></p>
                 <select class="form-select mb-3" name="idCliente" id="cliente">
@@ -214,7 +220,7 @@ if (!empty($message)) {
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-4 mt-3 mb-3">
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Distancia:</b>
@@ -243,7 +249,7 @@ if (!empty($message)) {
             <div class="col-12 bg-light text-center p-2">
                 <p><b>DESCRIPCIÓN DE LAS MERCANCIAS</b></p>
                 <table class="table table-striped" id="miTablaCotizacion">
-                    <tr> 
+                    <tr>
                         <th>Cantidad</th>
                         <th>Unidad medida</th>
                         <th>Descripción</th>
@@ -255,7 +261,7 @@ if (!empty($message)) {
                 </table>
                 <button class="btn btn-danger" type="button" onclick="eliminarUltimaFila()">-</button>
                 <button class="btn btn-secondary" type="button" onclick="agregarFila()">+</button>
-                
+
                 <div class="row mt-3 mb-3">
                     <div class="col-3 text-center">
                         <p style="display: inline-block;margin-bottom: 5px;">
@@ -527,7 +533,7 @@ if (!empty($message)) {
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE EN MEXICO</b></p>
                 <table class="table table-striped mt-3" id="tablaGasto">
-                <tbody>
+                    <tbody>
                         <tr>
                             <td><input type="text" class="form-control" name="conceptoGasto[]" value="Gastos en Destino / MANIOBRAS DESCONSOLIDACION"></td>
                             <td>
@@ -540,7 +546,7 @@ if (!empty($message)) {
                             </td>
                             <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
                             <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>              
+                        </tr>
                         <tr>
                             <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete Terrestre MEXICO Flete Directo"></td>
                             <td>
@@ -553,7 +559,7 @@ if (!empty($message)) {
                             </td>
                             <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
                             <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>                  
+                        </tr>
                         <tr class="text-end">
                             <td colspan="2">Subtotal</td>
                             <td style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
@@ -613,12 +619,11 @@ if (!empty($message)) {
                     </tr>
                 </table>
             </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="save">Guardar</button>
-    </div>
-    </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary" name="save">Guardar</button>
+            </div>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -900,7 +905,7 @@ if (!empty($message)) {
             document.getElementById("pesoCargableKgs").value = totalPesoCargable.toFixed(0);
 
             // Actualizar el valor comercial
-            actualizarValorComercial(); 
+            actualizarValorComercial();
             actualizarValoresUSD_MXN();
         }
 
@@ -928,19 +933,20 @@ if (!empty($message)) {
 
             // Actualiza los totales
             updateTotals();
-            
-        }
-        function actualizarValoresUSD_MXN() {
-        const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-        const dolarInputs = document.querySelectorAll(".dolarInput");
 
-        dolarInputs.forEach((input) => {
-        const row = input.closest("tr");
-        const mxnOutput = row.querySelector(".mxnOutput");
-        const dolarValue = parseFloat(input.value) || 0;
-        mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-        });
-        updateTotals();
+        }
+
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".dolarInput");
+
+            dolarInputs.forEach((input) => {
+                const row = input.closest("tr");
+                const mxnOutput = row.querySelector(".mxnOutput");
+                const dolarValue = parseFloat(input.value) || 0;
+                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+            });
+            updateTotals();
         }
 
         function updateTotals() {
@@ -986,6 +992,7 @@ if (!empty($message)) {
                 alert("No hay más filas para eliminar.");
             }
         }
+
         function updateRowDestinySpents(input) {
             const ExchangeValue = parseFloat(document.getElementById("valorMoneda").value) || 0;
             const DolarInput = parseFloat(input.value) || 0;
@@ -999,6 +1006,7 @@ if (!empty($message)) {
             // Actualiza los totales
             updateTotalsDestinySpents();
         }
+
         function updateTotalsDestinySpents() {
             const dolarInputs = document.querySelectorAll(".dolarInputs");
             const mxnOutputs = document.querySelectorAll(".mxnOutputs");
@@ -1018,6 +1026,7 @@ if (!empty($message)) {
             document.getElementById("totalDolars").textContent = `$${totalUSD.toFixed(2)}`;
             document.getElementById("totalMXNs").textContent = `$${totalMXN.toFixed(2)}`;
         }
+
         function calcularValores() {
             const valorGastos = parseFloat(document.getElementById('valorGastos').value) || 0;
             const valorFlete = parseFloat(document.getElementById('valorFlete').value) || 0;

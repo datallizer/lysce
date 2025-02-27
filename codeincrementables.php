@@ -11,11 +11,18 @@ if (isset($_POST['delete'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Eliminado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: alta-incrementables.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al eliminar, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
         header("Location: alta-incrementables.php");
         exit(0);
     }
@@ -23,26 +30,25 @@ if (isset($_POST['delete'])) {
 
 if (isset($_POST['update'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
-    $nombre = mysqli_real_escape_string($con, $_POST['nombre']);
-    $apellidop = mysqli_real_escape_string($con, $_POST['apellidop']);
-    $apellidom = mysqli_real_escape_string($con, $_POST['apellidom']);
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $rol = mysqli_real_escape_string($con, $_POST['rol']);
-    $estatus = mysqli_real_escape_string($con, $_POST['estatus']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $incrementable = mysqli_real_escape_string($con, $_POST['incrementable']);
+    $tipo = mysqli_real_escape_string($con, $_POST['tipo']);
 
-
-    // Actualizar los datos del usuario
-    $query = "UPDATE `usuarios` SET `nombre` = '$nombre',`password` = '$hashed_password', `apellidop` = '$apellidop', `apellidom` = '$apellidom', `email` = '$email', `rol` = '$rol', `estatus` = '$estatus' WHERE `usuarios`.`id` = '$id'";
+    $query = "UPDATE `tipoincrementable` SET `incrementable` = '$incrementable',`tipo` = '$tipo' WHERE `tipoincrementable`.`id` = '$id'";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Usuario editado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'EDITADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: alta-incrementables.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al editar el usuario, contácte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL EDITAR',
+            'icon' => 'error'
+        ];
         header("Location: alta-incrementables.php");
         exit(0);
     }
@@ -58,11 +64,18 @@ if (isset($_POST['save'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Registrado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'REGISTRADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: alta-incrementables.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al registrar, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL REGISTRAR',
+            'icon' => 'error'
+        ];
         header("Location: alta-incrementables.php");
         exit(0);
     }

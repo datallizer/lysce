@@ -11,17 +11,24 @@ if (isset($_POST['delete'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Usuario eliminado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];        
         header("Location: aereoimpointernacional.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al eliminar el usuario, contácte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
         header("Location: aereoimpointernacional.php");
         exit(0);
     }
 }
 
-if (isset($_POST['save'])) { 
+if (isset($_POST['save'])) {
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $idOrigen = mysqli_real_escape_string($con, $_POST['idOrigen']);
@@ -34,7 +41,7 @@ if (isset($_POST['save'])) {
     $totalFt3 = mysqli_real_escape_string($con, $_POST['totalFt3']);
     $totalM3 = mysqli_real_escape_string($con, $_POST['totalM3']);
     $distanciaDestinoFinalMillas = mysqli_real_escape_string($con, $_POST['distanciaDestinoFinalMillas']);
-    $distanciaDestinoFinalKms = mysqli_real_escape_string($con, $_POST['distanciaDestinoFinalKms']); 
+    $distanciaDestinoFinalKms = mysqli_real_escape_string($con, $_POST['distanciaDestinoFinalKms']);
     $tiempoRecorridoDestinoFinal = mysqli_real_escape_string($con, $_POST['tiempoRecorridoDestinoFinal']);
     $operador = mysqli_real_escape_string($con, $_POST['operador']);
     $unidad = mysqli_real_escape_string($con, $_POST['unidad']);
@@ -49,10 +56,10 @@ if (isset($_POST['save'])) {
     $collectionFeeOrigenUno = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenUno']);
     $collectionFeeOrigenDos = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenDos']);
     $collectionFeeOrigenTotal = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenTotal']);
-    $collectionFeeOrigenTotalUsd = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenTotalUsd']);        
-    $screeningChargeUno = mysqli_real_escape_string($con, $_POST['screeningChargeUno']); 
+    $collectionFeeOrigenTotalUsd = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenTotalUsd']);
+    $screeningChargeUno = mysqli_real_escape_string($con, $_POST['screeningChargeUno']);
     $screeningChargeDos = mysqli_real_escape_string($con, $_POST['screeningChargeDos']);
-    $screeningChargeTotal = mysqli_real_escape_string($con, $_POST['screeningChargeTotal']); 
+    $screeningChargeTotal = mysqli_real_escape_string($con, $_POST['screeningChargeTotal']);
     $screeningChargeTotalUsd = mysqli_real_escape_string($con, $_POST['screeningChargeTotalUsd']);
     $terminalHandlingUno = mysqli_real_escape_string($con, $_POST['terminalHandlingUno']);
     $terminalHandlingDos = mysqli_real_escape_string($con, $_POST['terminalHandlingDos']);
@@ -133,8 +140,6 @@ if (isset($_POST['save'])) {
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
     $tipoAereoImpo = mysqli_real_escape_string($con, $_POST['tipoAereoImpo']);
 
-    
-    
     $sql = "INSERT INTO aereoimportacion (
         fecha, idCliente, idOrigen, idDestino, idDestinoFinal, distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, pesoCargableKgs, pesoCotizacion, valorMercancia,
     valorComercial, collectionFeeOrigenUno, collectionFeeOrigenDos, collectionFeeOrigenTotal, collectionFeeOrigenTotalUsd, screeningChargeUno, screeningChargeDos, screeningChargeTotal, screeningChargeTotalUsd, terminalHandlingUno, terminalHandlingDos, terminalHandlingTotal, terminalHandlingTotalUsd, airportTransferUno, airportTransferDos, airportTransferTotal, airportTransferTotalUsd,
@@ -150,18 +155,21 @@ if (isset($_POST['save'])) {
     '$handlingUsd', '$handlingMx', '$desconsolUsd', '$desconsolMx', '$collectionFeeUsd', '$collectionFeeMx', '$amsFeeUsd', '$amsFeeMx', '$adicionalDestinoUno', '$adicionalDestinoUnoUsd', '$adicionalDestinoUnoMx', '$adicionalDestinoDos', '$adicionalDestinoDosUsd', '$adicionalDestinoDosMx', '$subtotalDestinoUsd', '$subtotalDestinoMx', '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd',
     '$totalDestinoMx', '$valorTotalFlete', '$fleteExtranjeroUsd', '$fleteExtranjeroMx', '$maniobrasUsd', '$maniobrasMx', '$almacenajeUsd', '$almacenajeMx', '$totalIncrementableUsd', '$totalIncrementableMx', '$subtotalFlete', '$retencionFlete', '$tipoAereoImpo'
     )";
-
     $query_run = mysqli_query($con, $sql);
 
     if ($query_run) {
-        // Obtener el ID insertado en la tabla `aereoimportacion`
-        $id = mysqli_insert_id($con);
-
-        $_SESSION['message'] = "Se registró exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'GUARDADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: aereoimpointernacional.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL GUARDAR',
+            'icon' => 'error'
+        ];
         header("Location: aereoimpointernacional.php");
         exit(0);
     }

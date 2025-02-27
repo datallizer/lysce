@@ -1,17 +1,20 @@
 <?php
 session_start();
 require 'dbcon.php';
-$message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
-if (!empty($message)) {
-    // HTML y JavaScript para mostrar la alerta...
+$alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
+
+if (!empty($alert)) {
+    $title = isset($alert['title']) ? json_encode($alert['title']) : '"Notificación"';
+    $message = isset($alert['message']) ? json_encode($alert['message']) : '""';
+    $icon = isset($alert['icon']) ? json_encode($alert['icon']) : '"info"';
+
     echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
-                const message = " . json_encode($message) . ";
                 Swal.fire({
-                    title: 'NOTIFICACIÓN',
-                    text: message,
-                    icon: 'info',
+                    title: $title,
+                    " . (!empty($alert['message']) ? "text: $message," : "") . "
+                    icon: $icon,
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -20,29 +23,32 @@ if (!empty($message)) {
                 });
             });
         </script>";
-    unset($_SESSION['message']); // Limpiar el mensaje de la sesión
+    unset($_SESSION['alert']);
 }
 
-//Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
 
-    // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
     $query = "SELECT * FROM usuarios WHERE email = '$email'";
     $result = mysqli_query($con, $query);
 
-    // Si se encuentra un registro coincidente, el usuario está autorizado
     if (mysqli_num_rows($result) > 0) {
-        // El usuario está autorizado, se puede acceder al contenido
     } else {
-        // Redirigir al usuario a una página de inicio de sesión
+        $_SESSION['alert'] = [
+            'title' => 'USUARIO NO ENCONTRADO',
+            'icon' => 'ERROR'
+        ];
         header('Location: login.php');
-        exit(); // Finalizar el script después de la redirección
+        exit();
     }
 } else {
-    // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
-    exit(); // Finalizar el script después de la redirección
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -52,7 +58,7 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
     <title>FTL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -92,7 +98,7 @@ if (isset($_SESSION['email'])) {
                         <input class="form-control" type="text" name="fecha" id="expedicion" value="">
                     </div>
                     <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                        <select class="form-select bg-warning" name="tipoFtl">
+                        <select class="form-select bg-warning" name="tipoFtl" required>
                             <option selected>Selecciona un servicio</option>
                             <?php
                             $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
@@ -245,20 +251,26 @@ if (isset($_SESSION['email'])) {
 
                     </div>
 
-                    <div class="col-12 bg-light text-center p-2">
-                        <p><b>DESCRIPCION DE LAS MERCANCIAS</b></p>
-                        <table class="table table-striped" id="miTablaCotizacion">
-                            <tr>
-                                <th>Cantidad</th>
-                                <th>Unidad medida</th>
-                                <th>Descripción</th>
-                                <th>Dimensiones</th>
-                                <th>Peso</th>
-                                <th>Valor factura</th>
-                            </tr>
-                        </table>
-                        <button class="btn btn-danger" type="button" onclick="eliminarUltimaFila()">-</button>
-                        <button class="btn btn-secondary" type="button" onclick="agregarFila()">+</button>
+                    <div class="col-12 text-center p-2">
+                        <div class="card">
+                            <div class="card-header bg-secondary">
+                                <p style="color: #fff;"><b>DESCRIPCIÓN DE LAS MERCANCÍAS</b></p>
+                            </div>
+                            <table class="table table-striped" id="miTablaCotizacion" style="margin-bottom: 0px;">
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Unidad medida</th>
+                                    <th>Descripción</th>
+                                    <th>Dimensiones</th>
+                                    <th>Peso</th>
+                                    <th>Valor factura</th>
+                                </tr>
+                            </table>
+                            <div class="text-center p-2">
+                                <button class="btn btn-danger" type="button" onclick="eliminarUltimaFila()">-</button>
+                                <button class="btn btn-secondary" type="button" onclick="agregarFila()">+</button>
+                            </div>
+                        </div>
 
                         <div class="row mt-3 mb-3">
                             <div class="col-3 text-center">
@@ -277,8 +289,7 @@ if (isset($_SESSION['email'])) {
                                         <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaLbs" name="pesoMercanciaLbs" readonly> lbs</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
+                                        <td colspan="2"><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
                                     </tr>
                                 </table>
                             </div>
@@ -286,112 +297,145 @@ if (isset($_SESSION['email'])) {
                             <div class="col-5">
                                 <table class="text-end w-100">
                                     <tr>
-                                        <td>Valor total de la mercancía USD</td>
+                                        <td>VALOR TOTAL DE LA MERCANCÍA USD</td>
                                         <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly oninput="actualizarSubtotal();"></td>
                                     </tr>
                                     <tr>
-                                        <td>VALOR TOTAL COMERCIAL PESOS</td>
+                                        <td>VALOR TOTAL DE LA MERCANCÍA MXN</td>
                                         <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="col-12 mt-5">
-                        <p class="text-center"><b>DETERMINACION DE INCREMENTABLES</b></p>
-                        <table class="table table-striped mt-3" id="incrementableTable">
-                            <thead>
-                                <tr>
-                                    <th>Incrementable</th>
-                                    <th>USD</th>
-                                    <th>MXN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <div class="card">
+                            <div class="card-header bg-secondary">
+                                <p class="text-center" style="color: #fff;"><b>TIPO DE SERVICIO</b></p>
+                            </div>
+                            <table class="table table-striped table-bordered" style="margin-bottom: 0px;" id="servicioTable">
+                                <thead>
+                                    <tr>
+                                        <th>Servicio</th>
+                                        <th>Tiempo de transito</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                            </tbody>
-                            <tfoot>
-                                <tr id="totalRow">
-                                    <td><b>TOTAL</b></td>
-                                    <td><input type="text" id="totalUSD" name="totalIncrementableUsd" class="form-control" value="0" readonly></td>
-                                    <td><input type="text" id="totalMXN" name="totalIncrementableMx" class="form-control" value="0" readonly></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <div class="col-12 text-center">
-                            <button class="btn btn-secondary" id="addRowButton" type="button" onclick="agregarIncrementable()">+</button>
-                            <button class="btn btn-danger" id="removeRowButton" type="button">-</button>
+                                </tbody>
+                            </table>
+                            <div class="col-12 text-center p-2">
+                                <button class="btn btn-danger" id="removeServiceButton" type="button">-</button>
+                                <button class="btn btn-secondary" id="addServiceButton" type="button" onclick="agregarTipoServicio()">+</button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-12 mt-5">
-                        <p class="text-center"><b>GASTOS POR FLETE TERRESTRE</b></p>
-                        <table class="table table-striped mt-3" id="tablaGasto">
-                            <tbody>
-                                <tr>
-                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce fronterizo"></td>
-                                    <td>
-                                        <div class="form-check float-end">
-                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck1">
-                                            <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                                    <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete en país destino"></td>
-                                    <td>
-                                        <div class="form-check float-end">
-                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck2" checked>
-                                            <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro de tránsito de mercancía">
+                        <div class="card">
+                            <div class="card-header bg-secondary">
+                                <p class="text-center" style="color: #fff;"><b>DETERMINACIÓN DE INCREMENTABLES</b></p>
+                            </div>
+                            <table class="table table-striped tabñe-bordered" id="incrementableTable" style="margin-bottom: 0px;">
+                                <thead>
+                                    <tr>
+                                        <th>Incrementable</th>
+                                        <th>USD</th>
+                                        <th>MXN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                                <tfoot>
+                                    <tr id="totalRow">
+                                        <td class="text-end"><b>TOTAL</b></td>
+                                        <td><input type="text" id="totalUSD" name="totalIncrementableUsd" class="form-control" value="0" readonly></td>
+                                        <td><input type="text" id="totalMXN" name="totalIncrementableMx" class="form-control" value="0" readonly></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="col-12 text-center p-2">
+                                <button class="btn btn-danger" id="removeRowButton" type="button">-</button>
+                                <button class="btn btn-secondary" id="addRowButton" type="button" onclick="agregarIncrementable()">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-5">
+                        <div class="card">
+                            <div class="card-header bg-secondary">
+                                <p class="text-center" style="color: #fff;"><b>GASTOS POR FLETE TERRESTRE</b></p>
+                            </div>
+                            <table class="table table-striped table-bordered" id="tablaGasto" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce fronterizo"></td>
+                                        <td>
+                                            <div class="form-check float-end">
+                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck1">
+                                                <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
                                             </div>
-                                            <div class="col-3">
-                                                <input type="text" class="form-control" name="porcentajeSeguro" value="38%" oninput="actualizarSubtotal();">
+                                        </td>
+                                        <td colspan="2" class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                        <!-- <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td> -->
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete en país destino"></td>
+                                        <td>
+                                            <div class="form-check float-end">
+                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck2" checked>
+                                                <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check float-end">
-                                            <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4" checked>
-                                            <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
-                                        </div>
-                                    </td>
-                                    <td colspan="2" class="text-end">
-                                        <input type="text" id="montoSeguro" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()" readonly>
-                                    </td>
-                                </tr>
-                                <tr class="text-end">
-                                    <td colspan="2">Subtotal</td>
-                                    <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
-                                </tr>
-                                <tr class="text-end">
-                                    <td colspan="2">I.V.A 16%</td>
-                                    <td colspan="2"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
-                                </tr>
-                                <tr class="text-end">
-                                    <td colspan="2">
-                                        <div class="form-check float-end">
-                                            <input class="form-check-input" type="checkbox" name="retencionFleteCheck" id="retencionCheck">
-                                            <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
-                                        </div>
-                                    </td>
-                                    <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00" readonly></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </td>
+                                        <td class="text-end" colspan="2"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                        <!-- <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td> -->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro de tránsito de mercancía">
+                                                </div>
+                                                <div class="col-3">
+                                                    <input type="text" class="form-control" name="porcentajeSeguro" value="38%" oninput="actualizarSubtotal();">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check float-end">
+                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4" checked>
+                                                <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
+                                            </div>
+                                        </td>
+                                        <td colspan="2" class="text-end">
+                                            <input type="text" id="montoSeguro" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr class="text-end">
+                                        <td colspan="2">Subtotal</td>
+                                        <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
+                                    </tr>
+                                    <tr class="text-end">
+                                        <td colspan="2">I.V.A 16%</td>
+                                        <td colspan="2"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
+                                    </tr>
+                                    <tr class="text-end">
+                                        <td colspan="2">
+                                            <div class="form-check float-end">
+                                                <input class="form-check-input" type="checkbox" name="retencionFleteCheck" id="retencionCheck">
+                                                <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
+                                            </div>
+                                        </td>
+                                        <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00" readonly></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-center p-2">
+                                <button type="button" class="btn btn-secondary" onclick="nuevoGasto()">+</button>
+                            </div>
+                        </div>
                     </div>
 
                     <script>
@@ -444,11 +488,12 @@ if (isset($_SESSION['email'])) {
                             let porcentajeSeguro = parseFloat(porcentajeSeguroInput.replace('%', '')) / 100;
                             let montoSeguro = valorMercancia * porcentajeSeguro;
 
+                            // Si el monto calculado es menor que 120, se fija en 120
+                            if (montoSeguro < 120) {
+                                montoSeguro = 120;
+                            }
 
                             montoSeguroInput.value = montoSeguro.toFixed(2);
-
-
-                           
 
                             // Actualizar el campo subtotalFlete con la suma
                             var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
@@ -468,19 +513,19 @@ if (isset($_SESSION['email'])) {
 
 
 
-                    <div class="text-center">
-                        <button type="button" class="btn btn-primary" onclick="nuevoGasto()">Añadir nuevo gasto</button>
-                    </div>
+
 
                     <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
                         <tr class="text-end">
                             <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
                             <td style="width: 180px;">
-                                <input class="form-control bg-warning" name="totalCotizacionNumero" type="text" readonly>
+                                <input class="form-control bg-warning" name="totalCotizacionNumero" id="totalCotizacionNumero" type="text" readonly>
                             </td>
                         </tr>
                         <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
-                            <td colspan="2"><b><input class="form-control bg-warning" name="totalCotizacionTexto" type="text" value="DOLARES /100 USD"></b></td>
+                            <td colspan="2">
+                                <input class="form-control bg-warning" name="totalCotizacionTexto" id="totalCotizacionTexto" type="text" readonly>
+                            </td>
                         </tr>
                     </table>
 
@@ -615,10 +660,10 @@ if (isset($_SESSION['email'])) {
             const nuevaFila = tabla.insertRow();
             nuevaFila.innerHTML = `
                 <td>
-                <input style="width: 60px;" class="form-control" type="text" name="cantidad[]" oninput="convertToCmAndCalculateVolume(this)">
+                <input style="width: 60px;" class="form-control mb-3" type="text" name="cantidad[]" oninput="convertToCmAndCalculateVolume(this)">
                 <p>NMFC</p></td>
                 <td>
-                    <input class="form-control" type="text" name="unidadMedida[]">
+                    <input class="form-control mb-1" type="text" name="unidadMedida[]">
                     <input class="form-control" type="text" name="nmfc[]" readonly>
                 </td>
                 <td>
@@ -627,26 +672,26 @@ if (isset($_SESSION['email'])) {
                 <td>
                     <div class="row">
                         <div class="col-6">
-                            <input class="form-control" type="text" name="largoPlg[]" placeholder="Largo (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
-                            <input class="form-control" type="text" name="anchoPlg[]" placeholder="Ancho (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control mb-1" type="text" name="largoPlg[]" placeholder="Largo (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
+                            <input class="form-control mb-1" type="text" name="anchoPlg[]" placeholder="Ancho (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
                             <input class="form-control" type="text" name="altoPlg[]" placeholder="Alto (pulgadas)" oninput="convertToCmAndCalculateVolume(this)">
-                            <p>pulgadas</p>
+                            <p class="mb-3">pulgadas</p>
                             <input class="form-control" type="text" name="piesCubicos[]" placeholder="pies cúbicos" readonly>
                             <p>ft³</p>
                         </div>
                         <div class="col-6">
-                            <input class="form-control" type="text" id="altoFilaCm" name="largoCm[]" placeholder="Largo (mts)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <input class="form-control" type="text" id="anchoFilaCm" name="anchoCm[]" placeholder="Ancho (mts)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control mb-1" type="text" id="altoFilaCm" name="largoCm[]" placeholder="Largo (mts)" oninput="convertToInchesAndCalculateVolume(this)">
+                            <input class="form-control mb-1" type="text" id="anchoFilaCm" name="anchoCm[]" placeholder="Ancho (mts)" oninput="convertToInchesAndCalculateVolume(this)">
                             <input class="form-control" type="text" id="profundidadFilaCm" name="altoCm[]" placeholder="Alto (mts)" oninput="convertToInchesAndCalculateVolume(this)">
-                            <p>mts</p>
+                            <p class="mb-3">mts</p>
                             <input class="form-control" type="text" name="metrosCubicos[]" placeholder="metros cúbicos" readonly>
                             <p>m³</p>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <input class="form-control" type="text" placeholder="lbs" name="libras" id="pesoFilaMercanciaLbs" oninput="convertToKg(this); actualizarTotales();">
-                    <input class="form-control" type="text" placeholder="kgs" name="kilogramos" id="pesoFilaMercanciaKgs" oninput="convertToLbs(this); actualizarTotales();">
+                    <input class="form-control mb-1" type="text" placeholder="lbs" name="libras[]" id="pesoFilaMercanciaLbs" oninput="convertToKg(this); actualizarTotales();">
+                    <input class="form-control" type="text" placeholder="kgs" name="kilogramos[]" id="pesoFilaMercanciaKgs" oninput="convertToLbs(this); actualizarTotales();">
                 </td>
                 <td><input class="form-control" id="valorFilaMercancia" type="text" name="valorFactura[]" placeholder="Precio total" oninput="actualizarTotales()"></td>
             `;
@@ -756,8 +801,8 @@ if (isset($_SESSION['email'])) {
                 const fila = tabla.rows[i];
 
                 // Obtener elementos de la fila
-                const pesoLbsInput = fila.querySelector("input[name='libras']");
-                const pesoKgsInput = fila.querySelector("input[name='kilogramos']");
+                const pesoLbsInput = fila.querySelector("input[name='libras[]']");
+                const pesoKgsInput = fila.querySelector("input[name='kilogramos[]']");
                 const valorInput = fila.querySelector("input[id='valorFilaMercancia']");
                 const ft3Input = fila.querySelector("[placeholder='pies cúbicos']");
                 const m3Input = fila.querySelector("[placeholder='metros cúbicos']");
@@ -833,20 +878,53 @@ if (isset($_SESSION['email'])) {
             document.getElementById("valorComercial").value = valorComercial.toFixed(2);
         }
 
+        function agregarTipoServicio() {
+            var tabla = document.getElementById("servicioTable").getElementsByTagName("tbody")[0];
 
+            // Crear nueva fila
+            var nuevaFilaServicio = document.createElement("tr");
 
+            nuevaFilaServicio.innerHTML = `
+        <td>
+            <select class="form-select" name="conceptoServicio[]">
+                <option selected>Selecciona un tipo de servicio</option>
+                <?php
+                $query = "SELECT * FROM servicios WHERE tipoServicio = 'ftl'";
+                $result = mysqli_query($con, $query);
 
+                if (mysqli_num_rows($result) > 0) {
+                    while ($registro = mysqli_fetch_assoc($result)) {
+                        $nombre = $registro['concepto'];
+                        echo "<option value='$nombre'>" . $nombre . "</option>";
+                    }
+                }
+                ?>
+            </select>
+        </td>
+        <td><input type="text" name="tiempoServicio[]" class="form-control"></td>
+    `;
+
+            // Agregar la nueva fila a la tabla de incrementables
+            tabla.appendChild(nuevaFilaServicio);
+        }
 
         const tableBody = document.querySelector("#incrementableTable tbody");
         const totalUSD = document.getElementById("totalUSD");
         const totalMXN = document.getElementById("totalMXN");
         const addRowButton = document.getElementById("addRowButton");
+        const removeServiceButton = document.getElementById("removeServiceButton");
         const removeRowButton = document.getElementById("removeRowButton");
 
         document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("removeServiceButton").addEventListener("click", removeServiceRow);
             document.getElementById("removeRowButton").addEventListener("click", removeRow);
             document.getElementById("valorMoneda").addEventListener("input", actualizarValoresUSD_MXN);
+
+            observarCambio(); // Iniciar la observación del cambio de valor
+            convertirNumeroATexto();
+            agregarFila()
             agregarIncrementable();
+            agregarTipoServicio();
         });
 
         // Función para agregar una nueva fila de incrementables
@@ -1021,6 +1099,18 @@ if (isset($_SESSION['email'])) {
             }
         }
 
+        function removeServiceRow() {
+            const tablaServicio = document.getElementById("servicioTable").getElementsByTagName("tbody")[0];
+            const filasServicios = tablaServicio.getElementsByTagName("tr");
+
+            if (filasServicios.length > 0) {
+                const filaAEliminar = filasServicios[filasServicios.length - 1];
+                filaAEliminar.remove();
+
+            } else {
+                alert("No hay más filas para eliminar.");
+            }
+        }
 
         function removeRow() {
             const tablaIncrementables = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
@@ -1057,6 +1147,54 @@ if (isset($_SESSION['email'])) {
                     break; // Salir del bucle después de eliminar la fila correspondiente
                 }
             }
+        }
+
+        function numeroALetras(num) {
+            const unidades = ["", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
+            const especiales = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISEIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"];
+            const decenas = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
+            const centenas = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"];
+
+            function convertir(n) {
+                if (n === 0) return "CERO";
+                if (n === 100) return "CIEN";
+                if (n < 10) return unidades[n];
+                if (n < 20) return especiales[n - 10];
+                if (n < 100) return decenas[Math.floor(n / 10)] + (n % 10 !== 0 ? " Y " + unidades[n % 10] : "");
+                if (n < 1000) return centenas[Math.floor(n / 100)] + (n % 100 !== 0 ? " " + convertir(n % 100) : "");
+                if (n < 1000000) return (n < 2000 ? "MIL" : convertir(Math.floor(n / 1000)) + " MIL") + (n % 1000 !== 0 ? " " + convertir(n % 1000) : "");
+                if (n < 1000000000) return convertir(Math.floor(n / 1000000)) + " MILLONES" + (n % 1000000 !== 0 ? " " + convertir(n % 1000000) : "");
+                return "NÚMERO DEMASIADO GRANDE";
+            }
+
+            return convertir(num);
+        }
+
+        function convertirNumeroATexto() {
+            let numeroInput = document.getElementById("totalCotizacionNumero");
+            let textoInput = document.getElementById("totalCotizacionTexto");
+
+            let numero = parseFloat(numeroInput.value.replace(/[^0-9.]/g, '')) || 0;
+            let parteEntera = Math.floor(numero);
+            let centavos = Math.round((numero - parteEntera) * 100);
+
+            let texto = numeroALetras(parteEntera) + " DÓLARES";
+            if (centavos > 0) {
+                texto += " CON " + numeroALetras(centavos) + " CENTAVOS";
+            }
+            textoInput.value = texto;
+        }
+
+        function observarCambio() {
+            let numeroInput = document.getElementById("totalCotizacionNumero");
+            let ultimoValor = numeroInput.value;
+
+            setInterval(() => {
+                if (numeroInput.value !== ultimoValor) {
+                    ultimoValor = numeroInput.value;
+                    convertirNumeroATexto();
+                }
+            }, 500); // Verifica cada 500ms si el valor cambió
         }
     </script>
 </body>

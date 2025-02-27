@@ -1,17 +1,20 @@
 <?php
 session_start();
 require 'dbcon.php';
-$message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
-if (!empty($message)) {
-    // HTML y JavaScript para mostrar la alerta...
+$alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
+
+if (!empty($alert)) {
+    $title = isset($alert['title']) ? json_encode($alert['title']) : '"Notificación"';
+    $message = isset($alert['message']) ? json_encode($alert['message']) : '""';
+    $icon = isset($alert['icon']) ? json_encode($alert['icon']) : '"info"';
+
     echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
-                const message = " . json_encode($message) . ";
                 Swal.fire({
-                    title: 'NOTIFICACIÓN',
-                    text: message,
-                    icon: 'info',
+                    title: $title,
+                    " . (!empty($alert['message']) ? "text: $message," : "") . "
+                    icon: $icon,
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -20,29 +23,32 @@ if (!empty($message)) {
                 });
             });
         </script>";
-    unset($_SESSION['message']); // Limpiar el mensaje de la sesión
+    unset($_SESSION['alert']);
 }
 
-//Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
 
-    // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
     $query = "SELECT * FROM usuarios WHERE email = '$email'";
     $result = mysqli_query($con, $query);
 
-    // Si se encuentra un registro coincidente, el usuario está autorizado
     if (mysqli_num_rows($result) > 0) {
-        // El usuario está autorizado, se puede acceder al contenido
     } else {
-        // Redirigir al usuario a una página de inicio de sesión
+        $_SESSION['alert'] = [
+            'title' => 'USUARIO NO ENCONTRADO',
+            'icon' => 'ERROR'
+        ];
         header('Location: login.php');
-        exit(); // Finalizar el script después de la redirección
+        exit();
     }
 } else {
-    // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
+        $_SESSION['alert'] = [
+            'message' => 'Para acceder debes iniciar sesión primero',
+            'title' => 'SESIÓN NO INICIADA',
+            'icon' => 'info'
+        ];
     header('Location: login.php');
-    exit(); // Finalizar el script después de la redirección
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -52,7 +58,7 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="images/ico.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
     <title>Alta incrementables | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -87,7 +93,7 @@ if (isset($_SESSION['email'])) {
                                     </thead>
                                     <tbody>
                                     <?php
-                                        $query = "SELECT * FROM tipoIncrementable ORDER BY id DESC";
+                                        $query = "SELECT * FROM tipoincrementable ORDER BY id DESC";
 
                                         $query_run = mysqli_query($con, $query);
 
@@ -104,8 +110,8 @@ if (isset($_SESSION['email'])) {
                                                     <td>
                                                         <p style="text-transform: uppercase;"><?= $registro['tipo']; ?></p>
                                                     </td>
-                                                    <td>
-                                                        <a href="editarincrementable.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                    <td style="width: 105px;">
+                                                        <a href="editar-incrementable.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
                                                         <form action="codeincrementables.php" method="POST" class="d-inline">
                                                             <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
@@ -155,7 +161,7 @@ if (isset($_SESSION['email'])) {
                                 <option value="lcl">Marítimo LCL</option>
                                 <option value="fcl">Marítimo FCL</option>
                             </select>
-                            <label for="tipoServicio">Modalidad</label>
+                            <label for="tipo">Modalidad</label>
                         </div>
 
                     

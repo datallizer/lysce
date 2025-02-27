@@ -174,11 +174,18 @@ if (isset($_POST['save'])) {
 
     $query_run = mysqli_query($con, $sql);
     if ($query_run) {
-        $_SESSION['message'] = "Se registro exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'SE REGISTRO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: clientes.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL REGISTRAR',
+            'icon' => 'error'
+        ];
         header("Location: clientes.php");
         exit(0);
     }
