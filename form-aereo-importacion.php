@@ -1,17 +1,20 @@
 <?php
 session_start();
 require 'dbcon.php';
-$message = isset($_SESSION['message']) ? $_SESSION['message'] : ''; // Obtener el mensaje de la sesión
 
-if (!empty($message)) {
-    // HTML y JavaScript para mostrar la alerta...
+$alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
+
+if (!empty($alert)) {
+    $title = isset($alert['title']) ? json_encode($alert['title']) : '"Notificación"';
+    $message = isset($alert['message']) ? json_encode($alert['message']) : '""';
+    $icon = isset($alert['icon']) ? json_encode($alert['icon']) : '"info"';
+
     echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
-                const message = " . json_encode($message) . ";
                 Swal.fire({
-                    title: 'NOTIFICACIÓN',
-                    text: message,
-                    icon: 'info',
+                    title: $title,
+                    " . (!empty($alert['message']) ? "text: $message," : "") . "
+                    icon: $icon,
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -20,30 +23,33 @@ if (!empty($message)) {
                 });
             });
         </script>";
-    unset($_SESSION['message']); // Limpiar el mensaje de la sesión
+    unset($_SESSION['alert']);
 }
 
-// //Verificar si existe una sesión activa y los valores de usuario y contraseña están establecidos
-// if (isset($_SESSION['username'])) {
-//     $username = $_SESSION['username'];
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
 
-//     // Consultar la base de datos para verificar si los valores coinciden con algún registro en la tabla de usuarios
-//     $query = "SELECT * FROM user WHERE username = '$username'";
-//     $result = mysqli_query($con, $query);
+    $query = "SELECT * FROM usuarios WHERE email = '$email'";
+    $result = mysqli_query($con, $query);
 
-//     // Si se encuentra un registro coincidente, el usuario está autorizado
-//     if (mysqli_num_rows($result) > 0) {
-//         // El usuario está autorizado, se puede acceder al contenido
-//     } else {
-//         // Redirigir al usuario a una página de inicio de sesión
-//         header('Location: login.php');
-//         exit(); // Finalizar el script después de la redirección
-//     }
-// } else {
-//     // Redirigir al usuario a una página de inicio de sesión si no hay una sesión activa
-//     header('Location: login.php');
-//     exit(); // Finalizar el script después de la redirección
-// }
+    if (mysqli_num_rows($result) > 0) {
+    } else {
+        $_SESSION['alert'] = [
+            'title' => 'USUARIO NO ENCONTRADO',
+            'icon' => 'ERROR'
+        ];
+        header('Location: login.php');
+        exit();
+    }
+} else {
+        $_SESSION['alert'] = [
+            'message' => 'Para acceder debes iniciar sesión primero',
+            'title' => 'SESIÓN NO INICIADA',
+            'icon' => 'info'
+        ];
+    header('Location: login.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +58,7 @@ if (!empty($message)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="images/ico.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
     <title>Áereo importación nacional | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -61,7 +67,7 @@ if (!empty($message)) {
 
 <body>
     <div class="container-fluid p-5">
-        <form action="codeaereoimportacion.php" method="POST" class="row justify-content-evenly">
+        <form action="codeaereo.php" method="POST" class="row justify-content-evenly">
             <div class="col-3 mb-3 text-center">
                 <img style="width: 70%;" src="images/logo.png" alt="">
                 <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
@@ -89,7 +95,20 @@ if (!empty($message)) {
                 <input class="form-control" type="text" name="fecha" id="expedicion" value="">
             </div>
             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                <p><b>COTIZACION DE FLETE ÁEREO / CARGA INTERNACIONAL</b></p>
+                <select class="form-select bg-warning" name="tipoAereoImpo">
+                    <option selected>Selecciona un servicio</option>
+                    <?php
+                    $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereo'";
+                    $result = mysqli_query($con, $query);
+
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($registro = mysqli_fetch_assoc($result)) {
+                            $nombre = $registro['nombreServicio'];
+                            echo "<option value='$nombre'>" . $nombre . "</option>";
+                        }
+                    }
+                    ?>
+                </select>
             </div>
             <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                 <p class="mb-1"><b>Cliente</b></p>
@@ -175,28 +194,28 @@ if (!empty($message)) {
                             <b>Distancia:</b>
                             <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="millas" oninput="convertirAMetros()">
                             millas |
-                            <input name="distanciaOrigenDestinoKilometros" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
+                            <input name="distanciaOrigenDestinoKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="km" oninput="convertirAMillas()"> Kms
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Tiempo / Recorrido:</b>
-                            <input class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
+                            <input name="tiempoRecorridoOrigenDestino" class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
                         </p><br>
 
                         <p style="display: inline-block;">
                             <b>Servicio:</b>
-                            <input class="form-control" style="width: 197px; display: inline-block;" type="text" id="servicio" value="Directo áereo de carga">
+                            <input name="servicio" class="form-control" style="width: 197px; display: inline-block;" type="text" id="servicio" value="Directo áereo de carga">
                         </p>
                     </div>
                     <div class="col-6">
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Total ft3:</b>
-                            <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
+                            <input name="totalFt3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="ft3Total" readonly>
                         </p><br>
 
                         <p style="display: inline-block;margin-bottom: 5px;">
                             <b>Total m3:</b>
-                            <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="m3Total" readonly>
+                            <input name="totalM3" class="form-control" style="width: 80px; display: inline-block;" type="text" id="m3Total" readonly>
                         </p>
                     </div>
                 </div>
@@ -205,24 +224,24 @@ if (!empty($message)) {
             <div class="col-4 mt-3 mb-3">
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Distancia:</b>
-                    <input name="distanciaOrigenDestinoMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
+                    <input name="distanciaDestinoFinalMillas" class="form-control" style="width: 90px; display: inline-block;" type="text" id="milla" oninput="convertirAMetrosDos()">
                     millas |
-                    <input name="distanciaOrigenDestinoKilometros" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
+                    <input name="distanciaDestinoFinalKms" class="form-control" style="width: 90px; display: inline-block;" type="text" id="kms" oninput="convertirAMillasDos()"> Kms
                 </p><br>
 
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Tiempo / Recorrido:</b>
-                    <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
+                    <input name="tiempoRecorridoDestinoFinal" class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
                 </p><br>
 
                 <p style="display: inline-block;margin-bottom: 5px;">
                     <b>Operador:</b>
-                    <input class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
+                    <input name="operador" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
                 </p>
 
                 <p style="display: inline-block;">
                     <b>Unidad:</b>
-                    <input class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio" value="Servicio terrestre">
+                    <input name="unidad" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio" value="Servicio terrestre">
                 </p>
 
             </div>
@@ -246,7 +265,7 @@ if (!empty($message)) {
                 <div class="row mt-3 mb-3">
                     <div class="col-3 text-center">
                         <p style="display: inline-block;margin-bottom: 5px;">
-                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="moneda" value="USD"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="18.6" oninput="actualizarTotales()">
+                            1 <input name="moneda" class="form-control" style="width: 80px; display: inline-block;" type="text" id="moneda" value="USD"> = <input name="valorMoneda" class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="18.6" oninput="actualizarTotales()">
                         </p>
                     </div>
 
@@ -302,99 +321,99 @@ if (!empty($message)) {
                             </tr>
                             <tr>
                                 <td>Collection Fee x KG min</td>
-                                <td><input type="text" name="" value="180"></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="text" name="collectionFeeOrigenUno" value="180"></td>
+                                <td><input type="text" name="collectionFeeOrigenDos" value=""></td>
+                                <td><input type="text" name="collectionFeeOrigenTotal" value=""></td>
+                                <td><input type="text" name="collectionFeeOrigenTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>Screenning Charge</td>
-                                <td><input type="text" name="" value="15"></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="screeningChargeUno" value="15"></td>
+                                <td><input type="text" name="screeningChargeDos" value=""></td>
+                                <td><input type="text" name="screeningChargeTotal" value=""></td>
+                                <td><input type="text" name="screeningChargeTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>Terminal Handling KN</td>
-                                <td><input type="text" name="" value="85"></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><input type="text" name="" value=""></td>
+                                <td><input type="text" name="terminalHandlingUno" value="85"></td>
+                                <td><input type="text" name="terminalHandlingDos" value=""></td>
+                                <td><input type="text" name="terminalHandlingTotal" value=""></td>
+                                <td><input type="text" name="terminalHandlingTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>Airport Transfer</td>
-                                <td><input type="text" name="" value="1.30"></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="airportTransferUno" value="1.30"></td>
+                                <td><input type="text" name="airportTransferDos" value=""></td>
+                                <td><input type="text" name="airportTransferTotal" value=""></td>
+                                <td><input type="text" name="airportTransferTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>Exports Customs Clearence</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="exportsCustomsUno" value=""></td>
+                                <td><input type="text" name="exportsCustomsDos" value=""></td>
+                                <td><input type="text" name="exportsCustomsTotal" value=""></td>
+                                <td><input type="text" name="exportsCustomsTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>X-Ray</td>
-                                <td><input type="text" name="" value="15"></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="xRayUno" value="15"></td>
+                                <td><input type="text" name="xRayDos" value=""></td>
+                                <td><input type="text" name="xRayTotal" value=""></td>
+                                <td><input type="text" name="xRayTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>Airport Tax</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="airportTaxUno" value=""></td>
+                                <td><input type="text" name="airportTaxDos" value=""></td>
+                                <td><input type="text" name="airportTaxTotal" value=""></td>
+                                <td><input type="text" name="airportTaxTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td>AMS Fee</td>
-                                <td><input type="text" name="" value="15"></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="amsFeeOrigenUno" value="15"></td>
+                                <td><input type="text" name="amsFeeOrigenDos" value=""></td>
+                                <td><input type="text" name="amsFeeOrigenTotal" value=""></td>
+                                <td><input type="text" name="amsFeeOrigenTotalUsd" value=""></td>
                             </tr>
                             <tr>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="adicionalOrigenUnoTitle" value=""></td>
+                                <td><input type="text" name="adicionalOrigenUnoUno" value=""></td>
+                                <td><input type="text" name="adicionalOrigenUnoDos" value=""></td>
+                                <td><input type="text" name="adicionalOrigenUnoTotal" value=""></td>
+                                <td><input type="text" name="adicionalOrigenUnoTotalUsd" value=""></td>
                             </tr>
                             <tr>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="adicionalOrigenDosTitle" value=""></td>
+                                <td><input type="text" name="adicionalOrigenDosUno" value=""></td>
+                                <td><input type="text" name="adicionalOrigenDosDos" value=""></td>
+                                <td><input type="text" name="adicionalOrigenDosTotal" value=""></td>
+                                <td><input type="text" name="adicionalOrigenDosTotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td colspan="2">HAWB</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="hawbDos" value=""></td>
+                                <td><input type="text" name="hawbTotal" value=""></td>
+                                <td><input type="text" name="hawbTotalUSD" value=""></td>
                             </tr>
                             <tr>
                                 <td colspan="2">FSC-A</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="fscADos" value=""></td>
+                                <td><input type="text" name="fscATotal" value=""></td>
+                                <td><input type="text" name="fscATotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td colspan="2">SSC-A</td>
-                                <td><input type="text" name="" value=""></td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input type="text" name="sscADos" value=""></td>
+                                <td><input type="text" name="sscATotal" value=""></td>
+                                <td><input type="text" name="sscATotalUsd" value=""></td>
                             </tr>
                             <tr>
                                 <td colspan="4" class="text-end">Subtotal (HAWB, FSC-A, SSC-A)</td>
-                                <td class="text-end"><span id="">$</span></td>
+                                <td class="text-end"><input type="text" name="subtotalOrigen" value=""></td>
                             </tr>
                             <tr>
                                 <td colspan="4" class="text-end">Total</td>
-                                <td class="text-end"><span id="">$</span></td>
+                                <td class="text-end"><input type="text" name="totalOrigen" value=""></td>
                             </tr>
                         </table>
                     </div>
@@ -402,7 +421,7 @@ if (!empty($message)) {
                         <table class="table table-striped gastos-table text-start">
                             <tr>
                                 <th>GASTOS EN DESTINO</th>
-                                <th colspan="3"><input type="text" name="" value="AEREOPUERTO CD. DE MÉXICO" style="width: 100% !important;"></th>
+                                <th colspan="3"><input type="text" name="lugarDestino" value="AEREOPUERTO CD. DE MÉXICO" style="width: 100% !important;"></th>
                             </tr>
                             <tr>
                                 <td></td>
@@ -411,50 +430,50 @@ if (!empty($message)) {
                             </tr>
                             <tr>
                                 <td>Handling</td>
-                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
-                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
+                                <td><input type="number" name="handlingUsd" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" name="handlingMx" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>Desconsol</td>
-                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
-                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
+                                <td><input type="number" name="desconsolUsd" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" name="desconsolMx" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>Collect fee 4% HAWB</td>
-                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
-                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
+                                <td><input type="number" name="collectionFeeUsd" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" name="collectionFeeMx" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>AMS fee</td>
-                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
-                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
+                                <td><input type="number" name="amsFeeUsd" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" name="amsFeeMx" class="mxnOutputs" value="" readonly></td>
                             </tr>
 
                             <tr>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
-                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
+                                <td><input type="text" name="adicionalDestinoUno" value=""></td>
+                                <td><input type="number" name="adicionalDestinoUnoUsd" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" name="adicionalDestinoUnoMx" class="mxnOutputs" value="" readonly></td>
                             </tr>
 
                             <tr>
-                                <td><input type="text" name="" value=""></td>
-                                <td><input type="number" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
-                                <td><input type="text" class="mxnOutputs" value="" readonly></td>
+                                <td><input type="text" name="adicionalDestinoDos" value=""></td>
+                                <td><input type="number" name="adicionalDestinoDosUsd" class="dolarInputs" value="" oninput="updateRowDestinySpents(this)"></td>
+                                <td><input type="text" name="adicionalDestinoDosMx" class="mxnOutputs" value="" readonly></td>
                             </tr>
                             <tr>
                                 <td>Subtotal</td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input name="subtotalDestinoUsd" id=""></td>
+                                <td><input name="subtotalDestinoMx" id=""></td>
                             </tr>
                             <tr>
                                 <td>Impuestos</td>
-                                <td><span id="">$</span></td>
-                                <td><span id="">$</span></td>
+                                <td><input name="impuestosDestinoUsd" id=""></td>
+                                <td><input name="impuestosDestinoMx" id=""></td>
                             </tr>
                             <tr class="text-end">
                                 <td>Total</td>
-                                <td><span id="totalDolars">$0.00</span></td>
-                                <td><span id="totalMXNs">$0.00</span></td>
+                                <td><input name="totalDestinoUsd" id="totalDolars"></td>
+                                <td><input name="totalDestinoMx" id="totalMXNs"></td>
                             </tr>
                         </table>
                     </div>
@@ -463,7 +482,7 @@ if (!empty($message)) {
                             <div class="col-10 text-end">
                                 <p><b>VALOR TOTAL FLETE INT</b></p>
                             </div>
-                            <div class="col-2 text-end"><span id="">$</span></div>
+                            <div class="col-2 text-end"><input name="valorTotalFlete" id=""></div>
                         </div>
                     </div>
                 </div>
@@ -482,23 +501,23 @@ if (!empty($message)) {
                     <tbody>
                         <tr>
                             <td>FLETE EXTRANJERO</td>
-                            <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxnOutput" value="" readonly></td>
+                            <td><input type="number" name="fleteExtranjeroUsd" class="dolarInput" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="fleteExtranjeroMx" class="mxnOutput" value="" readonly></td>
                         </tr>
                         <tr>
                             <td>MANIOBRAS</td>
-                            <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxnOutput" value="" readonly></td>
+                            <td><input type="number" name="maniobrasUsd" class="dolarInput" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="maniobrasMx" class="mxnOutput" value="" readonly></td>
                         </tr>
                         <tr>
                             <td>ALMACENAJE</td>
-                            <td><input type="number" class="dolarInput" value="" oninput="updateRow(this)"></td>
-                            <td><input type="text" class="mxnOutput" value="" readonly></td>
+                            <td><input type="number" name="almacenajeUsd" class="dolarInput" value="" oninput="updateRow(this)"></td>
+                            <td><input type="text" name="almacenajeMx" class="mxnOutput" value="" readonly></td>
                         </tr>
                         <tr id="totalRow">
                             <td>TOTAL</td>
-                            <td><span id="totalDolar">$0.00</span></td>
-                            <td><span id="totalMXN">$0.00</span></td>
+                            <td><input name="totalIncrementableUsd" id="totalDolar"></td>
+                            <td><input name="totalIncrementableMx" id="totalMXN"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -514,7 +533,7 @@ if (!empty($message)) {
             <div class="col-12 mt-5">
                 <p class="text-center"><b>GASTOS POR FLETE TERRESTRE EN MEXICO</b></p>
                 <table class="table table-striped mt-3" id="tablaGasto">
-                <tbody>
+                    <tbody>
                         <tr>
                             <td><input type="text" class="form-control" name="conceptoGasto[]" value="Gastos en Destino / MANIOBRAS DESCONSOLIDACION"></td>
                             <td>
@@ -527,7 +546,7 @@ if (!empty($message)) {
                             </td>
                             <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
                             <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>              
+                        </tr>
                         <tr>
                             <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete Terrestre MEXICO Flete Directo"></td>
                             <td>
@@ -540,7 +559,7 @@ if (!empty($message)) {
                             </td>
                             <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" id="totalUSDGasto" oninput="actualizarSubtotal()"></td>
                             <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
-                        </tr>                  
+                        </tr>
                         <tr class="text-end">
                             <td colspan="2">Subtotal</td>
                             <td style="width:20%;"><input class="form-control" name="subtotalFlete" type="text"></td>
@@ -600,16 +619,16 @@ if (!empty($message)) {
                     </tr>
                 </table>
             </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="save">Guardar</button>
-    </div>
-    </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary" name="save">Guardar</button>
+            </div>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
+    <script src="js/js.js"></script>
     <script>
         // Obtiene la fecha actual para la cotizacion
         const today = new Date();
@@ -886,7 +905,7 @@ if (!empty($message)) {
             document.getElementById("pesoCargableKgs").value = totalPesoCargable.toFixed(0);
 
             // Actualizar el valor comercial
-            actualizarValorComercial(); 
+            actualizarValorComercial();
             actualizarValoresUSD_MXN();
         }
 
@@ -914,19 +933,20 @@ if (!empty($message)) {
 
             // Actualiza los totales
             updateTotals();
-            
-        }
-        function actualizarValoresUSD_MXN() {
-        const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
-        const dolarInputs = document.querySelectorAll(".dolarInput");
 
-        dolarInputs.forEach((input) => {
-        const row = input.closest("tr");
-        const mxnOutput = row.querySelector(".mxnOutput");
-        const dolarValue = parseFloat(input.value) || 0;
-        mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
-        });
-        updateTotals();
+        }
+
+        function actualizarValoresUSD_MXN() {
+            const valorCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+            const dolarInputs = document.querySelectorAll(".dolarInput");
+
+            dolarInputs.forEach((input) => {
+                const row = input.closest("tr");
+                const mxnOutput = row.querySelector(".mxnOutput");
+                const dolarValue = parseFloat(input.value) || 0;
+                mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+            });
+            updateTotals();
         }
 
         function updateTotals() {
@@ -972,6 +992,7 @@ if (!empty($message)) {
                 alert("No hay más filas para eliminar.");
             }
         }
+
         function updateRowDestinySpents(input) {
             const ExchangeValue = parseFloat(document.getElementById("valorMoneda").value) || 0;
             const DolarInput = parseFloat(input.value) || 0;
@@ -985,6 +1006,7 @@ if (!empty($message)) {
             // Actualiza los totales
             updateTotalsDestinySpents();
         }
+
         function updateTotalsDestinySpents() {
             const dolarInputs = document.querySelectorAll(".dolarInputs");
             const mxnOutputs = document.querySelectorAll(".mxnOutputs");
@@ -1004,6 +1026,7 @@ if (!empty($message)) {
             document.getElementById("totalDolars").textContent = `$${totalUSD.toFixed(2)}`;
             document.getElementById("totalMXNs").textContent = `$${totalMXN.toFixed(2)}`;
         }
+
         function calcularValores() {
             const valorGastos = parseFloat(document.getElementById('valorGastos').value) || 0;
             const valorFlete = parseFloat(document.getElementById('valorFlete').value) || 0;

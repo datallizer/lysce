@@ -4,6 +4,30 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (isset($_POST['delete'])) {
+    $registro_id = mysqli_real_escape_string($con, $_POST['delete']);
+
+    $query = "DELETE FROM aereoimportacion WHERE id='$registro_id' ";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];        
+        header("Location: aereoimpointernacional.php");
+        exit(0);
+    } else {
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
+        header("Location: aereoimpointernacional.php");
+        exit(0);
+    }
+}
+
 if (isset($_POST['save'])) {
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
@@ -26,6 +50,7 @@ if (isset($_POST['save'])) {
     $pesoMercanciaLbs = mysqli_real_escape_string($con, $_POST['pesoMercanciaLbs']);
     $pesoMercanciaKgs = mysqli_real_escape_string($con, $_POST['pesoMercanciaKgs']);
     $pesoCargableKgs = mysqli_real_escape_string($con, $_POST['pesoCargableKgs']);
+    $pesoCotizacion = mysqli_real_escape_string($con, $_POST['pesoCotizacion']);
     $valorMercancia = mysqli_real_escape_string($con, $_POST['valorMercancia']);
     $valorComercial = mysqli_real_escape_string($con, $_POST['valorComercial']);
     $collectionFeeOrigenUno = mysqli_real_escape_string($con, $_POST['collectionFeeOrigenUno']);
@@ -60,25 +85,22 @@ if (isset($_POST['save'])) {
     $amsFeeOrigenDos = mysqli_real_escape_string($con, $_POST['amsFeeOrigenDos']);
     $amsFeeOrigenTotal = mysqli_real_escape_string($con, $_POST['amsFeeOrigenTotal']);
     $amsFeeOrigenTotalUsd = mysqli_real_escape_string($con, $_POST['amsFeeOrigenTotalUsd']);
-    $adicionalOrigenUnoTitle = mysqli_real_escape_string($con, $_POST['adicionalOrigenUnoTitle']);
+    $adicionalOrigenUnoTitle = mysqli_real_escape_string($con, $_POST['adicionalOrigenUnoUno']);
     $adicionalOrigenUnoUno = mysqli_real_escape_string($con, $_POST['adicionalOrigenUnoUno']);
     $adicionalOrigenUnoDos = mysqli_real_escape_string($con, $_POST['adicionalOrigenUnoDos']);
     $adicionalOrigenUnoTotal = mysqli_real_escape_string($con, $_POST['adicionalOrigenUnoTotal']);
     $adicionalOrigenUnoTotalUsd = mysqli_real_escape_string($con, $_POST['adicionalOrigenUnoTotalUsd']);
-    $adicionalOrigenDosTitle = mysqli_real_escape_string($con, $_POST['adicionalOrigenDosTitle']);
+    $adicionalOrigenDosTitle = mysqli_real_escape_string($con, $_POST['adicionalOrigenDosUno']);
     $adicionalOrigenDosUno = mysqli_real_escape_string($con, $_POST['adicionalOrigenDosUno']);
     $adicionalOrigenDosDos = mysqli_real_escape_string($con, $_POST['adicionalOrigenDosDos']);
     $adicionalOrigenDosTotal = mysqli_real_escape_string($con, $_POST['adicionalOrigenDosTotal']);
     $adicionalOrigenDosTotalUsd = mysqli_real_escape_string($con, $_POST['adicionalOrigenDosTotalUsd']);
-    $hawbUno = mysqli_real_escape_string($con, $_POST['hawbUno']);
     $hawbDos = mysqli_real_escape_string($con, $_POST['hawbDos']);
     $hawbTotal = mysqli_real_escape_string($con, $_POST['hawbTotal']);
     $hawbTotalUSD = mysqli_real_escape_string($con, $_POST['hawbTotalUSD']);
-    $fscAUno = mysqli_real_escape_string($con, $_POST['fscAUno']);
     $fscADos = mysqli_real_escape_string($con, $_POST['fscADos']);
     $fscATotal = mysqli_real_escape_string($con, $_POST['fscATotal']);
     $fscATotalUsd = mysqli_real_escape_string($con, $_POST['fscATotalUsd']);
-    $sscAUno = mysqli_real_escape_string($con, $_POST['sscAUno']);
     $sscADos = mysqli_real_escape_string($con, $_POST['sscADos']);
     $sscATotal = mysqli_real_escape_string($con, $_POST['sscATotal']);
     $sscATotalUsd = mysqli_real_escape_string($con, $_POST['sscATotalUsd']);
@@ -93,10 +115,10 @@ if (isset($_POST['save'])) {
     $collectionFeeMx = mysqli_real_escape_string($con, $_POST['collectionFeeMx']);
     $amsFeeUsd = mysqli_real_escape_string($con, $_POST['amsFeeUsd']);
     $amsFeeMx = mysqli_real_escape_string($con, $_POST['amsFeeMx']);
-    $adicionalDestinoUno = mysqli_real_escape_string($con, $_POST['adicionalDestinoUno']);
+    $adicionalDestinoUno = mysqli_real_escape_string($con, $_POST['adicionalDestinoUnoUsd']);
     $adicionalDestinoUnoUsd = mysqli_real_escape_string($con, $_POST['adicionalDestinoUnoUsd']);
     $adicionalDestinoUnoMx = mysqli_real_escape_string($con, $_POST['adicionalDestinoUnoMx']);
-    $adicionalDestinoDos = mysqli_real_escape_string($con, $_POST['adicionalDestinoDos']);
+    $adicionalDestinoDos = mysqli_real_escape_string($con, $_POST['adicionalDestinoDosUsd']);
     $adicionalDestinoDosUsd = mysqli_real_escape_string($con, $_POST['adicionalDestinoDosUsd']);
     $adicionalDestinoDosMx = mysqli_real_escape_string($con, $_POST['adicionalDestinoDosMx']);
     $subtotalDestinoUsd = mysqli_real_escape_string($con, $_POST['subtotalDestinoUsd']);
@@ -114,79 +136,41 @@ if (isset($_POST['save'])) {
     $almacenajeMx = mysqli_real_escape_string($con, $_POST['almacenajeMx']);
     $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
-    $gastosDestinoManiobras = mysqli_real_escape_string($con, $_POST['gastosDestinoManiobras']);
-    $fleteTerrestre = mysqli_real_escape_string($con, $_POST['fleteTerrestre']);
     $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
-    $impuestosFlete = mysqli_real_escape_string($con, $_POST['impuestosFlete']);
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
-    $totalFlete = mysqli_real_escape_string($con, $_POST['totalFlete']);
-    $totalCotizacionNumero = mysqli_real_escape_string($con, $_POST['totalCotizacionNumero']);
-    $totalCotizacionTexto = mysqli_real_escape_string($con, $_POST['totalCotizacionTexto']);
+    $tipoAereoImpo = mysqli_real_escape_string($con, $_POST['tipoAereoImpo']);
 
-    // Consulta SQL para insertar los datos
-    $sql = "INSERT INTO aereoImportacion (
-    fecha, idCliente, idOrigen, idDestino, idDestinoFinal,
-    distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
-    totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
-    operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, pesoCargableKgs, pesoCotizacion, 
-    valorMercancia, valorComercial, collectionFeeOrigenUno, collectionFeeOrigenDos, collectionFeeOrigenTotal, 
-    collectionFeeOrigenTotalUsd, screeningChargeUno, screeningChargeDos, screeningChargeTotal, 
-    screeningChargeTotalUsd, terminalHandlingUno, terminalHandlingDos, terminalHandlingTotal, 
-    terminalHandlingTotalUsd, airportTransferUno, airportTransferDos, airportTransferTotal, 
-    airportTransferTotalUsd, exportsCustomsUno, exportsCustomsDos, exportsCustomsTotal, exportsCustomsTotalUsd, 
-    xRayUno, xRayDos, xRayTotal, xRayTotalUsd, airportTaxUno, airportTaxDos, airportTaxTotal, 
-    airportTaxTotalUsd, amsFeeOrigenUno, amsFeeOrigenDos, amsFeeOrigenTotal, amsFeeOrigenTotalUsd, 
-    adicionalOrigenUnoTitle, adicionalOrigenUnoUno, adicionalOrigenUnoDos, adicionalOrigenUnoTotal, 
-    adicionalOrigenUnoTotalUsd, adicionalOrigenDosTitle, adicionalOrigenDosUno, adicionalOrigenDosDos, 
-    adicionalOrigenDosTotal, adicionalOrigenDosTotalUsd, hawbUno, hawbDos, hawbTotal, hawbTotalUSD, 
-    fscAUno, fscADos, fscATotal, fscATotalUsd, sscAUno, sscADos, sscATotal, sscATotalUsd, subtotalOrigen, 
-    totalOrigen, lugarDestino, handlingUsd, handlingMx, desconsolUsd, desconsolMx, collectionFeeUsd, 
-    collectionFeeMx, amsFeeUsd, amsFeeMx, adicionalDestinoUno, adicionalDestinoUnoUsd, adicionalDestinoUnoMx, 
-    adicionalDestinoDos, adicionalDestinoDosUsd, adicionalDestinoDosMx, subtotalDestinoUsd, subtotalDestinoMx, 
-    impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd, totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, 
-    fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, 
-    totalIncrementableMx, gastosDestinoManiobras, fleteTerrestre, subtotalFlete, impuestosFlete, retencionFlete, 
-    totalFlete, totalCotizacionNumero, totalCotizacionTexto
-) VALUES (
-    '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
-    '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
-    '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
-    '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$pesoCargableKgs', '$pesoCotizacion', 
-    '$valorMercancia', '$valorComercial', '$collectionFeeOrigenUno', '$collectionFeeOrigenDos', '$collectionFeeOrigenTotal', 
-    '$collectionFeeOrigenTotalUsd', '$screeningChargeUno', '$screeningChargeDos', '$screeningChargeTotal', 
-    '$screeningChargeTotalUsd', '$terminalHandlingUno', '$terminalHandlingDos', '$terminalHandlingTotal', 
-    '$terminalHandlingTotalUsd', '$airportTransferUno', '$airportTransferDos', '$airportTransferTotal', 
-    '$airportTransferTotalUsd', '$exportsCustomsUno', '$exportsCustomsDos', '$exportsCustomsTotal', '$exportsCustomsTotalUsd', 
-    '$xRayUno', '$xRayDos', '$xRayTotal', '$xRayTotalUsd', '$airportTaxUno', '$airportTaxDos', '$airportTaxTotal', 
-    '$airportTaxTotalUsd', '$amsFeeOrigenUno', '$amsFeeOrigenDos', '$amsFeeOrigenTotal', '$amsFeeOrigenTotalUsd', 
-    '$adicionalOrigenUnoTitle', '$adicionalOrigenUnoUno', '$adicionalOrigenUnoDos', '$adicionalOrigenUnoTotal', 
-    '$adicionalOrigenUnoTotalUsd', '$adicionalOrigenDosTitle', '$adicionalOrigenDosUno', '$adicionalOrigenDosDos', 
-    '$adicionalOrigenDosTotal', '$adicionalOrigenDosTotalUsd', '$hawbUno', '$hawbDos', '$hawbTotal', '$hawbTotalUSD', 
-    '$fscAUno', '$fscADos', '$fscATotal', '$fscATotalUsd', '$sscAUno', '$sscADos', '$sscATotal', '$sscATotalUsd', '$subtotalOrigen', 
-    '$totalOrigen', '$lugarDestino', '$handlingUsd', '$handlingMx', '$desconsolUsd', '$desconsolMx', '$collectionFeeUsd', 
-    '$collectionFeeMx', '$amsFeeUsd', '$amsFeeMx', '$adicionalDestinoUno', '$adicionalDestinoUnoUsd', '$adicionalDestinoUnoMx', 
-    '$adicionalDestinoDos', '$adicionalDestinoDosUsd', '$adicionalDestinoDosMx', '$subtotalDestinoUsd', '$subtotalDestinoMx', 
-    '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd', '$totalDestinoMx', '$valorTotalFlete', '$fleteExtranjeroUsd', 
-    '$fleteExtranjeroMx', '$maniobrasUsd', '$maniobrasMx', '$almacenajeUsd', '$almacenajeMx', '$totalIncrementableUsd', 
-    '$totalIncrementableMx', '$gastosDestinoManiobras', '$fleteTerrestre', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', 
-    '$totalFlete', '$totalCotizacionNumero', '$totalCotizacionTexto'
-)";
-
+    $sql = "INSERT INTO aereoimportacion (
+        fecha, idCliente, idOrigen, idDestino, idDestinoFinal, distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, pesoCargableKgs, pesoCotizacion, valorMercancia,
+    valorComercial, collectionFeeOrigenUno, collectionFeeOrigenDos, collectionFeeOrigenTotal, collectionFeeOrigenTotalUsd, screeningChargeUno, screeningChargeDos, screeningChargeTotal, screeningChargeTotalUsd, terminalHandlingUno, terminalHandlingDos, terminalHandlingTotal, terminalHandlingTotalUsd, airportTransferUno, airportTransferDos, airportTransferTotal, airportTransferTotalUsd,
+    exportsCustomsUno, exportsCustomsDos, exportsCustomsTotal, exportsCustomsTotalUsd, xRayUno, xRayDos, xRayTotal, xRayTotalUsd, airportTaxUno, airportTaxDos, airportTaxTotal, airportTaxTotalUsd, amsFeeOrigenUno, amsFeeOrigenDos, amsFeeOrigenTotal, amsFeeOrigenTotalUsd, adicionalOrigenUnoTitle, adicionalOrigenUnoUno, adicionalOrigenUnoDos, 
+    adicionalOrigenUnoTotal, adicionalOrigenUnoTotalUsd, adicionalOrigenDosTitle, adicionalOrigenDosUno, adicionalOrigenDosDos, adicionalOrigenDosTotal, adicionalOrigenDosTotalUsd, hawbDos, hawbTotal, hawbTotalUSD, fscADos, fscATotal, fscATotalUsd, sscADos, sscATotal, sscATotalUsd, subtotalOrigen, totalOrigen, lugarDestino, 
+    handlingUsd, handlingMx, desconsolUsd, desconsolMx, collectionFeeUsd, collectionFeeMx, amsFeeUsd, amsFeeMx, adicionalDestinoUno, adicionalDestinoUnoUsd, adicionalDestinoUnoMx, adicionalDestinoDos, adicionalDestinoDosUsd, adicionalDestinoDosMx, subtotalDestinoUsd, subtotalDestinoMx, impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd,
+    totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, totalIncrementableMx, subtotalFlete, retencionFlete, tipoAereoImpo
+    ) VALUES (
+        '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$pesoCargableKgs', '$pesoCotizacion', '$valorMercancia',
+    '$valorComercial', '$collectionFeeOrigenUno', '$collectionFeeOrigenDos', '$collectionFeeOrigenTotal', '$collectionFeeOrigenTotalUsd', '$screeningChargeUno', '$screeningChargeDos', '$screeningChargeTotal', '$screeningChargeTotalUsd', '$terminalHandlingUno', '$terminalHandlingDos', '$terminalHandlingTotal', '$terminalHandlingTotalUsd', '$airportTransferUno', '$airportTransferDos', '$airportTransferTotal', '$airportTransferTotalUsd',
+    '$exportsCustomsUno', '$exportsCustomsDos', '$exportsCustomsTotal', '$exportsCustomsTotalUsd', '$xRayUno', '$xRayDos', '$xRayTotal', '$xRayTotalUsd', '$airportTaxUno', '$airportTaxDos', '$airportTaxTotal', '$airportTaxTotalUsd', '$amsFeeOrigenUno', '$amsFeeOrigenDos', '$amsFeeOrigenTotal', '$amsFeeOrigenTotalUsd', '$adicionalOrigenUnoTitle', '$adicionalOrigenUnoUno', '$adicionalOrigenUnoDos', 
+    '$adicionalOrigenUnoTotal', '$adicionalOrigenUnoTotalUsd', '$adicionalOrigenDosTitle', '$adicionalOrigenDosUno', '$adicionalOrigenDosDos', '$adicionalOrigenDosTotal', '$adicionalOrigenDosTotalUsd', '$hawbDos', '$hawbTotal', '$hawbTotalUSD', '$fscADos', '$fscATotal', '$fscATotalUsd', '$sscADos', '$sscATotal', '$sscATotalUsd', '$subtotalOrigen', '$totalOrigen', '$lugarDestino',
+    '$handlingUsd', '$handlingMx', '$desconsolUsd', '$desconsolMx', '$collectionFeeUsd', '$collectionFeeMx', '$amsFeeUsd', '$amsFeeMx', '$adicionalDestinoUno', '$adicionalDestinoUnoUsd', '$adicionalDestinoUnoMx', '$adicionalDestinoDos', '$adicionalDestinoDosUsd', '$adicionalDestinoDosMx', '$subtotalDestinoUsd', '$subtotalDestinoMx', '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd',
+    '$totalDestinoMx', '$valorTotalFlete', '$fleteExtranjeroUsd', '$fleteExtranjeroMx', '$maniobrasUsd', '$maniobrasMx', '$almacenajeUsd', '$almacenajeMx', '$totalIncrementableUsd', '$totalIncrementableMx', '$subtotalFlete', '$retencionFlete', '$tipoAereoImpo'
+    )";
     $query_run = mysqli_query($con, $sql);
+
     if ($query_run) {
         $_SESSION['alert'] = [
-            'title' => 'SE REGISTRO EXITOSAMENTE',
+            'title' => 'GUARDADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: clientes.php");
+        header("Location: aereoimpointernacional.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
             'message' => 'Contacte a soporte',
-            'title' => 'ERROR AL REGISTRAR',
+            'title' => 'ERROR AL GUARDAR',
             'icon' => 'error'
         ];
-        header("Location: clientes.php");
+        header("Location: aereoimpointernacional.php");
         exit(0);
     }
 }

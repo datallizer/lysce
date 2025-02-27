@@ -42,11 +42,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -59,7 +59,7 @@ if (isset($_SESSION['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
-    <title>Clientes | LYSCE</title>
+    <title>Alta cotizaciones | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -75,10 +75,10 @@ if (isset($_SESSION['email'])) {
                         <div class="card">
                             <div class="card-header">
                                 <h4 style="color:#fff" class="m-1">
-                                    <a href="nuevocliente.php" class="btn btn-primary btn-sm float-end btn-sm mb-1">
-                                        Nuevo cliente
-                                    </a>
-                                    CLIENTES
+                                    <button type="button" class="btn btn-primary btn-sm mb-1 float-end" data-bs-toggle="modal" data-bs-target="#servicioModal">
+                                        Nueva cotizacion
+                                    </button>
+                                    ALTA DE COTIZACIONES
                                 </h4>
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
@@ -86,32 +86,14 @@ if (isset($_SESSION['email'])) {
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Cliente</th>
-                                            <th>Direccion</th>
-                                            <th>Telefono</th>
-                                            <th>Correo</th>
-                                            <th>RFC</th>
-                                            <th>Proveedor asociado</th>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
                                             <th>Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                        $query = "SELECT 
-            c.id AS idCliente, 
-            c.cliente, 
-            c.calle, 
-            c.colonia, 
-            c.city, 
-            c.telefono, 
-            c.correo, 
-            c.rfc, 
-            GROUP_CONCAT(p.proveedor SEPARATOR ', ') AS proveedores_asociados
-          FROM clientes c
-          LEFT JOIN proveedorcliente pc ON c.id = pc.idCliente
-          LEFT JOIN proveedores p ON pc.idProveedor = p.id
-          GROUP BY c.id
-          ORDER BY c.id DESC";
+                                        <?php
+                                        $query = "SELECT * FROM tiposervicio ORDER BY id DESC";
 
                                         $query_run = mysqli_query($con, $query);
 
@@ -120,41 +102,29 @@ if (isset($_SESSION['email'])) {
                                         ?>
                                                 <tr>
                                                     <td>
-                                                        <p><?= $registro['idCliente']; ?></p>
+                                                        <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['cliente']; ?></p>
+                                                        <p><?= $registro['nombreServicio']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['calle']; ?>, <?= $registro['colonia']; ?>, <?= $registro['city']; ?></p>
+                                                        <p style="text-transform: uppercase;"><?= $registro['tipoServicio']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['telefono']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['correo']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= $registro['rfc']; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p><?= !empty($registro['proveedores_asociados']) ? $registro['proveedores_asociados'] : 'Sin proveedores asociados'; ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <a href="editarcliente.php?id=<?= $registro['idCliente']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+                                                        <a href="editarcliente.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
-                                                        <form action="codeclientes.php" method="POST" class="d-inline">
-                                                            <button type="submit" name="delete" value="<?= $registro['idCliente']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                        <form action="codecotizaciones.php" method="POST" class="d-inline">
+                                                            <input type="hidden" name="id" value="<?= $registro['id']; ?>">
+                                                            <button type="submit" name="delete" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
                                                     </td>
                                                 </tr>
                                         <?php
                                             }
                                         } else {
-                                            echo "<td colspan='9'><p>No se encontró ningún registro</p></td>";
+                                            echo "<td colspan='4'><p>No se encontró ningún registro</p></td>";
                                         }
                                         ?>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -165,34 +135,52 @@ if (isset($_SESSION['email'])) {
         </div>
     </div>
 
+    <!-- Modal servicio -->
+    <div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="servicioLabel">NUEVO SERVICIO</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="codecotizaciones.php" method="post">
+                    <div class="modal-body row">
+
+                        <div class="col-12 form-floating mb-3">
+                            <input type="text" class="form-control" name="nombreServicio" placeholder="Nombre servicio" autocomplete="off" required>
+                            <label for="apellidop">Servicio</label>
+                        </div>
+
+                        <div class="form-floating mt-3 mb-3 col-12">
+                            <select class="form-select" name="tipoServicio" id="tipoServicio">
+                                <option selected>Selecciona la modalidad</option>
+                                <option value="aereoimpo">Aéreo importación</option>
+                                <option value="aereoexpo">Aéreo exportación</option>
+                                <option value="ltl">Terrestre LTL</option>
+                                <option value="ftl">Terrestre FTL</option>
+                                <option value="lcl">Marítimo LCL</option>
+                                <option value="fcl">Marítimo FCL</option>
+                            </select>
+                            <label for="tipoServicio">Modalidad</label>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" name="save">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
-    <script src="js/js.js"></script>
-    <script>
-        document.getElementById('clienteForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita el envío del formulario de manera tradicional
 
-            const form = event.target;
-            const formData = new FormData(form);
-
-            fetch('codeclientes.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text()) // O .json() si esperas una respuesta JSON
-                .then(data => {
-                    console.log(data); // Procesa la respuesta aquí
-                    alert('Formulario enviado con éxito');
-                    // Aquí podrías actualizar el DOM según la respuesta
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Hubo un problema al enviar el formulario');
-                });
-        });
-    </script>
 </body>
 
 </html>

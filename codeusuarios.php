@@ -11,11 +11,18 @@ if (isset($_POST['delete'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Usuario eliminado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: usuarios.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al eliminar el usuario, contácte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
         header("Location: usuarios.php");
         exit(0);
     }
@@ -55,7 +62,11 @@ if (isset($_POST['update'])) {
                 $src_image = imagecreatefromgif($image_tmp_name);
                 break;
             default:
-                $_SESSION['message'] = "Formato de imagen no soportado";
+            $_SESSION['alert'] = [
+                'message' => 'Selecciona otra imagen',
+                'title' => 'FORMATO NO SOPORTADO',
+                'icon' => 'error'
+            ];
                 header("Location: usuarios.php");
                 exit(0);
         }
@@ -70,7 +81,11 @@ if (isset($_POST['update'])) {
         $update_result = mysqli_query($con, $update_query);
 
         if (!$update_result) {
-            $_SESSION['message'] = "Error al actualizar la imagen del usuario, contácte a soporte";
+            $_SESSION['alert'] = [
+                'message' => 'Contacte a soporte',
+                'title' => 'ERROR AL ACTUALIZAR LA IMAGEN',
+                'icon' => 'error'
+            ];
             header("Location: usuarios.php");
             exit(0);
         }
@@ -81,11 +96,18 @@ if (isset($_POST['update'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Usuario editado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'EDITADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: usuarios.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al editar el usuario, contácte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL EDITAR',
+            'icon' => 'error'
+        ];
         header("Location: usuarios.php");
         exit(0);
     }
@@ -107,7 +129,11 @@ if (isset($_POST['save'])) {
 
     if (mysqli_num_rows($result_check) > 0) {
         // Si el email ya existe
-        $_SESSION['message'] = "Este email ya está en uso";
+        $_SESSION['alert'] = [
+            'message' => 'Inicia sesión o intenta registrando otro email',
+            'title' => 'USUARIO REGISTRADO',
+            'icon' => 'warning'
+        ];
         header("Location: usuarios.php");
         exit(0);
     } else {
@@ -146,11 +172,18 @@ if (isset($_POST['save'])) {
             // Actualizar la base de datos con la ruta de la imagen
             $query_update = "UPDATE usuarios SET medio='./$ruta_imagen' WHERE id='$id'";
             $query_update_run = mysqli_query($con, $query_update);
-            $_SESSION['message'] = "Usuario creado exitosamente";
+            $_SESSION['alert'] = [
+                'title' => 'REGISTRO EXITOSO',
+                'icon' => 'success'
+            ];
             header("Location: usuarios.php");
             exit(0);
         } else {
-            $_SESSION['message'] = "Error al crear el usuario, contacte a soporte";
+            $_SESSION['alert'] = [
+                'message' => 'Contacte a soporte',
+                'title' => 'ERROR AL REGISTRAR',
+                'icon' => 'error'
+            ];
             header("Location: usuarios.php");
             exit(0);
         }

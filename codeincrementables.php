@@ -5,9 +5,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (isset($_POST['delete'])) {
-    $id = mysqli_real_escape_string($con, $_POST['id']);
+    $registro_id = mysqli_real_escape_string($con, $_POST['delete']);
 
-    $query = "DELETE FROM tiposervicio WHERE id='$id' ";
+    $query = "DELETE FROM tipoincrementable WHERE id='$registro_id' ";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
@@ -15,7 +15,7 @@ if (isset($_POST['delete'])) {
             'title' => 'ELIMINADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-incrementables.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -23,18 +23,17 @@ if (isset($_POST['delete'])) {
             'title' => 'ERROR AL ELIMINAR',
             'icon' => 'error'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-incrementables.php");
         exit(0);
     }
 }
 
 if (isset($_POST['update'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
-    $nombreServicio = mysqli_real_escape_string($con, $_POST['nombreServicio']);
-    $tipoServicio = mysqli_real_escape_string($con, $_POST['tipoServicio']);
+    $incrementable = mysqli_real_escape_string($con, $_POST['incrementable']);
+    $tipo = mysqli_real_escape_string($con, $_POST['tipo']);
 
-    // Actualizar los datos del usuario
-    $query = "UPDATE `tiposervicio` SET `nombreServicio` = '$nombreServicio',`tipoServicio` = '$tipoServicio' WHERE `tiposervicio`.`id` = '$id'";
+    $query = "UPDATE `tipoincrementable` SET `incrementable` = '$incrementable',`tipo` = '$tipo' WHERE `tipoincrementable`.`id` = '$id'";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
@@ -42,7 +41,7 @@ if (isset($_POST['update'])) {
             'title' => 'EDITADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-incrementables.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -50,25 +49,26 @@ if (isset($_POST['update'])) {
             'title' => 'ERROR AL EDITAR',
             'icon' => 'error'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-incrementables.php");
         exit(0);
     }
 }
 
 
-if (isset($_POST['save'])) {
-    $nombreServicio = mysqli_real_escape_string($con, $_POST['nombreServicio']);
-    $tipoServicio = mysqli_real_escape_string($con, $_POST['tipoServicio']);
 
-    $query = "INSERT INTO tiposervicio (nombreServicio, tipoServicio) VALUES ('$nombreServicio', '$tipoServicio')";
+if (isset($_POST['save'])) {
+    $incrementable = mysqli_real_escape_string($con, $_POST['incrementable']);
+    $tipo = mysqli_real_escape_string($con, $_POST['tipo']);
+
+    $query = "INSERT INTO tipoincrementable (incrementable, tipo) VALUES ('$incrementable', '$tipo')";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
         $_SESSION['alert'] = [
-            'title' => 'REGISTRO EXITOSO',
+            'title' => 'REGISTRADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-incrementables.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -76,7 +76,7 @@ if (isset($_POST['save'])) {
             'title' => 'ERROR AL REGISTRAR',
             'icon' => 'error'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-incrementables.php");
         exit(0);
     }
 }

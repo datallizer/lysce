@@ -4,6 +4,45 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
+if (isset($_POST['delete'])) {
+    $id = mysqli_real_escape_string($con, $_POST['id']);
+
+    $delete_gastos = "DELETE FROM gastosftl WHERE idFtl='$id'";
+    $delete_incrementables = "DELETE FROM incrementablesftl WHERE idFtl='$id'";
+    $delete_descripcion = "DELETE FROM descripcionmercanciasftl WHERE idFtl='$id'";
+    $delete_servicio = "DELETE FROM servicioftl WHERE idFtl='$id'";
+
+    $delete_ftl = "DELETE FROM ftl WHERE id='$id'";
+
+    $query_run_gastos = mysqli_query($con, $delete_gastos);
+    $query_run_incrementables = mysqli_query($con, $delete_incrementables);
+    $query_run_descripcion = mysqli_query($con, $delete_descripcion);
+    $query_run_servicio = mysqli_query($con, $delete_servicio);
+    $query_run_ftl = mysqli_query($con, $delete_ftl);
+
+    if ($query_run_gastos && $query_run_incrementables && $query_run_descripcion && $query_run_servicio && $query_run_ftl) {
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
+        header("Location: ftl.php");
+        exit(0);
+    } else {
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
+        header("Location: ftl.php");
+        exit(0);
+    }
+}
+
+
 if (isset($_POST['save'])) {
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
@@ -28,7 +67,6 @@ if (isset($_POST['save'])) {
     $totalBultos = mysqli_real_escape_string($con, $_POST['totalBultos']);
     $valorMercancia = mysqli_real_escape_string($con, $_POST['valorMercancia']);
     $valorComercial = mysqli_real_escape_string($con, $_POST['valorComercial']);
-    $fleteTerrestre = mysqli_real_escape_string($con, $_POST['fleteTerrestre']);
     $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
     $impuestosFlete = mysqli_real_escape_string($con, $_POST['impuestosFlete']);
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
@@ -37,21 +75,20 @@ if (isset($_POST['save'])) {
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
     $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
-    $impuestoFlete = mysqli_real_escape_string($con, $_POST['impuestoFlete']);
     $tipoFtl = mysqli_real_escape_string($con, $_POST['tipoFtl']);
-    
+
     $sql = "INSERT INTO ftl (
         fecha, idCliente, idOrigen, idDestino, idDestinoFinal,
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
         totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
         operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, totalBultos, 
-        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, impuestoFlete, tipoFtl
+        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, tipoFtl
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$impuestoFlete', '$tipoFtl'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoFtl'
     )";
 
     $query_run = mysqli_query($con, $sql);
@@ -94,7 +131,7 @@ if (isset($_POST['save'])) {
             $kilogramos_val = mysqli_real_escape_string($con, $kilogramos[$i]);
             $valorFactura_val = mysqli_real_escape_string($con, $valorFactura[$i]);
 
-            $sql_detalle = "INSERT INTO descripcionMercanciasFtl (
+            $sql_detalle = "INSERT INTO descripcionmercanciasftl (
                 idFtl, cantidad, unidadMedida, nmfc, descripcion, 
                 largoCm, anchoCm, altoCm, largoPlg, anchoPlg, altoPlg, 
                 piesCubicos, metrosCubicos, libras, kilogramos, valorFactura
@@ -107,6 +144,20 @@ if (isset($_POST['save'])) {
             mysqli_query($con, $sql_detalle);
         }
 
+        if (!empty($_POST['conceptoServicio'])) {
+            $conceptoServicio = $_POST['conceptoServicio'];
+            $tiempoServicio = $_POST['tiempoServicio'];
+
+            for ($i = 0; $i < count($conceptoServicio); $i++) {
+                $servicios = mysqli_real_escape_string($con, $conceptoServicio[$i]);
+                $tiempo = mysqli_real_escape_string($con, $tiempoServicio[$i]);
+
+                $sql_servicio = "INSERT INTO servicioftl (idFtl, conceptoServicio, tiempoServicio) 
+                                      VALUES ('$idFtl', '$servicios', '$tiempo')";
+
+                mysqli_query($con, $sql_servicio);
+            }
+        }
 
         if (!empty($_POST['incrementable'])) {
             $incrementables = $_POST['incrementable'];
@@ -118,7 +169,7 @@ if (isset($_POST['save'])) {
                 $incrementableUsd = mysqli_real_escape_string($con, $incrementablesUsd[$i]);
                 $incrementableMx = mysqli_real_escape_string($con, $incrementablesMx[$i]);
 
-                $sql_incrementable = "INSERT INTO incrementablesFtl (idFtl, incrementable, incrementableUsd, incrementableMx) 
+                $sql_incrementable = "INSERT INTO incrementablesftl (idFtl, incrementable, incrementableUsd, incrementableMx) 
                                       VALUES ('$idFtl', '$incrementable', '$incrementableUsd', '$incrementableMx')";
 
                 mysqli_query($con, $sql_incrementable);
@@ -133,19 +184,25 @@ if (isset($_POST['save'])) {
             for ($i = 0; $i < count($conceptoGasto); $i++) {
                 $concepto = mysqli_real_escape_string($con, $conceptoGasto[$i]);
                 $monto = mysqli_real_escape_string($con, $montoGasto[$i]);
-                $iva = isset($ivaGasto[$i]) ? 1 : 0; // Si el checkbox está marcado
+                $iva = isset($ivaGasto[$i]) ? 1 : 0;
 
                 $sql_gasto = "INSERT INTO gastosftl (idFtl, conceptoGasto, montoGasto, ivaGasto) VALUES ('$idFtl', '$concepto', '$monto', '$iva')";
                 mysqli_query($con, $sql_gasto);
             }
         }
 
-
-        $_SESSION['message'] = "Se registró exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'COTIZACIÓN REGISTRADA EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: ftl.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL CREAR LA COTIZACIÓN',
+            'icon' => 'error'
+        ];
         header("Location: ftl.php");
         exit(0);
     }

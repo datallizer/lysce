@@ -11,11 +11,18 @@ if (isset($_POST['delete'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
-        $_SESSION['message'] = "Eliminado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: clientes.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al eliminar, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
         header("Location: clientes.php");
         exit(0);
     }
@@ -37,16 +44,23 @@ if (isset($_POST['update'])) {
     $pais = mysqli_real_escape_string($con, $_POST['pais']);
     $contacto = mysqli_real_escape_string($con, $_POST['contacto']);
     $estatus = mysqli_real_escape_string($con, $_POST['estatus']);
-    
+
     $query = "UPDATE clientes SET cliente = '$cliente', calle = '$calle', numinterior = '$numinterior', numexterior = '$numexterior', cpostal = '$cpostal', state = '$state', colonia = '$colonia', city = '$city', telefono = '$telefono', correo = '$correo', rfc = '$rfc', pais = '$pais', contacto = '$contacto', estatus = '$estatus' WHERE id = '$id'";
     $query_run = mysqli_query($con, $query);
-    
+
     if ($query_run) {
-        $_SESSION['message'] = "Cliente actualizado exitosamente";
+        $_SESSION['alert'] = [
+            'title' => 'ACTUALIZADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
         header("Location: clientes.php");
         exit(0);
     } else {
-        $_SESSION['message'] = "Error al actualizar el cliente, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ACTUALIZAR',
+            'icon' => 'error'
+        ];
         header("Location: clientes.php");
         exit(0);
     }
@@ -83,16 +97,27 @@ if (isset($_POST['save'])) {
         $query_run_cliente = mysqli_query($con, $query_proveedor_cliente);
 
         if ($query_run_cliente) {
-            $_SESSION['message'] = "Se registro exitosamente";
+            $_SESSION['alert'] = [
+                'title' => 'REGISTRADO EXITOSAMENTE',
+                'icon' => 'success'
+            ];
             header("Location: clientes.php");
             exit(0);
         } else {
-            $_SESSION['message'] = "Error al registrar el proveedor cliente, contacte a soporte";
+            $_SESSION['alert'] = [
+                'message' => 'Contacte a soporte',
+                'title' => 'ERROR AL VINCULAR CLIENTE-PROVEEDOR',
+                'icon' => 'error'
+            ];
             header("Location: clientes.php");
             exit(0);
         }
     } else {
-        $_SESSION['message'] = "Error, contacte a soporte";
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL REGISTRAR EL CLIENTE',
+            'icon' => 'error'
+        ];
         header("Location: clientes.php");
         exit(0);
     }
