@@ -10,15 +10,17 @@ if (isset($_POST['delete'])) {
     $delete_gastos = "DELETE FROM gastosftl WHERE idFtl='$id'";
     $delete_incrementables = "DELETE FROM incrementablesftl WHERE idFtl='$id'";
     $delete_descripcion = "DELETE FROM descripcionmercanciasftl WHERE idFtl='$id'";
+    $delete_servicio = "DELETE FROM servicioftl WHERE idFtl='$id'";
 
     $delete_ftl = "DELETE FROM ftl WHERE id='$id'";
 
     $query_run_gastos = mysqli_query($con, $delete_gastos);
     $query_run_incrementables = mysqli_query($con, $delete_incrementables);
     $query_run_descripcion = mysqli_query($con, $delete_descripcion);
+    $query_run_servicio = mysqli_query($con, $delete_servicio);
     $query_run_ftl = mysqli_query($con, $delete_ftl);
 
-    if ($query_run_gastos && $query_run_incrementables && $query_run_descripcion && $query_run_ftl) {
+    if ($query_run_gastos && $query_run_incrementables && $query_run_descripcion && $query_run_servicio && $query_run_ftl) {
         $_SESSION['alert'] = [
             'title' => 'ELIMINADO EXITOSAMENTE',
             'icon' => 'success'
