@@ -42,11 +42,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -123,7 +123,7 @@ if (isset($_SESSION['email'])) {
                     case "administrative_area_level_1":
                         document.querySelector('input[name="state"]').value = longName;
                         break;
-                        case "country":
+                    case "country":
                         document.querySelector('input[name="pais"]').value = longName;
                         break;
                     case "postal_code":
@@ -166,7 +166,7 @@ if (isset($_SESSION['email'])) {
                                 </h4>
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
-                                
+
                                 <form action="codeclientes.php" method="POST" class="row">
 
                                     <div class="col-12 col-md-12 form-floating mb-3">
@@ -219,30 +219,38 @@ if (isset($_SESSION['email'])) {
                                         <input type="text" class="form-control" name="rfc" placeholder="Rfc" autocomplete="off">
                                         <label for="rfc">RFC / Tax ID</label>
                                     </div>
+
                                     <div class="col-12 col-md-6 form-floating mb-3">
                                         <input type="text" class="form-control" name="contacto" placeholder="Contacto" autocomplete="off" required>
                                         <label for="contacto">Representante / Agent</label>
                                     </div>
 
-                                    <div class="form-floating mb-3 mb-3">
+                                    <div class="form-floating mb-3 mb-3 col-12 col-md-5">
                                         <select class="form-select" name="idProveedor" id="floatingSelect">
                                             <option selected>Selecciona un proveedor para asociar</option>
                                             <?php
-                                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                                            $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Proveedor'";
                                             $result = mysqli_query($con, $query);
 
                                             if (mysqli_num_rows($result) > 0) {
                                                 while ($registro = mysqli_fetch_assoc($result)) {
-                                                    $nombre = $registro['proveedor'];
-                                                    $contacto = $registro['contact'];
-                                                    $idOrigen = $registro['id'];
-                                                    echo "<option value='$idOrigen'>" . $nombre . ' - ' . $contacto . "</option>";
+                                                    $nombre = $registro['cliente'];
+                                                    $contacto = $registro['contacto'];
+                                                    $id = $registro['id'];
+                                                    echo "<option value='$id'>" . $nombre . ' - ' . $contacto . "</option>";
                                                 }
                                             }
                                             ?>
                                         </select>
                                         <label for="floatingSelect">Cliente</label>
                                     </div>
+
+                                    <div class="col-12 col-md-7 form-floating mb-3">
+                                        <input type="text" class="form-control" name="web" placeholder="web" autocomplete="off">
+                                        <label for="web">Sitio web / Web site</label>
+                                    </div>
+
+                                    <input type="hidden" name="tipo" value="Cliente">
                             </div>
                             <div class="modal-footer">
                                 <a href="clientes.php" class="btn btn-secondary">Cerrar</a>
@@ -259,9 +267,9 @@ if (isset($_SESSION['email'])) {
 
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
 
 
 </body>

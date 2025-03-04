@@ -81,12 +81,8 @@ require 'dbcon.php';
                             <div class="sb-nav-link-icon"><i class="bi bi-box-fill"></i></div>
                             Proveedores
                         </a>
-                        <a class="nav-link" href="alta-cotizaciones.php">
+                        <a class="nav-link" href="alta-servicios.php">
                             <div class="sb-nav-link-icon"><i class="bi bi-clipboard-fill"></i></div>
-                            Cotizaciones
-                        </a>
-                        <a class="nav-link" href="alta-servicio.php">
-                            <div class="sb-nav-link-icon"><i class="bi bi-plus-square-dotted"></i></div>
                             Servicios
                         </a>
                         <a class="nav-link" href="alta-incrementables.php">

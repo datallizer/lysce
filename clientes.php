@@ -42,11 +42,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -87,31 +87,17 @@ if (isset($_SESSION['email'])) {
                                         <tr>
                                             <th>#</th>
                                             <th>Cliente</th>
-                                            <th>Direccion</th>
-                                            <th>Telefono</th>
+                                            <th>Domicilio</th>
+                                            <th>Teléfono</th>
                                             <th>Correo</th>
                                             <th>RFC</th>
                                             <th>Proveedor asociado</th>
-                                            <th>Accion</th>
+                                            <th style="width: 55px;">Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                        $query = "SELECT 
-            c.id AS idCliente, 
-            c.cliente, 
-            c.calle, 
-            c.colonia, 
-            c.city, 
-            c.telefono, 
-            c.correo, 
-            c.rfc, 
-            GROUP_CONCAT(p.proveedor SEPARATOR ', ') AS proveedores_asociados
-          FROM clientes c
-          LEFT JOIN proveedorcliente pc ON c.id = pc.idCliente
-          LEFT JOIN proveedores p ON pc.idProveedor = p.id
-          GROUP BY c.id
-          ORDER BY c.id DESC";
+                                        <?php
+                                        $query = "SELECT * FROM clientes WHERE tipo = 'cliente' ORDER BY id DESC";
 
                                         $query_run = mysqli_query($con, $query);
 
@@ -120,7 +106,7 @@ if (isset($_SESSION['email'])) {
                                         ?>
                                                 <tr>
                                                     <td>
-                                                        <p><?= $registro['idCliente']; ?></p>
+                                                        <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
                                                         <p><?= $registro['cliente']; ?></p>
@@ -138,13 +124,85 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['rfc']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= !empty($registro['proveedores_asociados']) ? $registro['proveedores_asociados'] : 'Sin proveedores asociados'; ?></p>
+                                                        <p></p>
                                                     </td>
                                                     <td>
-                                                        <a href="editarcliente.php?id=<?= $registro['idCliente']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+
+                                                        <button type="button" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#myModal<?= $registro['id']; ?>" data-id="<?= $registro['id']; ?>"><i class="bi bi-eye-fill"></i></button>
+
+                                                        <div class="modal fade" id="myModal<?= $registro['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel<?= $registro['id']; ?>" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+                                                                <div class="modal-content">
+                                                                    <?php
+                                                                    $cliente_id = $registro['id'];
+                                                                    $query = "SELECT * FROM clientes WHERE id='$cliente_id' ";
+                                                                    $query_run = mysqli_query($con, $query);
+
+                                                                    if (mysqli_num_rows($query_run) > 0) {
+                                                                        $cliente = mysqli_fetch_array($query_run);
+                                                                    ?>
+                                                                        <div class="modal-header">
+                                                                            <h2 style="text-transform: uppercase;" class="modal-title" id="exampleModalLabel<?= $registro['id']; ?>">INFORMACIÓN DEL CLIENTE</h2>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="container-fluid g-0">
+                                                                                <div class="row justify-content-center">
+                                                                                    <div class="col-12 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['cliente']; ?>" placeholder="Nombre" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">Proveedor / Supplier name</label><br>
+                                                                                    </div>
+
+                                                                                    <div class="col-12 col-md-10 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['calle']; ?> <?= $cliente['numexterior']; ?> <?= $cliente['numinterior']; ?>, <?= $cliente['colonia']; ?>, <?= $cliente['city']; ?>, <?= $cliente['state']; ?>, <?= $cliente['pais']; ?>. C.P. <?= $cliente['cpostal']; ?>" placeholder="Calle" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">Domicilio / Address</label><br>
+                                                                                    </div>
+
+                                                                                    <div class="col-12 col-md-2 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['telefono']; ?>" placeholder="Nombre" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">Teléfono / Phone</label><br>
+                                                                                    </div>
+
+                                                                                    <div class="col-12 col-md-5 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['contacto']; ?>" placeholder="Nombre" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">Contacto / Representant</label><br>
+                                                                                    </div>
+
+                                                                                    <div class="col-12 col-md-4 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['correo']; ?>" placeholder="Nombre" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">Correo / Email</label><br>
+                                                                                    </div>
+
+                                                                                    <div class="col-12 col-md-3 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['rfc']; ?>" placeholder="Nombre" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">RFC / Tax ID</label><br>
+                                                                                    </div>
+
+                                                                                    <div class="col-12 form-floating">
+                                                                                        <input type="text" class="form-control" value="<?= $cliente['web']; ?>" placeholder="Nombre" disabled>
+                                                                                        <label for="exampleFormControlInput1" class="form-label">Sitio web / Web site</label><br>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php
+                                                                    } else {
+                                                                        echo "<h4>No Such Id Found</h4>";
+                                                                    }
+                                                                        ?>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <a href="editarcliente.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
                                                         <form action="codeclientes.php" method="POST" class="d-inline">
-                                                            <button type="submit" name="delete" value="<?= $registro['idCliente']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                            <input type="hidden" name="tipo" value="<?= $registro['tipo']; ?>">
+                                                            <input type="hidden" name="id" value="<?= $registro['id']; ?>">
+                                                            <button type="submit" name="delete" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
                                                     </td>
                                                 </tr>

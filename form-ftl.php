@@ -84,7 +84,7 @@ if (isset($_SESSION['email'])) {
                     <div class="col-3 mb-3">
                         <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
                         <?php
-                        $query = "SELECT MAX(id) AS max_id FROM aereoimportacion";
+                        $query = "SELECT MAX(id) AS max_id FROM ftl";
                         $result = mysqli_query($con, $query);
                         if ($result && $row = $result->fetch_assoc()) {
                             $lastID = $row['max_id'];
@@ -98,7 +98,7 @@ if (isset($_SESSION['email'])) {
                         <input class="form-control" type="text" name="fecha" id="expedicion" value="">
                     </div>
                     <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                        <select class="form-select bg-warning" name="tipoFtl" required>
+                        <select class="form-select bg-warning" name="tipoFtl" id="tipoFtlSelect" required onchange="agregarTipoServicio()">
                             <option selected>Selecciona un servicio</option>
                             <?php
                             $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
@@ -118,7 +118,7 @@ if (isset($_SESSION['email'])) {
                         <select class="form-select mb-3" name="idCliente" id="cliente">
                             <option selected>Selecciona un cliente</option>
                             <?php
-                            $query = "SELECT * FROM clientes WHERE estatus = 1";
+                            $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente'";
                             $result = mysqli_query($con, $query);
 
                             if (mysqli_num_rows($result) > 0) {
@@ -137,14 +137,15 @@ if (isset($_SESSION['email'])) {
                         <select class="form-select" name="idOrigen" id="origen">
                             <option selected>Selecciona el origen</option>
                             <?php
-                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                            $query = "SELECT * FROM clientes WHERE estatus = 1";
                             $result = mysqli_query($con, $query);
 
                             if (mysqli_num_rows($result) > 0) {
                                 while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['proveedor'];
-                                    $idOrigen = $registro['id'];
-                                    echo "<option value='$idOrigen'>" . $nombre . "</option>";
+                                    $nombre = $registro['cliente'];
+                                    $id = $registro['id'];
+                                    $tipo = $registro['tipo'];
+                                    echo "<option value='$id'>" . $nombre . ' - ' . $tipo . "</option>";
                                 }
                             }
                             ?>
@@ -156,17 +157,17 @@ if (isset($_SESSION['email'])) {
                         <select class="form-select" name="idAduana" id="aduana">
                             <option selected>Selecciona el destino en frontera</option>
                             <?php
-                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                            $query = "SELECT * FROM clientes WHERE estatus = 1";
                             $result = mysqli_query($con, $query);
 
                             if (mysqli_num_rows($result) > 0) {
                                 while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['proveedor'];
-                                    $idOrigen = $registro['id'];
-                                    echo "<option value='$idOrigen'>" . $nombre . "</option>";
+                                    $nombre = $registro['cliente'];
+                                    $id = $registro['id'];
+                                    $tipo = $registro['tipo'];
+                                    echo "<option value='$id'>" . $nombre . ' - ' . $tipo . "</option>";
                                 }
                             }
-
                             ?>
                         </select>
                         <p id="detalleAduana"></p>
@@ -176,17 +177,17 @@ if (isset($_SESSION['email'])) {
                         <select class="form-select" name="idDestino" id="destino">
                             <option selected>Selecciona el destino final</option>
                             <?php
-                            $query = "SELECT * FROM proveedores WHERE estatus = 1";
+                            $query = "SELECT * FROM clientes WHERE estatus = 1";
                             $result = mysqli_query($con, $query);
 
                             if (mysqli_num_rows($result) > 0) {
                                 while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['proveedor'];
-                                    $idOrigen = $registro['id'];
-                                    echo "<option value='$idOrigen'>" . $nombre . "</option>";
+                                    $nombre = $registro['cliente'];
+                                    $id = $registro['id'];
+                                    $tipo = $registro['tipo'];
+                                    echo "<option value='$id'>" . $nombre . ' - ' . $tipo . "</option>";
                                 }
                             }
-
                             ?>
                         </select>
                         <p id="detalleDestino"></p>
@@ -879,6 +880,13 @@ if (isset($_SESSION['email'])) {
         }
 
         function agregarTipoServicio() {
+            var tipoSeleccionado = document.getElementById("tipoFtlSelect").value;
+
+            // Si el usuario no ha seleccionado nada, no hacer nada
+            if (tipoSeleccionado === "Selecciona un servicio") {
+                return;
+            }
+
             var tabla = document.getElementById("servicioTable").getElementsByTagName("tbody")[0];
 
             // Crear nueva fila
@@ -889,12 +897,12 @@ if (isset($_SESSION['email'])) {
             <select class="form-select" name="conceptoServicio[]">
                 <option selected>Selecciona un tipo de servicio</option>
                 <?php
-                $query = "SELECT * FROM servicios WHERE tipoServicio = 'ftl'";
+                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
                 $result = mysqli_query($con, $query);
 
                 if (mysqli_num_rows($result) > 0) {
                     while ($registro = mysqli_fetch_assoc($result)) {
-                        $nombre = $registro['concepto'];
+                        $nombre = $registro['nombreServicio'];
                         echo "<option value='$nombre'>" . $nombre . "</option>";
                     }
                 }
@@ -904,8 +912,12 @@ if (isset($_SESSION['email'])) {
         <td><input type="text" name="tiempoServicio[]" class="form-control"></td>
     `;
 
-            // Agregar la nueva fila a la tabla de incrementables
+            // Agregar la nueva fila a la tabla
             tabla.appendChild(nuevaFilaServicio);
+
+            // Seleccionar automáticamente el mismo valor en el nuevo select
+            var nuevoSelect = nuevaFilaServicio.querySelector("select");
+            nuevoSelect.value = tipoSeleccionado;
         }
 
         const tableBody = document.querySelector("#incrementableTable tbody");

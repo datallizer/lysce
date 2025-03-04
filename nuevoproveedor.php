@@ -42,11 +42,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -59,7 +59,7 @@ if (isset($_SESSION['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
-    <title>Proveedores | LYSCE</title>
+    <title>Nuevo proveedor | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -68,8 +68,8 @@ if (isset($_SESSION['email'])) {
         let autocompleteInstances = {}; // Objeto para guardar las instancias de Autocomplete
 
         function initMap() {
-            const addressInputs = document.querySelectorAll('input[name="domicilio"]');
-            const postalCodeInput = document.getElementById('postal');
+            const addressInputs = document.querySelectorAll('input[name="calle"]');
+            const postalCodeInput = document.getElementById('cpostal');
 
             addressInputs.forEach(input => {
                 if (!autocompleteInstances[input.name]) { // Verifica si ya existe una instancia para este input
@@ -91,8 +91,8 @@ if (isset($_SESSION['email'])) {
         }
 
         function handlePlaceChange(place) {
-            const addressInputs = document.querySelectorAll('input[name="domicilio"]');
-            const postalCodeInput = document.getElementById('postal');
+            const addressInputs = document.querySelectorAll('input[name="calle"]');
+            const postalCodeInput = document.getElementById('cpostal');
 
             if (!place.address_components) {
                 console.log("No se encontró información para este lugar.");
@@ -109,22 +109,22 @@ if (isset($_SESSION['email'])) {
 
                 switch (type) {
                     case "street_number":
-                        document.querySelector('input[name="exterior"]').value = longName;
+                        document.querySelector('input[name="numexterior"]').value = longName;
                         break;
                     case "route":
-                        document.querySelector('input[name="domicilio"]').value = longName;
+                        document.querySelector('input[name="calle"]').value = longName;
                         break;
                     case "sublocality_level_1":
-                        document.querySelector('input[name="fraccionamiento"]').value = longName;
+                        document.querySelector('input[name="colonia"]').value = longName;
                         break;
                     case "locality":
-                        document.querySelector('input[name="ciudad"]').value = longName;
+                        document.querySelector('input[name="city"]').value = longName;
                         break;
                     case "administrative_area_level_1":
-                        document.querySelector('input[name="estado"]').value = longName;
+                        document.querySelector('input[name="state"]').value = longName;
                         break;
                     case "country":
-                        document.querySelector('input[name="country"]').value = longName;
+                        document.querySelector('input[name="pais"]').value = longName;
                         break;
                     case "postal_code":
                         postalCodeInput.value = longName;
@@ -155,7 +155,7 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 style="color:#fff" class="m-1">NUEVO PROVEEDOR / AGENTE ADUANAL
+                                <h4 style="color:#fff" class="m-1">NUEVO PROVEEDOR
 
                                     <div class="float-end">
                                         <a href="proveedores.php" class="btn btn-danger btn-sm me-2">
@@ -167,72 +167,69 @@ if (isset($_SESSION['email'])) {
                             </div>
                             <div class="card-body" style="overflow-y:scroll;">
 
-                                <form action="codeproveedores.php" method="POST" class="row">
+                                <form action="codeclientes.php" method="POST" class="row">
 
                                     <div class="col-12 col-md-12 form-floating mb-3">
-                                        <input type="text" class="form-control" name="proveedor" placeholder="Proveedor" autocomplete="off">
-                                        <label for="proveedor">Proveedor / Agente aduanal</label>
+                                        <input type="text" class="form-control" name="cliente" placeholder="Cliente" autocomplete="off">
+                                        <label for="proveedor">Proveedor / Supplier name</label>
                                     </div>
                                     <div class="col-12 col-md-8 form-floating mb-3">
-                                        <input type="text" class="form-control" name="domicilio" placeholder="Domicilio" autocomplete="off">
-                                        <label for="domicilio">Calle</label>
+                                        <input type="text" class="form-control" name="calle" placeholder="Calle" autocomplete="off">
+                                        <label for="calle">Calle / Street</label>
                                     </div>
 
                                     <div class="col-12 col-md-4 form-floating mb-3">
-                                        <input type="text" class="form-control" name="exterior" placeholder="Exterior" autocomplete="off">
-                                        <label for="exterior">Número exterior / Outside number</label>
+                                        <input type="text" class="form-control" name="numexterior" placeholder="numExterior" autocomplete="off">
+                                        <label for="numexterior">Número exterior / Outside number</label>
                                     </div>
 
                                     <div class="col-12 col-md-4 form-floating mb-3">
-                                        <input type="text" class="form-control" name="interior" placeholder="Interior" autocomplete="off">
-                                        <label for="interior">Número interior / Inside number</label>
+                                        <input type="text" class="form-control" name="numinterior" placeholder="numInterior" autocomplete="off">
+                                        <label for="numinterior">Número interior / Inside number</label>
                                     </div>
                                     <div class="col-12 col-md-8 form-floating mb-3">
-                                        <input type="text" class="form-control" name="fraccionamiento" placeholder="Fraccionamiento" autocomplete="off">
-                                        <label for="fraccionamiento">Colonia / Neighbourhood</label>
+                                        <input type="text" class="form-control" name="colonia" placeholder="Colonia" autocomplete="off">
+                                        <label for="colonia">Colonia / Neighbourhood</label>
                                     </div>
                                     <div class="col-12 col-md-6 form-floating mb-3">
-                                        <input type="text" class="form-control" name="ciudad" placeholder="Ciudad" autocomplete="off">
-                                        <label for="ciudad">Ciudad / City</label>
+                                        <input type="text" class="form-control" name="city" placeholder="City" autocomplete="off">
+                                        <label for="city">Ciudad / City</label>
                                     </div>
                                     <div class="col-12 col-md-6 form-floating mb-3">
-                                        <input type="text" class="form-control" name="estado" placeholder="Estado" autocomplete="off">
-                                        <label for="estado">Estado/ State</label>
-                                    </div>
-                                    <div class="col-12 col-md-3 form-floating mb-3">
-                                        <input type="text" class="form-control" name="postal" id="postal" placeholder="Postal" autocomplete="off">
-                                        <label for="postal">Código postal / ZIP code</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 form-floating mb-3">
-                                        <input type="text" class="form-control" name="country" placeholder="Country" autocomplete="off">
-                                        <label for="country">País / Country</label>
-                                    </div>
-                                    <div class="col-12 col-md-5 form-floating mb-3">
-                                        <input type="text" class="form-control" name="phone" placeholder="Phone" autocomplete="off">
-                                        <label for="phone">Teléfono / Phone</label>
-                                    </div>
-                                    <div class="col-12 col-md-6 form-floating mb-3">
-                                        <input type="text" class="form-control" name="email" placeholder="Email" autocomplete="off">
-                                        <label for="email">Correo / Email</label>
-                                    </div>
-                                    <div class="col-12 col-md-6 form-floating mb-3">
-                                        <input type="text" class="form-control" name="tax" placeholder="Tax" autocomplete="off">
-                                        <label for="tax">RFC / Tax ID</label>
-                                    </div>
-                                    <div class="col-12 col-md-5 form-floating mb-3">
-                                        <input type="text" class="form-control" name="web" placeholder="Web" autocomplete="off">
-                                        <label for="web">Sitio / Web site</label>
+                                        <input type="text" class="form-control" name="state" placeholder="State" autocomplete="off">
+                                        <label for="state">Estado/ State</label>
                                     </div>
                                     <div class="col-12 col-md-7 form-floating mb-3">
-                                        <input type="text" class="form-control" name="contact" placeholder="Contact" autocomplete="off" required>
-                                        <label for="contact">Representante / Agent</label>
+                                        <input type="text" class="form-control" name="cpostal" id="cpostal" placeholder="Postal" autocomplete="off">
+                                        <label for="cpostal">Código postal / ZIP code</label>
+                                    </div>
+                                    <div class="col-12 col-md-5 form-floating mb-3">
+                                        <input type="text" class="form-control" name="pais" placeholder="Pais" autocomplete="off">
+                                        <label for="web">País / Country</label>
+                                    </div>
+                                    <div class="col-12 col-md-5 form-floating mb-3">
+                                        <input type="text" class="form-control" name="telefono" placeholder="Telefono" autocomplete="off" autocomplete="off">
+                                        <label for="telefono">Teléfono / Phone</label>
+                                    </div>
+                                    <div class="col-12 col-md-7 form-floating mb-3">
+                                        <input type="text" class="form-control" name="correo" placeholder="Correo" autocomplete="off">
+                                        <label for="correo">Correo / Email</label>
+                                    </div>
+                                    <div class="col-12 col-md-6 form-floating mb-3">
+                                        <input type="text" class="form-control" name="rfc" placeholder="Rfc" autocomplete="off">
+                                        <label for="rfc">RFC / Tax ID</label>
                                     </div>
 
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="idCliente" id="floatingSelect">
-                                            <option selected>Selecciona un cliente para asociar</option>
+                                    <div class="col-12 col-md-6 form-floating mb-3">
+                                        <input type="text" class="form-control" name="contacto" placeholder="Contacto" autocomplete="off" required>
+                                        <label for="contacto">Representante / Agent</label>
+                                    </div>
+
+                                    <div class="form-floating col-12 col-md-5 mb-3 mb-3">
+                                        <select class="form-select" name="idProveedor" id="floatingSelect">
+                                            <option selected>Selecciona un proveedor para asociar</option>
                                             <?php
-                                            $query = "SELECT * FROM clientes WHERE estatus = 1";
+                                            $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente'";
                                             $result = mysqli_query($con, $query);
 
                                             if (mysqli_num_rows($result) > 0) {
@@ -245,8 +242,15 @@ if (isset($_SESSION['email'])) {
                                             }
                                             ?>
                                         </select>
-                                        <label for="floatingSelect">Cliente</label>
+                                        <label for="floatingSelect">Proveedor</label>
                                     </div>
+
+                                    <div class="col-12 col-md-7 form-floating mb-3">
+                                        <input type="text" class="form-control" name="web" placeholder="web" autocomplete="off" required>
+                                        <label for="web">Sitio web / Web site</label>
+                                    </div>
+
+                                    <input type="hidden" name="tipo" value="Proveedor">
                             </div>
                             <div class="modal-footer">
                                 <a href="proveedores.php" class="btn btn-secondary">Cerrar</a>

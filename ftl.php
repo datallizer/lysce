@@ -121,19 +121,19 @@ if (isset($_SESSION['email'])) {
                                         $query = "SELECT 
                                                     a.*,
                                                     c.cliente AS cliente_nombre,
-                                                    p_origen.proveedor AS origen_nombre,
-                                                    p_destino.proveedor AS destino_nombre,
-                                                    p_final.proveedor AS final_nombre
+                                                    p_origen.cliente AS origen_nombre,
+                                                    p_destino.cliente AS destino_nombre,
+                                                    p_final.cliente AS final_nombre
                                                 FROM 
                                                     ftl a
                                                 LEFT JOIN 
                                                     clientes c ON a.idCliente = c.id
                                                 LEFT JOIN 
-                                                    proveedores p_origen ON a.idOrigen = p_origen.id
+                                                    clientes p_origen ON a.idOrigen = p_origen.id
                                                 LEFT JOIN 
-                                                    proveedores p_destino ON a.idDestino = p_destino.id
+                                                    clientes p_destino ON a.idDestino = p_destino.id
                                                 LEFT JOIN
-                                                    proveedores p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                                    clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
                                                 ";
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
@@ -158,9 +158,506 @@ if (isset($_SESSION['email'])) {
                                                     <td>
                                                         <p><?= $registro['fecha']; ?></p>
                                                     </td>
-                                                    <td style="width: 150px;text-align:center;">
+                                                    <td style="width: 105px;text-align:center;">
+
+                                                        <button type="button" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#myModal<?= $registro['id']; ?>" data-id="<?= $registro['id']; ?>"><i class="bi bi-eye-fill"></i></button>
+
+                                                        <div class="modal fade" id="myModal<?= $registro['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel<?= $registro['id']; ?>" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                                                                <div class="modal-content">
+                                                                    <?php
+
+
+                                                                    $query = "SELECT * FROM ftl WHERE id='$registro[id];' ";
+                                                                    $query_run = mysqli_query($con, $query);
+
+                                                                    if (mysqli_num_rows($query_run) > 0) {
+                                                                        $ftl = mysqli_fetch_array($query_run);
+                                                                    ?>
+                                                                        <div class="row justify-content-evenly g-0 p-3 w-100" style="max-height: 600px;overflow-y:scroll;">
+
+                                                                            <div class="col-3 mb-3 text-center">
+                                                                                <img style="width: 70%;" src="images/logo.png" alt="">
+                                                                                <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
+                                                                            </div>
+
+                                                                            <div class="col-5 mb-3">
+                                                                                <h2><b>GRUPO LYSCE S.C.</b></h2>
+                                                                                <p style="margin: 0px;">R.F.C GLY170421ES6</p>
+                                                                                <p style="margin: 0px;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte, Aguascalientes, Ags. C.P. 20127</p>
+                                                                                <p style="margin: 0px;">Tel / Fax +52 (449) 300 3265</p>
+                                                                            </div>
+
+                                                                            <div class="col-3 mb-4">
+                                                                                <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
+                                                                                <p>LYSCE-<?= $ftl['id']; ?></p>
+                                                                                <p style="margin: 5px;">Aguascalientes, Ags a</p>
+                                                                                <p><?= $ftl['fecha']; ?></p>
+                                                                            </div>
+
+                                                                            <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
+                                                                                <p><?= $ftl['tipoFtl']; ?></p>
+                                                                            </div>
+
+                                                                            <div class="col-12 p-2 text-start" style="border: 1px solid #666666; border-bottom:0px;">
+                                                                                <p class="mb-1"><b>Cliente</b></p>
+                                                                                <?php
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idCliente]'";
+                                                                                $query_run_client = mysqli_query($con, $query_client);
+                                                                                if (mysqli_num_rows($query_run_client) > 0) {
+                                                                                    while ($client = mysqli_fetch_assoc($query_run_client)) {
+                                                                                ?>
+                                                                                        <p><?= $client['cliente']; ?></p>
+                                                                                        <p><b>Domicilio: </b><?= $client['calle']; ?> <?= $client['numexterior']; ?> <?= $client['numinterior']; ?>, <?= $client['colonia']; ?>, <?= $client['city']; ?>, <?= $client['state']; ?>, <?= $client['pais']; ?>. C.P <?= $client['cpostal']; ?></p>
+                                                                                        <p><b>Teléfono:</b> <?= $client['telefono']; ?></p>
+                                                                                        <p><b>Correo:</b> <?= $client['correo']; ?></p>
+                                                                                        <p><b>RFC:</b> <?= $client['rfc']; ?></p>
+                                                                                        <p><b>Representante:</b> <?= $client['contacto']; ?></p>
+                                                                                <?php
+                                                                                    }
+                                                                                } else {
+                                                                                    echo "No se encontraron registros";
+                                                                                }
+                                                                                ?>
+                                                                            </div>
+
+                                                                            <div class="col-4 p-2 text-start" style="border: 1px solid #666666;">
+                                                                                <p class="mb-1"><b>Origen</b></p>
+                                                                                <?php
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idOrigen]'";
+                                                                                $query_run_client = mysqli_query($con, $query_client);
+                                                                                if (mysqli_num_rows($query_run_client) > 0) {
+                                                                                    while ($client = mysqli_fetch_assoc($query_run_client)) {
+                                                                                ?>
+                                                                                        <p><?= $client['cliente']; ?></p>
+                                                                                        <p><b>Domicilio: </b><?= $client['calle']; ?> <?= $client['numexterior']; ?> <?= $client['numinterior']; ?>, <?= $client['colonia']; ?>, <?= $client['city']; ?>, <?= $client['state']; ?>, <?= $client['pais']; ?>. C.P <?= $client['cpostal']; ?></p>
+                                                                                        <p><b>Teléfono:</b> <?= $client['telefono']; ?></p>
+                                                                                        <p><b>Correo:</b> <?= $client['correo']; ?></p>
+                                                                                        <p><b>RFC:</b> <?= $client['rfc']; ?></p>
+                                                                                        <p><b>Representante:</b> <?= $client['contacto']; ?></p>
+                                                                                <?php
+                                                                                    }
+                                                                                } else {
+                                                                                    echo "No se encontraron registros";
+                                                                                }
+                                                                                ?>
+                                                                            </div>
+
+                                                                            <div class="col-4 p-2 text-start" style="border: 1px solid #666666;">
+                                                                                <p class="mb-1"><b>Destino en frontera</b></p>
+                                                                                <?php
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idDestino]'";
+                                                                                $query_run_client = mysqli_query($con, $query_client);
+                                                                                if (mysqli_num_rows($query_run_client) > 0) {
+                                                                                    while ($client = mysqli_fetch_assoc($query_run_client)) {
+                                                                                ?>
+                                                                                        <p><?= $client['cliente']; ?></p>
+                                                                                        <p><b>Domicilio: </b><?= $client['calle']; ?> <?= $client['numexterior']; ?> <?= $client['numinterior']; ?>, <?= $client['colonia']; ?>, <?= $client['city']; ?>, <?= $client['state']; ?>, <?= $client['pais']; ?>. C.P <?= $client['cpostal']; ?></p>
+                                                                                        <p><b>Teléfono:</b> <?= $client['telefono']; ?></p>
+                                                                                        <p><b>Correo:</b> <?= $client['correo']; ?></p>
+                                                                                        <p><b>RFC:</b> <?= $client['rfc']; ?></p>
+                                                                                        <p><b>Representante:</b> <?= $client['contacto']; ?></p>
+                                                                                <?php
+                                                                                    }
+                                                                                } else {
+                                                                                    echo "No se encontraron registros";
+                                                                                }
+                                                                                ?>
+                                                                            </div>
+
+                                                                            <div class="col-4 p-2 text-start" style="border: 1px solid #666666;">
+                                                                                <p class="mb-1"><b>Destino Final</b></p>
+                                                                                <?php
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idDestinoFinal]'";
+                                                                                $query_run_client = mysqli_query($con, $query_client);
+                                                                                if (mysqli_num_rows($query_run_client) > 0) {
+                                                                                    while ($client = mysqli_fetch_assoc($query_run_client)) {
+                                                                                ?>
+                                                                                        <p><?= $client['cliente']; ?></p>
+                                                                                        <p><b>Domicilio: </b><?= $client['calle']; ?> <?= $client['numexterior']; ?> <?= $client['numinterior']; ?>, <?= $client['colonia']; ?>, <?= $client['city']; ?>, <?= $client['state']; ?>, <?= $client['pais']; ?>. C.P <?= $client['cpostal']; ?></p>
+                                                                                        <p><b>Teléfono:</b> <?= $client['telefono']; ?></p>
+                                                                                        <p><b>Correo:</b> <?= $client['correo']; ?></p>
+                                                                                        <p><b>RFC:</b> <?= $client['rfc']; ?></p>
+                                                                                        <p><b>Representante:</b> <?= $client['contacto']; ?></p>
+                                                                                <?php
+                                                                                    }
+                                                                                } else {
+                                                                                    echo "No se encontraron registros";
+                                                                                }
+                                                                                ?>
+                                                                            </div>
+
+                                                                            <div class="col-7 mt-3 mb-3">
+                                                                                <div class="row justify-content-start">
+                                                                                    <div class="col-8 text-start">
+                                                                                        <p style="margin-bottom: 5px;">
+                                                                                            <b>Distancia:</b> <?= $ftl['distanciaOrigenDestinoMillas']; ?> millas <?= $ftl['distanciaOrigenDestinoKms']; ?> Kms
+                                                                                        </p>
+
+                                                                                        <p style="margin-bottom: 5px;">
+                                                                                            <b>Tiempo / Recorrido:</b> <?= $ftl['tiempoRecorridoOrigenDestino']; ?>
+                                                                                        </p>
+
+                                                                                        <p style="margin-bottom: 5px;">
+                                                                                            <b>Operador:</b> <?= $ftl['servicio']; ?>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                    <div class="col-4">
+                                                                                        <p style="margin-bottom: 5px;">
+                                                                                            <b>Total CFT:</b> <?= $ftl['totalFt3']; ?>
+                                                                                        </p>
+
+                                                                                        <p style="margin-bottom: 5px;">
+                                                                                            <b>Total m3:</b> <?= $ftl['totalM3']; ?>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-5 mt-3 mb-3 text-end">
+                                                                                <p style="display: inline-block;margin-bottom: 5px;">
+                                                                                    <b>Distancia:</b> <?= $ftl['distanciaDestinoFinalMillas']; ?> millas <?= $ftl['distanciaDestinoFinalKms']; ?> Kms
+                                                                                </p>
+
+                                                                                <p style="margin-bottom: 5px;">
+                                                                                    <b>Tiempo / Recorrido:</b> <?= $ftl['tiempoRecorridoDestinoFinal']; ?>
+                                                                                </p>
+
+                                                                                <p style="margin-bottom: 5px;">
+                                                                                    <b>Operador:</b> <?= $ftl['operador']; ?>
+                                                                                </p>
+
+                                                                                <p>
+                                                                                    <b>Unidad:</b>
+                                                                                <p><?= $ftl['unidad']; ?></p>
+                                                                                </p>
+
+                                                                            </div>
+
+                                                                            <div class="col-12 text-center p-2">
+                                                                                <div class="card">
+                                                                                    <div class="card-header bg-secondary">
+                                                                                        <p style="color: #fff;"><b>DESCRIPCIÓN DE LAS MERCANCÍAS</b></p>
+                                                                                    </div>
+                                                                                    <table class="table table-striped">
+                                                                                        <tr>
+                                                                                            <th>Cantidad</th>
+                                                                                            <th>Unidad medida</th>
+                                                                                            <th>Descripción</th>
+                                                                                            <th>Dimensiones</th>
+                                                                                            <th>Peso</th>
+                                                                                            <th>Valor factura</th>
+                                                                                        </tr>
+                                                                                        <?php
+                                                                                        // Obtener los ftls de descripcionmercanciasftl relacionados con el ID de ftl
+                                                                                        $query_desc = "SELECT * FROM descripcionmercanciasftl WHERE idFtl='$registro[id]'";
+                                                                                        $query_run_desc = mysqli_query($con, $query_desc);
+
+                                                                                        if (mysqli_num_rows($query_run_desc) > 0) {
+                                                                                            while ($mercancia = mysqli_fetch_assoc($query_run_desc)) {
+                                                                                        ?>
+                                                                                                <tr>
+
+                                                                                                    <td>
+                                                                                                        <p><?= $mercancia['cantidad']; ?></p>
+                                                                                                        <p>NMFC</p>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <p><?= $mercancia['unidadMedida']; ?></p>
+                                                                                                        <p><?= $mercancia['nmfc']; ?></p>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <p><?= $mercancia['descripcion']; ?></p>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-6">
+                                                                                                                <p><?= $mercancia['largoPlg']; ?> x
+                                                                                                                    <?= $mercancia['anchoPlg']; ?> x
+                                                                                                                    <?= $mercancia['altoPlg']; ?> inches</p>
+                                                                                                                <p><?= $mercancia['piesCubicos']; ?>ft³</p>
+                                                                                                            </div>
+                                                                                                            <div class="col-6">
+                                                                                                                <p><?= $mercancia['largoCm']; ?> x
+                                                                                                                    <?= $mercancia['anchoCm']; ?> x
+                                                                                                                    <?= $mercancia['altoCm']; ?> mts</p>
+                                                                                                                <p><?= $mercancia['metrosCubicos']; ?>m³</p>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <p><?= $mercancia['libras']; ?> lbs</p>
+                                                                                                        <p><?= $mercancia['kilogramos']; ?> kgs</p>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <p>$<?= $mercancia['valorFactura']; ?></p>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                        <?php
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "<tr><td colspan='6' class='text-center'>No se encontraron ftls</td></tr>";
+                                                                                        }
+                                                                                        ?>
+                                                                                    </table>
+
+                                                                                    <div class="row mt-3 mb-3">
+                                                                                        <div class="col-3 text-center">
+                                                                                            <p>Total bultos: <?= $ftl['totalBultos']; ?></p>
+                                                                                            <p>1 <?= $ftl['moneda']; ?> = <?= $ftl['valorMoneda']; ?></p>
+                                                                                        </div>
+
+                                                                                        <div class="col-4">
+                                                                                            <table class="text-end">
+                                                                                                <tr>
+                                                                                                    <td>Peso total de la mercancía</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        <p><?= $ftl['pesoMercanciaLbs']; ?> lbs</p>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td colspan="2">
+                                                                                                        <p><?= $ftl['pesoMercanciaKgs']; ?> kgs</p>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </table>
+                                                                                        </div>
+
+                                                                                        <div class="col-5">
+                                                                                            <table class="text-end w-100">
+                                                                                                <tr>
+                                                                                                    <td>VALOR TOTAL DE LA MERCANCÍA USD</td>
+                                                                                                    <td>
+                                                                                                        <p>$<?= $ftl['valorMercancia']; ?></p>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>VALOR TOTAL DE LA MERCANCÍA MXN</td>
+                                                                                                    <td>
+                                                                                                        <p>$<?= $ftl['valorComercial']; ?></p>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-12 mt-5">
+                                                                                <div class="card">
+                                                                                    <div class="card-header bg-secondary">
+                                                                                        <p class="text-center" style="color: #fff;"><b>TIPO DE SERVICIO</b></p>
+                                                                                    </div>
+                                                                                    <table class="table table-striped table-bordered" style="margin-bottom: 0px;" id="servicioTable">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Servicio</th>
+                                                                                                <th>Tiempo de transito</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <?php
+                                                                                            $query_servicio = "SELECT * FROM servicioftl WHERE idFtl='$registro[id]'";
+                                                                                            $query_run_servicio = mysqli_query($con, $query_servicio);
+
+                                                                                            if (mysqli_num_rows($query_run_servicio) > 0) {
+                                                                                                while ($servicio = mysqli_fetch_assoc($query_run_servicio)) {
+                                                                                            ?>
+                                                                                                    <tr>
+
+                                                                                                        <td>
+                                                                                                            <p><?= $servicio['conceptoServicio']; ?></p>
+                                                                                                        </td>
+
+                                                                                                        <td>
+                                                                                                            <p><?= $servicio['tiempoServicio']; ?></p>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                            <?php
+                                                                                                }
+                                                                                            } else {
+                                                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron ftls</td></tr>";
+                                                                                            }
+                                                                                            ?>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-12 mt-5">
+                                                                                <div class="card">
+                                                                                    <div class="card-header bg-secondary">
+                                                                                        <p class="text-center" style="color: #fff;"><b>DETERMINACIÓN DE INCREMENTABLES</b></p>
+                                                                                    </div>
+                                                                                    <table class="table table-striped tabñe-bordered" id="incrementableTable" style="margin-bottom: 0px;">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Incrementable</th>
+                                                                                                <th>USD</th>
+                                                                                                <th>MXN</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <?php
+                                                                                            $query_incrementable = "SELECT * FROM incrementablesftl WHERE idFtl='$registro[id]'";
+                                                                                            $query_run_incrementable = mysqli_query($con, $query_incrementable);
+
+                                                                                            if (mysqli_num_rows($query_run_incrementable) > 0) {
+                                                                                                while ($incrementable = mysqli_fetch_assoc($query_run_incrementable)) {
+                                                                                            ?>
+                                                                                                    <tr>
+                                                                                                        <td>
+                                                                                                            <p><?= $incrementable['incrementable']; ?></p>
+                                                                                                        </td>
+
+                                                                                                        <td>
+                                                                                                            <p>$<?= $incrementable['incrementableUsd']; ?></p>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <p>$<?= $incrementable['incrementableMx']; ?></p>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                            <?php
+                                                                                                }
+                                                                                            } else {
+                                                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron ftls</td></tr>";
+                                                                                            }
+                                                                                            ?>
+                                                                                        </tbody>
+                                                                                        <tfoot>
+                                                                                            <tr id="totalRow">
+                                                                                                <td class="text-end"><b>TOTAL</b></td>
+                                                                                                <td>
+                                                                                                    <p><?= $ftl['totalIncrementableUsd']; ?></p>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <p><?= $ftl['totalIncrementableMx']; ?></p>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tfoot>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-12 mt-5">
+                                                                                <div class="card">
+                                                                                    <div class="card-header bg-secondary">
+                                                                                        <p class="text-center" style="color: #fff;"><b>GASTOS POR FLETE TERRESTRE</b></p>
+                                                                                    </div>
+                                                                                    <table class="table table-striped table-bordered" id="tablaGasto" style="margin-bottom: 0px;">
+                                                                                        <tbody>
+                                                                                            <?php
+                                                                                            $query_gasto = "SELECT * FROM gastosftl WHERE idFtl='$registro[id]'";
+                                                                                            $query_run_gasto = mysqli_query($con, $query_gasto);
+
+                                                                                            if (mysqli_num_rows($query_run_gasto) > 0) {
+                                                                                                while ($gasto = mysqli_fetch_assoc($query_run_gasto)) {
+                                                                                            ?>
+                                                                                                    <tr>
+                                                                                                        <td>
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-9">
+                                                                                                                    <p><?= $gasto['conceptoGasto']; ?></p>
+                                                                                                                </div>
+                                                                                                                <?php if ($gasto['conceptoGasto'] == "Seguro de tránsito de mercancía") : ?>
+                                                                                                                    <div class="col-3">
+                                                                                                                        <p><?= $ftl['porcentajeSeguro']; ?></p>
+                                                                                                                    </div>
+                                                                                                                <?php endif; ?>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <div class="form-check float-end">
+                                                                                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4"
+                                                                                                                    <?php if ($gasto['ivaGasto'] == 1) echo 'checked'; ?> disabled>
+                                                                                                                <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td colspan="2" class="text-end">
+                                                                                                            <p>$<?= $gasto['montoGasto']; ?> USD</p>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                            <?php
+                                                                                                }
+                                                                                            } else {
+                                                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron ftls</td></tr>";
+                                                                                            }
+                                                                                            ?>
+                                                                                            <tr class="text-end">
+                                                                                                <td colspan="2">Subtotal</td>
+                                                                                                <td colspan="2" style="width:20%;">
+                                                                                                    <p>$<?= $ftl['subtotalFlete']; ?> USD</p>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="text-end">
+                                                                                                <td colspan="2">I.V.A 16%</td>
+                                                                                                <td colspan="2">
+                                                                                                    <p>$<?= $ftl['impuestosFlete']; ?> USD</p>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="text-end">
+                                                                                                <td colspan="2">
+                                                                                                    <div class="form-check float-end">
+                                                                                                        <input class="form-check-input" type="checkbox" name="retencionFleteCheck" id="retencionCheck"
+                                                                                                            <?= (!empty($ftl['retencionFlete']) && $ftl['retencionFlete'] > 0) ? 'checked' : ''; ?> disabled>
+                                                                                                        <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td colspan="2">
+                                                                                                    <p>$<?= $ftl['retencionFlete']; ?> USD</p>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-12">
+                                                                                <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
+                                                                                    <tr class="text-end">
+                                                                                        <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
+                                                                                        <td style="width: 180px;">
+                                                                                            <p>$<?= $ftl['totalCotizacionNumero']; ?></p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
+                                                                                        <td colspan="2">
+                                                                                            <p><?= $ftl['totalCotizacionTexto']; ?></p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+
+
+                                                                            <div class="col-12 mt-3 text-start">
+                                                                                <b>OBSERVACIONES</b>
+                                                                                <pre><?= $ftl['observaciones']; ?></pre>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    <?php
+                                                                    } else {
+                                                                        echo "<h4>No Such Id Found</h4>";
+                                                                    }
+
+                                                                    ?>
+
+
+
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
                                                         <a href="generate_ftl.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1">
-                                                            <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                                                            <i class="bi bi-download"></i>
                                                         </a>
 
                                                         <a href="editar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
@@ -183,21 +680,6 @@ if (isset($_SESSION['email'])) {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">NUEVA COTIZACIÓN</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
                 </div>
             </div>
         </div>

@@ -146,7 +146,7 @@ if (isset($_POST['save'])) {
     impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd, totalDestinoMx, valorTotalFlete, fleteExtranjeroUsd, 
     fleteExtranjeroMx, maniobrasUsd, maniobrasMx, almacenajeUsd, almacenajeMx, totalIncrementableUsd, 
     totalIncrementableMx, gastosDestinoManiobras, fleteTerrestre, subtotalFlete, impuestosFlete, retencionFlete, 
-    totalFlete, totalCotizacionNumero, totalCotizacionTexto
+    totalFlete, totalCotizacionNumero, totalCotizacionTexto, porcentajeSeguro
 ) VALUES (
     '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
     '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 

@@ -37,55 +37,55 @@ if (isset($_GET['id'])) {
     c.contacto AS cliente_contacto,
     c.rfc AS cliente_rfc,
     c.correo AS cliente_correo,
-    p_origen.proveedor AS origen_nombre,
-    p_origen.domicilio AS origen_domicilio,
-    p_origen.exterior AS origen_exterior,
-    p_origen.interior AS origen_interior,
-    p_origen.estado AS origen_estado,
-    p_origen.fraccionamiento AS origen_fraccionamiento,
-    p_origen.ciudad AS origen_ciudad,
-    p_origen.postal AS origen_postal,
-    p_origen.country AS origen_country,
-    p_origen.phone AS origen_phone,
-    p_origen.contact AS origen_contact,
-    p_origen.email AS origen_email,
-    p_origen.tax AS origen_tax,
-    p_destino.proveedor AS destino_nombre,
-    p_destino.domicilio AS destino_domicilio,
-    p_destino.exterior AS destino_exterior,
-    p_destino.interior AS destino_interior,
-    p_destino.estado AS destino_estado,
-    p_destino.fraccionamiento AS destino_fraccionamiento,
-    p_destino.ciudad AS destino_ciudad,
-    p_destino.postal AS destino_postal,
-    p_destino.country AS destino_country,
-    p_destino.phone AS destino_phone,
-    p_destino.contact AS destino_contact,
-    p_destino.email AS destino_email,
-    p_destino.tax AS destino_tax,
-    p_final.proveedor AS final_nombre,
-    p_final.domicilio AS final_domicilio,
-    p_final.exterior AS final_exterior,
-    p_final.interior AS final_interior,
-    p_final.estado AS final_estado,
-    p_final.fraccionamiento AS final_fraccionamiento,
-    p_final.ciudad AS final_ciudad,
-    p_final.postal AS final_postal,
-    p_final.country AS final_country,
-    p_final.phone AS final_phone,
-    p_final.contact AS final_contact,
-    p_final.email AS final_email,
-    p_final.tax AS final_tax
+    p_origen.cliente AS origen_nombre,
+    p_origen.calle AS origen_domicilio,
+    p_origen.numexterior AS origen_exterior,
+    p_origen.numinterior AS origen_interior,
+    p_origen.state AS origen_estado,
+    p_origen.colonia AS origen_fraccionamiento,
+    p_origen.city AS origen_ciudad,
+    p_origen.cpostal AS origen_postal,
+    p_origen.pais AS origen_country,
+    p_origen.telefono AS origen_phone,
+    p_origen.contacto AS origen_contact,
+    p_origen.correo AS origen_email,
+    p_origen.rfc AS origen_tax,
+    p_destino.cliente AS destino_nombre,
+    p_destino.calle AS destino_domicilio,
+    p_destino.numexterior AS destino_exterior,
+    p_destino.numinterior AS destino_interior,
+    p_destino.state AS destino_estado,
+    p_destino.colonia AS destino_fraccionamiento,
+    p_destino.city AS destino_ciudad,
+    p_destino.cpostal AS destino_postal,
+    p_destino.pais AS destino_country,
+    p_destino.telefono AS destino_phone,
+    p_destino.contacto AS destino_contact,
+    p_destino.correo AS destino_email,
+    p_destino.rfc AS destino_tax,
+    p_final.cliente AS final_nombre,
+    p_final.calle AS final_domicilio,
+    p_final.numexterior AS final_exterior,
+    p_final.numinterior AS final_interior,
+    p_final.state AS final_estado,
+    p_final.colonia AS final_fraccionamiento,
+    p_final.city AS final_ciudad,
+    p_final.cpostal AS final_postal,
+    p_final.pais AS final_country,
+    p_final.telefono AS final_phone,
+    p_final.contacto AS final_contact,
+    p_final.correo AS final_email,
+    p_final.rfc AS final_tax
 FROM 
     ftl a
 LEFT JOIN 
     clientes c ON a.idCliente = c.id
 LEFT JOIN 
-    proveedores p_origen ON a.idOrigen = p_origen.id
+    clientes p_origen ON a.idOrigen = p_origen.id
 LEFT JOIN 
-    proveedores p_destino ON a.idDestino = p_destino.id
+    clientes p_destino ON a.idDestino = p_destino.id
 LEFT JOIN
-    proveedores p_final ON a.idDestinoFinal = p_final.id
+    clientes p_final ON a.idDestinoFinal = p_final.id
 WHERE 
     a.id = $id;
 ";

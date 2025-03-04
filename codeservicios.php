@@ -15,7 +15,7 @@ if (isset($_POST['delete'])) {
             'title' => 'ELIMINADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-servicios.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -23,7 +23,7 @@ if (isset($_POST['delete'])) {
             'title' => 'ERROR AL ELIMINAR',
             'icon' => 'error'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-servicios.php");
         exit(0);
     }
 }
@@ -42,7 +42,7 @@ if (isset($_POST['update'])) {
             'title' => 'EDITADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-servicios.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -50,7 +50,7 @@ if (isset($_POST['update'])) {
             'title' => 'ERROR AL EDITAR',
             'icon' => 'error'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-servicios.php");
         exit(0);
     }
 }
@@ -68,7 +68,7 @@ if (isset($_POST['save'])) {
             'title' => 'REGISTRO EXITOSO',
             'icon' => 'success'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-servicios.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -76,7 +76,7 @@ if (isset($_POST['save'])) {
             'title' => 'ERROR AL REGISTRAR',
             'icon' => 'error'
         ];
-        header("Location: alta-cotizaciones.php");
+        header("Location: alta-servicios.php");
         exit(0);
     }
 }

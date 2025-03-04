@@ -20,11 +20,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -37,9 +37,9 @@ if (isset($_SESSION['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Editar cliente | LYSCE</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBynovZcvSlXHZvqYnF3NXE6TWR3reHUFc&libraries=places&callback=initMap" async defer loading="async"></script>
     <script>
@@ -101,7 +101,7 @@ if (isset($_SESSION['email'])) {
                     case "administrative_area_level_1":
                         document.querySelector('input[name="state"]').value = longName;
                         break;
-                        case "country":
+                    case "country":
                         document.querySelector('input[name="pais"]').value = longName;
                         break;
                     case "postal_code":
@@ -231,9 +231,11 @@ if (isset($_SESSION['email'])) {
                                                     <label for="correo">Correo / Email</label>
                                                 </div>
 
+                                                <input type="hidden" name="tipo" value="<?= $registro['tipo']; ?>">
+
                                                 <div class="col-12 text-center mt-3">
-                                                    <button type="submit" name="update" class="btn btn-primary">
-                                                        Actualizar usuario
+                                                    <button type="submit" name="update" class="btn btn-warning">
+                                                        Actualizar
                                                     </button>
                                                 </div>
 
