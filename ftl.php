@@ -188,9 +188,9 @@ if (isset($_SESSION['email'])) {
                                                                                 <p style="margin: 0px;">Tel / Fax +52 (449) 300 3265</p>
                                                                             </div>
 
-                                                                            <div class="col-3 mb-4">
+                                                                            <div class="col-3 mb-4 text-end">
                                                                                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                                                                                <p>LYSCE-<?= $ftl['id']; ?></p>
+                                                                                <p>LYSCE-<?= str_pad($ftl['id'], 5, '0', STR_PAD_LEFT); ?></p>
                                                                                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
                                                                                 <p><?= $ftl['fecha']; ?></p>
                                                                             </div>
@@ -328,8 +328,7 @@ if (isset($_SESSION['email'])) {
                                                                                 </p>
 
                                                                                 <p>
-                                                                                    <b>Unidad:</b>
-                                                                                <p><?= $ftl['unidad']; ?></p>
+                                                                                    <b>Unidad:</b> <?= $ftl['unidad']; ?>
                                                                                 </p>
 
                                                                             </div>
@@ -478,7 +477,7 @@ if (isset($_SESSION['email'])) {
                                                                                             <?php
                                                                                                 }
                                                                                             } else {
-                                                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron ftls</td></tr>";
+                                                                                                echo "<tr><td colspan='6' class='text-center'>No se registro tipo de servicio</td></tr>";
                                                                                             }
                                                                                             ?>
                                                                                         </tbody>
@@ -522,7 +521,7 @@ if (isset($_SESSION['email'])) {
                                                                                             <?php
                                                                                                 }
                                                                                             } else {
-                                                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron ftls</td></tr>";
+                                                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron incrementables</td></tr>";
                                                                                             }
                                                                                             ?>
                                                                                         </tbody>
@@ -530,10 +529,10 @@ if (isset($_SESSION['email'])) {
                                                                                             <tr id="totalRow">
                                                                                                 <td class="text-end"><b>TOTAL</b></td>
                                                                                                 <td>
-                                                                                                    <p><?= $ftl['totalIncrementableUsd']; ?></p>
+                                                                                                    <p>$<?= $ftl['totalIncrementableUsd']; ?> USD</p>
                                                                                                 </td>
                                                                                                 <td>
-                                                                                                    <p><?= $ftl['totalIncrementableMx']; ?></p>
+                                                                                                    <p>$<?= $ftl['totalIncrementableMx']; ?> MXN</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                         </tfoot>

@@ -339,7 +339,10 @@ WHERE
                 <td><b>$' . $registro['valorComercial'] . '</b></td>
             </tr>
         </tbody>
-    </table>
+    </table>';
+
+    if ($servicios_html != '') {
+        $html .= '
     <h3>TIPO DE SERVICIO</h3>
   <table id="servicios" class="table">
         <thead>
@@ -351,25 +354,32 @@ WHERE
         <tbody>
             ' . $servicios_html . '
         </tbody>
-    </table>
-    <h3>DETERMINACION DE INCREMENTABLES</h3>
-  <table id="incrementables" class="table">
-        <thead>
+    </table>';
+    }
+  
+    if ($incrementables_html != '') {
+        $html .= '
+        <h3>INCREMENTABLES</h3>
+        <table id="incrementables" class="table">
+            <thead>
             <tr style="background-color:#e7e7e7;">
                 <td>Incrementable</td>
                 <td>USD</td>
                 <td>MX</td>
             </tr>
         </thead>
-        <tbody>
-            ' . $incrementables_html . '
+            <tbody>
+                ' . $incrementables_html . '
             <tr class="bg-secondary">
                 <td style="text-align:right;"><b>Total</b></td>
                 <td><b>$' . $registro['totalIncrementableUsd'] . ' USD</b></td>
                 <td><b>$' . $registro['totalIncrementableMx'] . ' MXN</b></td>
             </tr>
         </tbody>
-    </table>
+    </table>';
+    }
+
+$html .= '
     <h3>GASTOS POR FLETE TERRESTRE</h3>
   <table id="gastos" class="table">
         <thead>
@@ -416,6 +426,6 @@ WHERE
     $dompdf->render();
 
     // Salida del PDF (descarga)
-    $cliente_nombre_sin_espacios = str_replace(' ', '', $registro['cliente_nombre']);
-    $dompdf->stream('cotizacionFTL' . $cliente_nombre_sin_espacios . '_' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '.pdf', ['Attachment' => true]);
+    $cliente_nombre_sin_espacios = str_replace(' ', '_', $registro['cliente_nombre']);
+    $dompdf->stream('cotizacionFTL_' . $cliente_nombre_sin_espacios . '_LYSCE_' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '.pdf', ['Attachment' => true]);
 }

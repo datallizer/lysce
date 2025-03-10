@@ -379,8 +379,8 @@ if (isset($_SESSION['email'])) {
                                                 <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
                                             </div>
                                         </td>
-                                        <td colspan="2" class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                                        <!-- <td style="width: 10px;"><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td> -->
+                                        <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                        <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                     </tr>
                                     <tr>
                                         <td><input type="text" class="form-control" name="conceptoGasto[]" value="Flete en país destino"></td>
@@ -390,8 +390,8 @@ if (isset($_SESSION['email'])) {
                                                 <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
                                             </div>
                                         </td>
-                                        <td class="text-end" colspan="2"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
-                                        <!-- <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td> -->
+                                        <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                        <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -761,12 +761,12 @@ if (isset($_SESSION['email'])) {
             const profundidad = parseFloat(row.querySelector("[placeholder='Alto (mts)']").value) || 0;
 
             // Convertir centímetros a pulgadas y calcular volumen
-            row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 2.54).toFixed(2);
-            row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 2.54).toFixed(2);
-            row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 2.54).toFixed(2);
-            const height = altura / 2.54;
-            const width = ancho / 2.54;
-            const deep = profundidad / 2.54;
+            row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 0.0254).toFixed(2);
+            row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 0.0254).toFixed(2);
+            const height = altura / 0.0254;
+            const width = ancho / 0.0254;
+            const deep = profundidad / 0.0254;
             const volumeFt3 = (height * width * deep) / 1728;
             row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
             const volumeM3 = volumeFt3 * 0.0283168;
@@ -1087,13 +1087,21 @@ if (isset($_SESSION['email'])) {
 
         // Función para eliminar una fila de la tabla de gastos
         function eliminarFila(boton) {
-            var fila = boton.closest("tr");
-            var conceptoGasto = fila.querySelector(".conceptoGasto").value; // Obtener el concepto del gasto
-            fila.remove(); // Eliminar la fila del gasto
+            var fila = boton.closest("tr"); // Encuentra la fila actual
+            if (!fila) return; // Si no hay fila, salir
 
-            eliminarIncrementable(conceptoGasto); // Llamar a la función para eliminar el incrementable correspondiente
-            actualizarSubtotal(); // Actualizar subtotal después de eliminar la fila
+            var conceptoInput = fila.querySelector(".conceptoGasto");
+            var conceptoGasto = conceptoInput ? conceptoInput.value : null; // Verifica si existe el input
+
+            fila.remove(); // Elimina la fila de la tabla
+
+            if (conceptoGasto) {
+                eliminarIncrementable(conceptoGasto); // Elimina el incrementable solo si hay concepto
+            }
+
+            actualizarSubtotal(); // Recalcular subtotal
         }
+
 
         function eliminarIncrementable(conceptoGasto) {
             const tablaIncrementables = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
@@ -1109,6 +1117,7 @@ if (isset($_SESSION['email'])) {
                     break; // Salir del bucle después de eliminar la fila correspondiente
                 }
             }
+            updateTotal();
         }
 
         function removeServiceRow() {

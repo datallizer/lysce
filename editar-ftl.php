@@ -70,7 +70,7 @@ if (isset($_SESSION['email'])) {
                                         $titulo = $registro['tipoFtl'];
                                 ?>
                                         <form action="codeftl.php" method="POST" class="row justify-content-evenly">
-                                        <input class="form-control" value="<?= $registro['id']; ?>" type="hidden" name="id">
+                                            <input class="form-control" value="<?= $registro['id']; ?>" type="hidden" name="id">
                                             <div class="col-3 mb-3 text-center">
                                                 <img style="width: 70%;" src="images/logo.png" alt="">
                                                 <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
@@ -277,7 +277,7 @@ if (isset($_SESSION['email'])) {
                                                             while ($mercancia = mysqli_fetch_assoc($query_run_desc)) {
                                                         ?>
                                                                 <tr>
-                                                                   
+
                                                                     <td>
                                                                         <input style="width: 60px;" class="form-control mb-3" type="text" name="cantidad[]" value="<?= $mercancia['cantidad']; ?>" oninput="convertToCmAndCalculateVolume(this)">
                                                                         <p>NMFC</p>
@@ -387,7 +387,7 @@ if (isset($_SESSION['email'])) {
                                                                 while ($servicio = mysqli_fetch_assoc($query_run_servicio)) {
                                                             ?>
                                                                     <tr>
-                                                                        
+
                                                                         <td>
                                                                             <select class="form-select" name="conceptoServicio[]">
                                                                                 <option disabled>Selecciona un tipo de servicio</option>
@@ -444,28 +444,28 @@ if (isset($_SESSION['email'])) {
 
                                                             if (mysqli_num_rows($query_run_incrementable) > 0) {
                                                                 while ($incrementable = mysqli_fetch_assoc($query_run_incrementable)) {
+                                                                    $uniqueId = $incrementable['id']; // Usa el ID real de la BD
                                                             ?>
                                                                     <tr>
                                                                         <td>
-                                                                            <select class="form-select" name="incrementable[]">
+                                                                            <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="<?= $uniqueId; ?>" onchange="actualizarConceptoGasto(this)">
                                                                                 <option disabled>Selecciona un incrementable</option>
                                                                                 <?php
                                                                                 $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
                                                                                 $result = mysqli_query($con, $query);
-                                                                                $actual_incrementable = $incrementable['incrementable']; // Valor actual de la BD
+                                                                                $actual_incrementable = $incrementable['incrementable'];
 
                                                                                 if (mysqli_num_rows($result) > 0) {
                                                                                     while ($registro_incrementable = mysqli_fetch_assoc($result)) {
                                                                                         $option_incrementable = $registro_incrementable['incrementable'];
-                                                                                        $selected_incrementable = ($option_incrementable == $actual_incrementable) ? "selected" : ""; // Comparar y marcar como seleccionado
+                                                                                        $selected_incrementable = ($option_incrementable == $actual_incrementable) ? "selected" : "";
                                                                                         echo "<option value='$option_incrementable' $selected_incrementable>$option_incrementable</option>";
                                                                                     }
                                                                                 }
                                                                                 ?>
                                                                             </select>
                                                                         </td>
-
-                                                                        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="<?= $incrementable['incrementableUsd']; ?>" oninput="actualizarMontoGasto(this); updateRow(this);"></td>
+                                                                        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" data-id="<?= $uniqueId; ?>" value="<?= $incrementable['incrementableUsd']; ?>" oninput="actualizarMontoGasto(this); updateRow(this); sincronizarGasto(this);"></td>
                                                                         <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="<?= $incrementable['incrementableMx']; ?>" readonly></td>
                                                                     </tr>
                                                             <?php
@@ -474,6 +474,7 @@ if (isset($_SESSION['email'])) {
                                                                 echo "<tr><td colspan='6' class='text-center'>No se encontraron registros</td></tr>";
                                                             }
                                                             ?>
+
                                                         </tbody>
                                                         <tfoot>
                                                             <tr id="totalRow">
@@ -503,31 +504,31 @@ if (isset($_SESSION['email'])) {
 
                                                             if (mysqli_num_rows($query_run_gasto) > 0) {
                                                                 while ($gasto = mysqli_fetch_assoc($query_run_gasto)) {
+                                                                    // Buscar el ID del incrementable correspondiente según el conceptoGasto
+                                                                    $conceptoGasto = $gasto['conceptoGasto'];
+                                                                    $query_incrementable_id = "SELECT id FROM incrementablesftl WHERE incrementable = '$conceptoGasto' AND idFtl='$registro_id' LIMIT 1";
+                                                                    $result_incrementable_id = mysqli_query($con, $query_incrementable_id);
+                                                                    $incrementable = mysqli_fetch_assoc($result_incrementable_id);
+                                                                    $uniqueId = $incrementable ? $incrementable['id'] : 'null'; // Si no encuentra coincidencia, usa 'null'
                                                             ?>
-                                                                    <tr>
+                                                                    <tr data-id="<?= $uniqueId; ?>">
                                                                         <td>
                                                                             <div class="row">
                                                                                 <div class="col-9">
-                                                                                    <input type="text" class="form-control" name="conceptoGasto[]" value="<?= $gasto['conceptoGasto']; ?>">
+                                                                                    <input type="text" class="form-control conceptoGasto" name="conceptoGasto[]" data-id="<?= $uniqueId; ?>" value="<?= $gasto['conceptoGasto']; ?>">
                                                                                 </div>
-                                                                                <?php if ($gasto['conceptoGasto'] == "Seguro de tránsito de mercancía") : ?>
-                                                                                    <div class="col-3">
-                                                                                        <input type="text" class="form-control" name="porcentajeSeguro" value="<?= $registro['porcentajeSeguro']; ?>" oninput="actualizarSubtotal();">
-                                                                                    </div>
-                                                                                <?php endif; ?>
-
                                                                             </div>
                                                                         </td>
                                                                         <td>
                                                                             <div class="form-check float-end">
-                                                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4"
-                                                                                    <?php if ($gasto['ivaGasto'] == 1) echo 'checked'; ?>>
-                                                                                <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
+                                                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" data-id="<?= $uniqueId; ?>" <?= ($gasto['ivaGasto'] == 1) ? 'checked' : ''; ?>>
+                                                                                <label class="form-check-label"> IVA 16% </label>
                                                                             </div>
                                                                         </td>
-                                                                        <td colspan="2" class="text-end">
-                                                                            <input type="text" <?php if ($gasto['conceptoGasto'] == "Seguro de tránsito de mercancía") echo 'id="montoSeguro"'; ?> value="<?= $gasto['montoGasto']; ?>" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()" <?php if ($gasto['conceptoGasto'] == "Seguro de tránsito de mercancía") echo 'readonly'; ?>>
+                                                                        <td class="text-end">
+                                                                            <input type="text" value="<?= $gasto['montoGasto']; ?>" class="form-control montoGasto" name="montoGasto[]" data-id="<?= $uniqueId; ?>" oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
                                                                         </td>
+                                                                        <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'disabled' : ''; ?>><i class="bi bi-trash-fill"></i></button></td>
                                                                     </tr>
                                                             <?php
                                                                 }
@@ -535,6 +536,7 @@ if (isset($_SESSION['email'])) {
                                                                 echo "<tr><td colspan='6' class='text-center'>No se encontraron registros</td></tr>";
                                                             }
                                                             ?>
+
                                                             <tr class="text-end">
                                                                 <td colspan="2">Subtotal</td>
                                                                 <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
@@ -975,12 +977,12 @@ if (isset($_SESSION['email'])) {
                 const profundidad = parseFloat(row.querySelector("[placeholder='Alto (mts)']").value) || 0;
 
                 // Convertir centímetros a pulgadas y calcular volumen
-                row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 2.54).toFixed(2);
-                row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 2.54).toFixed(2);
-                row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 2.54).toFixed(2);
-                const height = altura / 2.54;
-                const width = ancho / 2.54;
-                const deep = profundidad / 2.54;
+                row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 0.0254).toFixed(2);
+                row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 0.0254).toFixed(2);
+                row.querySelector("[placeholder='Alto (pulgadas)']").value = (profundidad / 0.0254).toFixed(2);
+                const height = altura / 0.0254;
+                const width = ancho / 0.0254;
+                const deep = profundidad / 0.0254;
                 const volumeFt3 = (height * width * deep) / 1728;
                 row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
                 const volumeM3 = volumeFt3 * 0.0283168;
@@ -1142,13 +1144,12 @@ if (isset($_SESSION['email'])) {
             // Función para agregar una nueva fila de incrementables
             function agregarIncrementable() {
                 var tabla = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
-
-                // Crear nueva fila
                 var nuevaFila = document.createElement("tr");
 
+                var uniqueId = Date.now(); // Generar un ID único para vincular con el gasto
                 nuevaFila.innerHTML = `
         <td>
-            <select class="form-select conceptoIncrementable" name="incrementable[]" onchange="actualizarConceptoGasto(this)">
+            <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="${uniqueId}" onchange="actualizarConceptoGasto(this)">
                 <option selected>Selecciona un incrementable</option>
                 <?php
                 $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
@@ -1163,18 +1164,15 @@ if (isset($_SESSION['email'])) {
                 ?>
             </select>
         </td>
-        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" value="" oninput="actualizarMontoGasto(this); updateRow(this);"></td>
+        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" data-id="${uniqueId}" value="" oninput="actualizarMontoGasto(this); updateRow(this); sincronizarGasto(this);"></td>
         <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
     `;
 
-                // Agregar la nueva fila a la tabla de incrementables
                 tabla.appendChild(nuevaFila);
-
-                // Llamar a nuevoGasto solo una vez
-                setTimeout(nuevoGasto, 10);
-
+                setTimeout(() => nuevoGasto(uniqueId), 10);
                 updateTotal();
             }
+
 
             // Función para actualizar el valor en MXN cuando cambia USD
             function updateRow(input) {
@@ -1227,12 +1225,14 @@ if (isset($_SESSION['email'])) {
 
             // Función para actualizar el concepto del gasto al seleccionar un incrementable
             function actualizarConceptoGasto(selectElement) {
-                var index = Array.from(document.querySelectorAll(".conceptoIncrementable")).indexOf(selectElement);
-                var conceptoGastoInputs = document.querySelectorAll(".conceptoGasto");
-                if (conceptoGastoInputs[index]) {
-                    conceptoGastoInputs[index].value = selectElement.value;
+                var id = selectElement.getAttribute("data-id"); // Obtener el data-id de la fila seleccionada
+                var conceptoInput = document.querySelector(`.conceptoGasto[data-id="${id}"]`); // Buscar el input correcto en gastosftl
+
+                if (conceptoInput) {
+                    conceptoInput.value = selectElement.value; // Asigna el nuevo valor del select al campo conceptoGasto correspondiente
                 }
             }
+
 
             // Función para actualizar el monto del gasto cuando cambia el valor en USD
             function actualizarMontoGasto(inputElement) {
@@ -1252,9 +1252,8 @@ if (isset($_SESSION['email'])) {
 
 
             // Función para agregar una nueva fila en la tabla de gastos
-            function nuevoGasto() {
+            function nuevoGasto(incrementableId = null) {
                 var tabla = document.getElementById("tablaGasto").getElementsByTagName("tbody")[0];
-
                 var filas = tabla.getElementsByTagName("tr");
                 var filaSubtotal = null;
 
@@ -1267,23 +1266,48 @@ if (isset($_SESSION['email'])) {
                 }
 
                 if (filaSubtotal) {
+                    var uniqueId = incrementableId || Date.now(); // Si viene de un incrementable, usa su ID
+
                     var nuevaFila = document.createElement("tr");
+                    nuevaFila.setAttribute("data-id", uniqueId); // Asignar el mismo ID
 
                     nuevaFila.innerHTML = `
-            <td><input type="text" class="form-control conceptoGasto" name="conceptoGasto[]"></td>
+            <td><input type="text" class="form-control conceptoGasto" name="conceptoGasto[]" data-id="${uniqueId}"></td>
             <td>
                 <div class="form-check float-end">
                     <input class="form-check-input" type="checkbox" name="ivaGasto[]" checked>
                     <label class="form-check-label">IVA 16%</label>
                 </div>
             </td>
-            <td class="text-end"><input type="text" class="form-control montoGasto" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+            <td class="text-end">
+                <input type="text" class="form-control montoGasto" name="montoGasto[]" data-id="${uniqueId}" oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
+            </td>
             <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
         `;
 
                     tabla.insertBefore(nuevaFila, filaSubtotal);
                 }
             }
+
+            function sincronizarGasto(input) {
+                var id = input.getAttribute("data-id");
+                var gastoInput = document.querySelector(`.montoGasto[data-id="${id}"]`);
+
+                if (gastoInput) {
+                    gastoInput.value = input.value; // Asigna el mismo valor al campo de gasto correspondiente
+                }
+            }
+
+            function sincronizarIncrementable(input) {
+                var id = input.getAttribute("data-id");
+                var incrementableInput = document.querySelector(`.usd-input[data-id="${id}"]`);
+
+                if (incrementableInput) {
+                    incrementableInput.value = input.value; // Asigna el mismo valor al campo de incrementable correspondiente
+                }
+            }
+
+
 
             // Función para eliminar una fila de la tabla de gastos
             function eliminarFila(boton) {
@@ -1293,6 +1317,7 @@ if (isset($_SESSION['email'])) {
 
                 eliminarIncrementable(conceptoGasto); // Llamar a la función para eliminar el incrementable correspondiente
                 actualizarSubtotal(); // Actualizar subtotal después de eliminar la fila
+                
             }
 
             function eliminarIncrementable(conceptoGasto) {
@@ -1309,6 +1334,7 @@ if (isset($_SESSION['email'])) {
                         break; // Salir del bucle después de eliminar la fila correspondiente
                     }
                 }
+                updateTotal();
             }
 
             function removeServiceRow() {
