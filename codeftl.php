@@ -44,6 +44,7 @@ if (isset($_POST['delete'])) {
 
 
 if (isset($_POST['save'])) {
+    $email = $_SESSION['email'];
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $idOrigen = mysqli_real_escape_string($con, $_POST['idOrigen']);
@@ -83,13 +84,13 @@ if (isset($_POST['save'])) {
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
         totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
         operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, totalBultos, 
-        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, tipoFtl, porcentajeSeguro
+        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, tipoFtl, porcentajeSeguro, asignado
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoFtl', '$porcentajeSeguro'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoFtl', '$porcentajeSeguro', '$email'
     )";
 
     $query_run = mysqli_query($con, $sql);

@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
     p_final.correo AS final_email,
     p_final.rfc AS final_tax
 FROM 
-    ftl a
+    ltl a
 LEFT JOIN 
     clientes c ON a.idCliente = c.id
 LEFT JOIN 
@@ -90,7 +90,7 @@ WHERE
     a.id = $id;
 ";
 
-    $query_mercancias = "SELECT * FROM descripcionmercanciasftl WHERE idFtl = $id";
+    $query_mercancias = "SELECT * FROM descripcionmercanciasltl WHERE idLtl = $id";
     $resultado_mercancias = mysqli_query($con, $query_mercancias);
 
     $mercancias_html = '';
@@ -120,7 +120,7 @@ WHERE
         }
     }
 
-    $query_servicios = "SELECT conceptoServicio, tiempoServicio FROM servicioftl WHERE idFtl = $id";
+    $query_servicios = "SELECT conceptoServicio, tiempoServicio FROM servicioltl WHERE idLtl = $id";
     $resultado_servicios = mysqli_query($con, $query_servicios);
 
     $servicios_html = '';
@@ -134,7 +134,7 @@ WHERE
         }
     }
 
-    $query_incrementables = "SELECT incrementable, incrementableUSD, incrementableMx FROM incrementablesftl WHERE idFtl = $id";
+    $query_incrementables = "SELECT incrementable, incrementableUSD, incrementableMx FROM incrementablesltl WHERE idLtl = $id";
     $resultado_incrementables = mysqli_query($con, $query_incrementables);
 
     $incrementables_html = '';
@@ -149,7 +149,7 @@ WHERE
         }
     }
 
-    $query_gasto = "SELECT * FROM gastosftl WHERE idFtl = $id";
+    $query_gasto = "SELECT * FROM gastosltl WHERE idLtl = $id";
     $resultado_gasto = mysqli_query($con, $query_gasto);
 
     $gasto_html = '';
@@ -180,7 +180,7 @@ WHERE
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="https://lysce.com.mx/images/ics.ico">
-    <title>Cotización FTL | LYSCE</title>
+    <title>Cotización LTL | LYSCE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -239,7 +239,7 @@ WHERE
         </tr>
     </table>
     <br>
-    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoFtl'] . '</b></p>
+    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoLtl'] . '</b></p>
     <table class="table">
         <tr>
             <td colspan="3"><b>Cliente</b>
@@ -433,5 +433,5 @@ WHERE
 
     // Salida del PDF (descarga)
     $cliente_nombre_sin_espacios = str_replace(' ', '_', $registro['cliente_nombre']);
-    $dompdf->stream('cotizacion_FTL_' . $cliente_nombre_sin_espacios . '_LYSCE_' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '.pdf', ['Attachment' => true]);
+    $dompdf->stream('cotizacion_LTL_' . $cliente_nombre_sin_espacios . '_LYSCE_' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '.pdf', ['Attachment' => true]);
 }
