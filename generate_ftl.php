@@ -155,13 +155,19 @@ WHERE
     $gasto_html = '';
     if (mysqli_num_rows($resultado_gasto) > 0) {
         while ($row = mysqli_fetch_assoc($resultado_gasto)) {
+            // Excluir la fila si conceptoGasto es "Seguro de tránsito de mercancía" y montoGasto es "0"
+            if ($row['conceptoGasto'] === "Seguro de tránsito de mercancía" && floatval($row['montoGasto']) == 0) {
+                continue; // Saltar esta iteración del bucle
+            }
+
             $gasto_html .= '
-        <tr>
-            <td>' . htmlspecialchars($row['conceptoGasto']) . '</td>
-            <td>$' . htmlspecialchars($row['montoGasto']) . '</td>
-        </tr>';
+            <tr>
+                <td>' . htmlspecialchars($row['conceptoGasto']) . '</td>
+                <td>$' . htmlspecialchars($row['montoGasto']) . '</td>
+            </tr>';
         }
     }
+
 
     $query_run = mysqli_query($con, $query);
     if (mysqli_num_rows($query_run) > 0) {
@@ -341,8 +347,8 @@ WHERE
         </tbody>
     </table>';
 
-    if ($servicios_html != '') {
-        $html .= '
+            if ($servicios_html != '') {
+                $html .= '
     <h3>TIPO DE SERVICIO</h3>
   <table id="servicios" class="table">
         <thead>
@@ -355,10 +361,10 @@ WHERE
             ' . $servicios_html . '
         </tbody>
     </table>';
-    }
-  
-    if ($incrementables_html != '') {
-        $html .= '
+            }
+
+            if ($incrementables_html != '') {
+                $html .= '
         <h3>INCREMENTABLES</h3>
         <table id="incrementables" class="table">
             <thead>
@@ -377,9 +383,9 @@ WHERE
             </tr>
         </tbody>
     </table>';
-    }
+            }
 
-$html .= '
+            $html .= '
     <h3>GASTOS POR FLETE TERRESTRE</h3>
   <table id="gastos" class="table">
         <thead>

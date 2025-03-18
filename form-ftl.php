@@ -397,11 +397,12 @@ if (isset($_SESSION['email'])) {
                                         <td>
                                             <div class="row">
                                                 <div class="col-9">
-                                                    <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro de tránsito de mercancía">
+                                                    <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro de tránsito de mercancía" readonly>
                                                 </div>
                                                 <div class="col-3">
                                                     <input type="text" class="form-control" name="porcentajeSeguro" value="38%" oninput="actualizarSubtotal();">
                                                 </div>
+                                                <p style="font-size: 11px;" class="text-end">Establezca el porcentaje en 0% para omitir el calculo de seguro*</p>
                                             </div>
                                         </td>
                                         <td>
@@ -489,8 +490,11 @@ if (isset($_SESSION['email'])) {
                             let porcentajeSeguro = parseFloat(porcentajeSeguroInput.replace('%', '')) / 100;
                             let montoSeguro = valorMercancia * porcentajeSeguro;
 
-                            // Si el monto calculado es menor que 120, se fija en 120
-                            if (montoSeguro < 120) {
+                            // Si el porcentaje es 0%, el monto del seguro debe ser 0
+                            if (porcentajeSeguro === 0) {
+                                montoSeguro = 0;
+                            } else if (montoSeguro < 120 && porcentajeSeguro > 0) {
+                                // Si el monto calculado es menor que 120, se fija en 120
                                 montoSeguro = 120;
                             }
 

@@ -514,9 +514,19 @@ if (isset($_SESSION['email'])) {
                                                                     <tr data-id="<?= $uniqueId; ?>">
                                                                         <td>
                                                                             <div class="row">
-                                                                                <div class="col-9">
-                                                                                    <input type="text" class="form-control conceptoGasto" name="conceptoGasto[]" data-id="<?= $uniqueId; ?>" value="<?= $gasto['conceptoGasto']; ?>">
+                                                                                <div <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'class="col-9"' : 'class="col-12"'; ?>>
+                                                                                    <input type="text" class="form-control conceptoGasto" name="conceptoGasto[]" data-id="<?= $uniqueId; ?>" value="<?= $gasto['conceptoGasto']; ?>" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'readonly' : ''; ?>>
                                                                                 </div>
+                                                                                <?php
+                                                                                if ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') {
+                                                                                ?>
+                                                                                    <div class="col-3">
+                                                                                        <input type="text" class="form-control" name="porcentajeSeguro" value="<?= $registro['porcentajeSeguro']; ?>" oninput="actualizarSubtotal();">
+                                                                                    </div>
+                                                                                    <p style="font-size: 11px;" class="text-end">Establezca el porcentaje en 0% para omitir el calculo de seguro*</p>
+                                                                                <?php
+                                                                                }
+                                                                                ?>
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -526,9 +536,9 @@ if (isset($_SESSION['email'])) {
                                                                             </div>
                                                                         </td>
                                                                         <td class="text-end">
-                                                                            <input type="text" value="<?= $gasto['montoGasto']; ?>" class="form-control montoGasto" name="montoGasto[]" data-id="<?= $uniqueId; ?>" oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
+                                                                            <input type="text" value="<?= $gasto['montoGasto']; ?>" class="form-control montoGasto" name="montoGasto[]" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'id="montoSeguro"' : ''; ?> data-id="<?= $uniqueId; ?>" oninput="actualizarSubtotal(); sincronizarIncrementable(this);" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'readonly' : ''; ?>>
                                                                         </td>
-                                                                        <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'disabled' : ''; ?>><i class="bi bi-trash-fill"></i></button></td>
+                                                                        <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'readonly' : ''; ?>><i class="bi bi-trash-fill"></i></button></td>
                                                                     </tr>
                                                             <?php
                                                                 }
@@ -613,8 +623,11 @@ if (isset($_SESSION['email'])) {
                                                     let porcentajeSeguro = parseFloat(porcentajeSeguroInput.replace('%', '')) / 100;
                                                     let montoSeguro = valorMercancia * porcentajeSeguro;
 
-                                                    // Si el monto calculado es menor que 120, se fija en 120
-                                                    if (montoSeguro < 120) {
+                                                    // Si el porcentaje es 0%, el monto del seguro debe ser 0
+                                                    if (porcentajeSeguro === 0) {
+                                                        montoSeguro = 0;
+                                                    } else if (montoSeguro < 120 && porcentajeSeguro > 0) {
+                                                        // Si el monto calculado es menor que 120, se fija en 120
                                                         montoSeguro = 120;
                                                     }
 
@@ -1317,7 +1330,7 @@ if (isset($_SESSION['email'])) {
 
                 eliminarIncrementable(conceptoGasto); // Llamar a la función para eliminar el incrementable correspondiente
                 actualizarSubtotal(); // Actualizar subtotal después de eliminar la fila
-                
+
             }
 
             function eliminarIncrementable(conceptoGasto) {
