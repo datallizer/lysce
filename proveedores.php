@@ -128,9 +128,31 @@ if (isset($_SESSION['email'])) {
                                                     </td>
                                                     <td>
                                                         <p><?= $registro['rfc']; ?></p>
+
                                                     </td>
                                                     <td>
-                                                        <p></p>
+                                                        <?php
+                                                        // Consulta para obtener los proveedores asociados a este cliente
+                                                        $idProveedor = $registro['id'];
+                                                        $proveedores_query = "SELECT p.cliente, pc.id as idasoc 
+                                                                                FROM proveedorcliente pc
+                                                                                JOIN clientes p ON pc.idCliente = p.id
+                                                                                WHERE pc.idProveedor = '$idProveedor'";
+
+                                                        $proveedores_run = mysqli_query($con, $proveedores_query);
+
+                                                        if (mysqli_num_rows($proveedores_run) > 0) {
+                                                            while ($proveedor = mysqli_fetch_assoc($proveedores_run)) {
+                                                                echo "<div class='d-flex'><p>{$proveedor['cliente']}</p><form action='codeclientes.php' method='post'>
+                                                                        <input type='hidden' name='id' value='{$proveedor['idasoc']}'>
+                                                                        <input type='hidden' name='ubicacion' value='proveedores'>
+                                                                        <button class='btn btn-sm btn-outline-danger' type='submit' name='desasociar'><i class='bi bi-x-lg'></i></button>
+                                                        </form></div>";
+                                                            }
+                                                        } else {
+                                                            echo "<p>Sin asociados</p>";
+                                                        }
+                                                        ?>
                                                     </td>
                                                     <td>
                                                         <button type="button" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#myModal<?= $registro['id']; ?>" data-id="<?= $registro['id']; ?>"><i class="bi bi-eye-fill"></i></button>

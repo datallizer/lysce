@@ -155,3 +155,66 @@ if (isset($_POST['save'])) {
         exit(0);
     }
 }
+
+if (isset($_POST['asociar'])) {
+    $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
+    $idProveedor = mysqli_real_escape_string($con, $_POST['idProveedor']);
+
+    // Verificar si ya existe la asociación
+    $check_query = "SELECT * FROM proveedorcliente WHERE idCliente = '$idCliente' AND idProveedor = '$idProveedor'";
+    $check_result = mysqli_query($con, $check_query);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        // Ya existe la asociación, mostrar mensaje de advertencia
+        $_SESSION['alert'] = [
+            'title' => 'ASOCIACIÓN EXISTENTE',
+            'message' => 'Este proveedor ya está asociado con este cliente.',
+            'icon' => 'warning'
+        ];
+    } else {
+        // Si no existe, insertar la nueva asociación
+        $query = "INSERT INTO proveedorcliente (idCliente, idProveedor) VALUES ('$idCliente', '$idProveedor')";
+        $query_run = mysqli_query($con, $query);
+
+        if ($query_run) {
+            $_SESSION['alert'] = [
+                'title' => 'SE ASOCIÓ EXITOSAMENTE',
+                'icon' => 'success'
+            ];
+        } else {
+            $_SESSION['alert'] = [
+                'message' => 'Contacte a soporte',
+                'title' => 'ERROR AL ASOCIAR',
+                'icon' => 'error'
+            ];
+        }
+    }
+
+    header("Location: proveedores.php");
+    exit();
+}
+
+if (isset($_POST['desasociar'])) {
+    $id = mysqli_real_escape_string($con, $_POST['id']);
+    $ubicacion = mysqli_real_escape_string($con, $_POST['ubicacion']);
+
+    $query = "DELETE FROM proveedorcliente WHERE id='$id'";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        $_SESSION['alert'] = [
+            'title' => 'ELIMINADO EXITOSAMENTE',
+            'icon' => 'success'
+        ];
+        header("Location: $ubicacion.php");
+        exit(0);
+    } else {
+        $_SESSION['alert'] = [
+            'message' => 'Contacte a soporte',
+            'title' => 'ERROR AL ELIMINAR',
+            'icon' => 'error'
+        ];
+        header("Location: $ubicacion.php");
+        exit(0);
+    }
+}

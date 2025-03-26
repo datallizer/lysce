@@ -243,7 +243,7 @@ if (isset($_POST['update'])) {
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
     $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
-    $tipoltl = mysqli_real_escape_string($con, $_POST['tipoltl']);
+    $tipoLtl = mysqli_real_escape_string($con, $_POST['tipoLtl']);
     $porcentajeSeguro = mysqli_real_escape_string($con, $_POST['porcentajeSeguro']);
 
     $sql = "UPDATE ltl SET 
@@ -278,7 +278,7 @@ if (isset($_POST['update'])) {
         observaciones = '$observaciones',
         totalIncrementableUsd = '$totalIncrementableUsd',
         totalIncrementableMx = '$totalIncrementableMx',
-        tipoltl = '$tipoltl',
+        tipoLtl = '$tipoLtl',
         porcentajeSeguro = '$porcentajeSeguro'
     WHERE id = '$id'";
 
@@ -324,35 +324,43 @@ if (isset($_POST['update'])) {
             mysqli_query($con, $sql_detalle);
         }
 
+        if (!empty($_POST['conceptoServicio']) && is_array($_POST['conceptoServicio'])) {
+            foreach ($_POST['conceptoServicio'] as $i => $concepto) {
+                $concepto_val = mysqli_real_escape_string($con, $concepto);
+                $tiempo_val = mysqli_real_escape_string($con, $_POST['tiempoServicio'][$i]);
 
-        foreach ($_POST['conceptoServicio'] as $i => $concepto) {
-            $concepto_val = mysqli_real_escape_string($con, $concepto);
-            $tiempo_val = mysqli_real_escape_string($con, $_POST['tiempoServicio'][$i]);
-
-            $sql_servicio = "INSERT INTO servicioltl (idLtl, conceptoServicio, tiempoServicio)
-                             VALUES ('$id', '$concepto_val', '$tiempo_val')";
-            mysqli_query($con, $sql_servicio);
+                $sql_servicio = "INSERT INTO servicioltl (idLtl, conceptoServicio, tiempoServicio)
+                                 VALUES ('$id', '$concepto_val', '$tiempo_val')";
+                mysqli_query($con, $sql_servicio);
+            }
         }
 
-        foreach ($_POST['incrementable'] as $i => $incrementable) {
-            $incrementable_val = mysqli_real_escape_string($con, $incrementable);
-            $usd_val = mysqli_real_escape_string($con, $_POST['incrementableUsd'][$i]);
-            $mx_val = mysqli_real_escape_string($con, $_POST['incrementableMx'][$i]);
 
-            $sql_incrementable = "INSERT INTO incrementablesltl (idLtl, incrementable, incrementableUsd, incrementableMx)
-                                  VALUES ('$id', '$incrementable_val', '$usd_val', '$mx_val')";
-            mysqli_query($con, $sql_incrementable);
+        if (!empty($_POST['incrementable']) && is_array($_POST['incrementable'])) {
+            foreach ($_POST['incrementable'] as $i => $incrementable) {
+                $incrementable_val = mysqli_real_escape_string($con, $incrementable);
+                $usd_val = mysqli_real_escape_string($con, $_POST['incrementableUsd'][$i]);
+                $mx_val = mysqli_real_escape_string($con, $_POST['incrementableMx'][$i]);
+
+                $sql_incrementable = "INSERT INTO incrementablesltl (idLtl, incrementable, incrementableUsd, incrementableMx)
+                                      VALUES ('$id', '$incrementable_val', '$usd_val', '$mx_val')";
+                mysqli_query($con, $sql_incrementable);
+            }
         }
 
-        foreach ($_POST['conceptoGasto'] as $i => $gasto) {
-            $concepto_val = mysqli_real_escape_string($con, $gasto);
-            $monto_val = mysqli_real_escape_string($con, $_POST['montoGasto'][$i]);
-            $iva_val = isset($_POST['ivaGasto'][$i]) ? 1 : 0;
 
-            $sql_gasto = "INSERT INTO gastosltl (idLtl, conceptoGasto, montoGasto, ivaGasto)
-                          VALUES ('$id', '$concepto_val', '$monto_val', '$iva_val')";
-            mysqli_query($con, $sql_gasto);
+        if (!empty($_POST['conceptoGasto']) && is_array($_POST['conceptoGasto'])) {
+            foreach ($_POST['conceptoGasto'] as $i => $gasto) {
+                $concepto_val = mysqli_real_escape_string($con, $gasto);
+                $monto_val = mysqli_real_escape_string($con, $_POST['montoGasto'][$i]);
+                $iva_val = isset($_POST['ivaGasto'][$i]) ? 1 : 0;
+
+                $sql_gasto = "INSERT INTO gastosltl (idLtl, conceptoGasto, montoGasto, ivaGasto)
+                              VALUES ('$id', '$concepto_val', '$monto_val', '$iva_val')";
+                mysqli_query($con, $sql_gasto);
+            }
         }
+
 
         $_SESSION['alert'] = ['title' => "COTIZACIÓN ACTUALIZADA EXITOSAMENTE", 'icon' => 'success'];
         header("Location: ltl.php");

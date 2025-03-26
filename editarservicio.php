@@ -83,7 +83,7 @@ if (isset($_SESSION['email'])) {
                                                     <option disabled>Seleccione una opción</option>
                                                     <option value="aereoimpo" <?= ($tipoServicio == 'aereoimpo') ? 'selected' : ''; ?>>Aéreo importación</option>
                                                     <option value="aereoexpo" <?= ($tipoServicio == 'aereoexpo') ? 'selected' : ''; ?>>Aéreo exportación</option>
-                                                    <option value="ltl" <?= ($tipoServicio == 'ltl') ? 'selected' : ''; ?>>Terrestre LCL</option>
+                                                    <option value="ltl" <?= ($tipoServicio == 'ltl') ? 'selected' : ''; ?>>Terrestre LTL</option>
                                                     <option value="ftl" <?= ($tipoServicio == 'ftl') ? 'selected' : ''; ?>>Terrestre FTL</option>
                                                     <option value="lcl" <?= ($tipoServicio == 'lcl') ? 'selected' : ''; ?>>Marítimo LCL</option>
                                                     <option value="fcl" <?= ($tipoServicio == 'fcl') ? 'selected' : ''; ?>>Marítimo FCL</option>

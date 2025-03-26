@@ -42,11 +42,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -94,22 +94,7 @@ if (isset($_SESSION['email'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT 
-    a.*,
-    c.cliente AS cliente_nombre,
-    p_origen.proveedor AS origen_nombre,
-    p_destino.proveedor AS destino_nombre,
-    p_final.proveedor AS final_nombre
-FROM 
-    aereoimportacion a
-LEFT JOIN 
-    clientes c ON a.idCliente = c.id
-LEFT JOIN 
-    proveedores p_origen ON a.idOrigen = p_origen.id
-LEFT JOIN 
-    proveedores p_destino ON a.idDestino = p_destino.id
-LEFT JOIN
-    proveedores p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                        $query = "SELECT * FROM aereoimportacion ORDER BY id DESC
 ";
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
@@ -120,19 +105,19 @@ LEFT JOIN
                                                         <p><?= $registro['id']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['cliente_nombre']; ?></p>
+                                                        <p><?= $registro['tipoAereoImpo']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['origen_nombre']; ?></p>
+                                                        <p><?= $registro['idCliente']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['destino_nombre']; ?></p>
+                                                        <p><?= $registro['idOrigen']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['final_nombre']; ?></p>
+                                                        <p><?= $registro['idDestino']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['fecha']; ?></p>
+                                                        <p><?= $registro['idDestinoFinal']; ?></p>
                                                     </td>
                                                     <td>
                                                         <a href="generate_ftl.php?id=<?= $registro['id']; ?>" id="file-download" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
