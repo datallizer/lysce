@@ -50,7 +50,7 @@ if (isset($_GET['id'])) {
     p_final.phone AS destino_final_telefono,
     p_final.contact AS destino_final_contacto
 FROM 
-    aereoimportacion a
+    aereo a
 JOIN 
     clientes c ON a.idCliente = c.id
 JOIN 

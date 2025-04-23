@@ -94,8 +94,24 @@ if (isset($_SESSION['email'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT * FROM aereoimportacion ORDER BY id DESC
-";
+                                        $query = "SELECT 
+                                        a.*,
+                                        c.cliente AS cliente_nombre,
+                                        p_origen.cliente AS origen_nombre,
+                                        p_destino.cliente AS destino_nombre,
+                                        p_final.cliente AS final_nombre
+                                    FROM 
+                                        aereo a
+                                    LEFT JOIN 
+                                        clientes c ON a.idCliente = c.id
+                                    LEFT JOIN 
+                                        clientes p_origen ON a.idOrigen = p_origen.id
+                                    LEFT JOIN 
+                                        clientes p_destino ON a.idDestino = p_destino.id
+                                    LEFT JOIN
+                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                    ";
+
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
@@ -108,22 +124,22 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['tipoAereoImpo']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idCliente']; ?></p>
+                                                        <p><?= $registro['cliente_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idOrigen']; ?></p>
+                                                        <p><?= $registro['origen_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idDestino']; ?></p>
+                                                        <p><?= $registro['destino_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p><?= $registro['idDestinoFinal']; ?></p>
+                                                        <p><?= $registro['final_nombre']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <a href="generate_ftl.php?id=<?= $registro['id']; ?>" id="file-download" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
+                                                        <!-- <a href="generate_ftl.php?id=<?= $registro['id']; ?>" id="file-download" class="btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a> -->
 
                                                         <form action="codeaereo.php" method="POST" class="d-inline">
-                                                            <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                            <button disabled type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
                                                         </form>
 
                                                     </td>

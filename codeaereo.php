@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 if (isset($_POST['delete'])) {
     $registro_id = mysqli_real_escape_string($con, $_POST['delete']);
 
-    $query = "DELETE FROM aereoimportacion WHERE id='$registro_id' ";
+    $query = "DELETE FROM aereo WHERE id='$registro_id' ";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
@@ -140,7 +140,7 @@ if (isset($_POST['save'])) {
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
     $tipoAereoImpo = mysqli_real_escape_string($con, $_POST['tipoAereoImpo']);
 
-    $sql = "INSERT INTO aereoimportacion (
+    $sql = "INSERT INTO aereo (
         fecha, idCliente, idOrigen, idDestino, idDestinoFinal, distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, pesoCargableKgs, pesoCotizacion, valorMercancia,
     valorComercial, collectionFeeOrigenUno, collectionFeeOrigenDos, collectionFeeOrigenTotal, collectionFeeOrigenTotalUsd, screeningChargeUno, screeningChargeDos, screeningChargeTotal, screeningChargeTotalUsd, terminalHandlingUno, terminalHandlingDos, terminalHandlingTotal, terminalHandlingTotalUsd, airportTransferUno, airportTransferDos, airportTransferTotal, airportTransferTotalUsd,
     exportsCustomsUno, exportsCustomsDos, exportsCustomsTotal, exportsCustomsTotalUsd, xRayUno, xRayDos, xRayTotal, xRayTotalUsd, airportTaxUno, airportTaxDos, airportTaxTotal, airportTaxTotalUsd, amsFeeOrigenUno, amsFeeOrigenDos, amsFeeOrigenTotal, amsFeeOrigenTotalUsd, adicionalOrigenUnoTitle, adicionalOrigenUnoUno, adicionalOrigenUnoDos, 

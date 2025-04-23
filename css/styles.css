@@ -46,7 +46,11 @@ p {
   margin-bottom: 0px;
 }
 
-.gastos-table input {
+.origen-table input {
+  width: 60px !important;
+}
+
+.destino-table input {
   width: 80px !important;
 }
 

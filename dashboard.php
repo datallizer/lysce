@@ -56,7 +56,7 @@ $result = mysqli_query($con, $query);
 $row = mysqli_fetch_assoc($result);
 $totalFTL = $row['total'];
 
-$query_aereo_impo = "SELECT COUNT(*) AS totalaereoimpo FROM aereoimportacion";
+$query_aereo_impo = "SELECT COUNT(*) AS totalaereoimpo FROM aereo";
 $result_aereo_impo = mysqli_query($con, $query_aereo_impo);
 $row_aereo_impo = mysqli_fetch_assoc($result_aereo_impo);
 $total_aereo_impo = $row_aereo_impo['totalaereoimpo'];
