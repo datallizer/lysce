@@ -291,7 +291,7 @@ if (isset($_SESSION['email'])) {
                                                                                 <div class="row justify-content-start">
                                                                                     <div class="col-8 text-start">
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Distancia:</b> <?= $ltl['distanciaOrigenDestinoMillas']; ?> millas <?= $ltl['distanciaOrigenDestinoKms']; ?> Kms
+                                                                                            <b>Distancia:</b> <?= number_format($ltl['distanciaOrigenDestinoMillas'], 2, '.', ','); ?> millas <?= number_format($ltl['distanciaOrigenDestinoKms'], 2, '.', ','); ?> Kms
                                                                                         </p>
 
                                                                                         <p style="margin-bottom: 5px;">
@@ -304,11 +304,11 @@ if (isset($_SESSION['email'])) {
                                                                                     </div>
                                                                                     <div class="col-4">
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Total CFT:</b> <?= $ltl['totalFt3']; ?>
+                                                                                            <b>Total CFT:</b> <?= number_format($ltl['totalFt3'], 2, '.', ','); ?>
                                                                                         </p>
 
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Total m3:</b> <?= $ltl['totalM3']; ?>
+                                                                                            <b>Total m3:</b> <?= number_format($ltl['totalM3'], 2, '.', ','); ?>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
@@ -316,7 +316,7 @@ if (isset($_SESSION['email'])) {
 
                                                                             <div class="col-5 mt-3 mb-3 text-end">
                                                                                 <p style="display: inline-block;margin-bottom: 5px;">
-                                                                                    <b>Distancia:</b> <?= $ltl['distanciaDestinoFinalMillas']; ?> millas <?= $ltl['distanciaDestinoFinalKms']; ?> Kms
+                                                                                    <b>Distancia:</b> <?= number_format($ltl['distanciaDestinoFinalMillas'], 2, '.', ','); ?> millas <?= number_format($ltl['distanciaDestinoFinalKms'], 2, '.', ','); ?> Kms
                                                                                 </p>
 
                                                                                 <p style="margin-bottom: 5px;">
@@ -374,22 +374,22 @@ if (isset($_SESSION['email'])) {
                                                                                                                 <p><?= $mercancia['largoPlg']; ?> x
                                                                                                                     <?= $mercancia['anchoPlg']; ?> x
                                                                                                                     <?= $mercancia['altoPlg']; ?> inches</p>
-                                                                                                                <p><?= $mercancia['piesCubicos']; ?>ft³</p>
+                                                                                                                <p><?= number_format($mercancia['piesCubicos'], 2, '.', ','); ?>ft³</p>
                                                                                                             </div>
                                                                                                             <div class="col-6">
                                                                                                                 <p><?= $mercancia['largoCm']; ?> x
                                                                                                                     <?= $mercancia['anchoCm']; ?> x
                                                                                                                     <?= $mercancia['altoCm']; ?> mts</p>
-                                                                                                                <p><?= $mercancia['metrosCubicos']; ?>m³</p>
+                                                                                                                <p><?= number_format($mercancia['metrosCubicos'], 2, '.', ','); ?>m³</p>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </td>
                                                                                                     <td>
-                                                                                                        <p><?= $mercancia['libras']; ?> lbs</p>
-                                                                                                        <p><?= $mercancia['kilogramos']; ?> kgs</p>
+                                                                                                        <p><?= number_format($mercancia['libras'], 2, '.', ','); ?> lbs</p>
+                                                                                                        <p><?= number_format($mercancia['kilogramos'], 2, '.', ','); ?> kgs</p>
                                                                                                     </td>
                                                                                                     <td>
-                                                                                                        <p>$<?= $mercancia['valorFactura']; ?></p>
+                                                                                                        <p>$<?= number_format($mercancia['valorFactura'], 2, '.', ','); ?></p>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                         <?php
@@ -413,12 +413,12 @@ if (isset($_SESSION['email'])) {
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td>
-                                                                                                        <p><?= $ltl['pesoMercanciaLbs']; ?> lbs</p>
+                                                                                                        <p><?= number_format($ltl['pesoMercanciaLbs'], 2, '.', ','); ?> lbs</p>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td colspan="2">
-                                                                                                        <p><?= $ltl['pesoMercanciaKgs']; ?> kgs</p>
+                                                                                                        <p><?= number_format($ltl['pesoMercanciaKgs'], 2, '.', ','); ?> kgs</p>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </table>
@@ -429,13 +429,13 @@ if (isset($_SESSION['email'])) {
                                                                                                 <tr>
                                                                                                     <td>VALOR TOTAL DE LA MERCANCÍA USD</td>
                                                                                                     <td>
-                                                                                                        <p>$<?= $ltl['valorMercancia']; ?></p>
+                                                                                                        <p>$<?= number_format($ltl['valorMercancia'], 2, '.', ','); ?></p>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td>VALOR TOTAL DE LA MERCANCÍA MXN</td>
                                                                                                     <td>
-                                                                                                        <p>$<?= $ltl['valorComercial']; ?></p>
+                                                                                                        <p>$<?= number_format($ltl['valorComercial'], 2, '.', ','); ?></p>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </table>
@@ -512,10 +512,10 @@ if (isset($_SESSION['email'])) {
                                                                                                         </td>
 
                                                                                                         <td>
-                                                                                                            <p>$<?= $incrementable['incrementableUsd']; ?></p>
+                                                                                                            <p>$<?= number_format($incrementable['incrementableUsd'], 2, '.', ','); ?></p>
                                                                                                         </td>
                                                                                                         <td>
-                                                                                                            <p>$<?= $incrementable['incrementableMx']; ?></p>
+                                                                                                            <p>$<?= number_format($incrementable['incrementableMx'], 2, '.', ','); ?></p>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                             <?php
@@ -529,10 +529,10 @@ if (isset($_SESSION['email'])) {
                                                                                             <tr id="totalRow">
                                                                                                 <td class="text-end"><b>TOTAL</b></td>
                                                                                                 <td>
-                                                                                                    <p>$<?= $ltl['totalIncrementableUsd']; ?> USD</p>
+                                                                                                    <p>$<?= number_format($ltl['totalIncrementableUsd'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                                 <td>
-                                                                                                    <p>$<?= $ltl['totalIncrementableMx']; ?> MXN</p>
+                                                                                                    <p>$<?= number_format($ltl['totalIncrementableMx'], 2, '.', ','); ?> MXN</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                         </tfoot>
@@ -575,7 +575,7 @@ if (isset($_SESSION['email'])) {
                                                                                                             </div>
                                                                                                         </td>
                                                                                                         <td colspan="2" class="text-end">
-                                                                                                            <p>$<?= $gasto['montoGasto']; ?> USD</p>
+                                                                                                            <p>$<?= number_format($gasto['montoGasto'], 2, '.', ','); ?> USD</p>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                             <?php
@@ -587,13 +587,13 @@ if (isset($_SESSION['email'])) {
                                                                                             <tr class="text-end">
                                                                                                 <td colspan="2">Subtotal</td>
                                                                                                 <td colspan="2" style="width:20%;">
-                                                                                                    <p>$<?= $ltl['subtotalFlete']; ?> USD</p>
+                                                                                                    <p>$<?= number_format($ltl['subtotalFlete'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr class="text-end">
                                                                                                 <td colspan="2">I.V.A 16%</td>
                                                                                                 <td colspan="2">
-                                                                                                    <p>$<?= $ltl['impuestosFlete']; ?> USD</p>
+                                                                                                    <p>$<?= number_format($ltl['impuestosFlete'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr class="text-end">
@@ -605,7 +605,7 @@ if (isset($_SESSION['email'])) {
                                                                                                     </div>
                                                                                                 </td>
                                                                                                 <td colspan="2">
-                                                                                                    <p>$<?= $ltl['retencionFlete']; ?> USD</p>
+                                                                                                    <p>$<?= number_format($ltl['retencionFlete'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                         </tbody>
@@ -618,7 +618,7 @@ if (isset($_SESSION['email'])) {
                                                                                     <tr class="text-end">
                                                                                         <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
                                                                                         <td style="width: 180px;">
-                                                                                            <p>$<?= $ltl['totalCotizacionNumero']; ?></p>
+                                                                                            <p>$<?= number_format($ltl['totalCotizacionNumero'], 2, '.', ','); ?></p>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">

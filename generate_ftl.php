@@ -108,14 +108,14 @@ WHERE
             </td>
             <td>' . htmlspecialchars($row['descripcion']) . '</td>
             <td>
-                <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' inches ' . htmlspecialchars($row['piesCubicos']) . ' ft3</p>
-                <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' cm ' . htmlspecialchars($row['metrosCubicos']) . ' m3</p>
+                <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' inches ' . number_format($row['piesCubicos'], 2, '.', ',') . ' ft3</p>
+                <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' cm ' . number_format($row['metrosCubicos'], 2, '.', ',') . ' m3</p>
             </td>
             <td>
-                <p>' . htmlspecialchars($row['libras']) . ' Lbs</p>
-                <p>' . htmlspecialchars($row['kilogramos']) . ' Kgs</p>
+                <p>' . number_format($row['libras'], 2, '.', ',') . ' Lbs</p>
+                <p>' . number_format($row['kilogramos'], 2, '.', ',') . ' Kgs</p>
             </td>
-            <td>$' . htmlspecialchars($row['valorFactura']) . '</td>
+            <td>$' . number_format($row['valorFactura'], 2, '.', ',') . '</td>
         </tr>';
         }
     }
@@ -143,8 +143,8 @@ WHERE
             $incrementables_html .= '
         <tr>
             <td>' . htmlspecialchars($row['incrementable']) . '</td>
-            <td>$' . htmlspecialchars($row['incrementableUSD']) . ' USD</td>
-            <td>$' . htmlspecialchars($row['incrementableMx']) . ' MXN</td>
+            <td>$' . number_format($row['incrementableUSD'], 2, '.', ',') . ' USD</td>
+            <td>$' . number_format($row['incrementableMx'], 2, '.', ',') . ' MXN</td>
         </tr>';
         }
     }
@@ -163,7 +163,7 @@ WHERE
             $gasto_html .= '
             <tr>
                 <td>' . htmlspecialchars($row['conceptoGasto']) . '</td>
-                <td>$' . htmlspecialchars($row['montoGasto']) . '</td>
+                <td>$' . number_format($row['montoGasto'], 2, '.', ',') . '</td>
             </tr>';
         }
     }
@@ -286,21 +286,21 @@ WHERE
             <table style="width:100%;border: 0px;">
                 <tr style="width:100%;border: 0px;">
                     <td style="width:33%;border: 0px;">
-                        <p><b>Distancia:</b> ' . $registro['distanciaOrigenDestinoMillas'] . ' millas | ' . $registro['distanciaOrigenDestinoKms'] . ' kms</p>
+                        <p><b>Distancia:</b> ' . number_format($registro['distanciaOrigenDestinoMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaOrigenDestinoKms'], 2, '.', ',') . ' kms</p>
                         <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . '</p>
                         <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
                         <br>
                     </td>
                     
                     <td style="width:33%;border: 0px;">
-                        <p><b>Total CFT:</b> ' . $registro['totalFt3'] . '</p>
-                        <p><b>Total m3:</b> ' . $registro['totalM3'] . '</p>
+                        <p><b>Total CFT:</b> ' . number_format($registro['totalFt3'], 2, '.', ',') . '</p>
+                        <p><b>Total m3:</b> ' . number_format($registro['totalM3'], 2, '.', ',') . '</p>
                         <br>
                         <br>
                     </td>
                     
                     <td style="width:33%;border: 0px;">
-                        <p><b>Distancia:</b> ' . $registro['distanciaDestinoFinalMillas'] . ' millas | ' . $registro['distanciaDestinoFinalKms'] . ' kms</p>
+                        <p><b>Distancia:</b> ' . number_format($registro['distanciaDestinoFinalMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaDestinoFinalKms'], 2, '.', ',') . ' kms</p>
                         <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . '</p>
                         <p><b>Operador:</b> ' . $registro['operador'] . '</p>
                         <p><b>Unidad:</b> ' . $registro['unidad'] . '</p>
@@ -331,18 +331,18 @@ WHERE
                 <td></td>
                 <td>
                     <p>Peso total de la mercacía</p>
-                    <p>' . $registro['pesoMercanciaLbs'] . ' Lbs</p>
-                    <p>' . $registro['pesoMercanciaKgs'] . ' Kgs</p>
+                    <p>' . number_format($registro['pesoMercanciaLbs'], 2, '.', ',') . ' Lbs</p>
+                    <p>' . number_format($registro['pesoMercanciaKgs'], 2, '.', ',') . ' Kgs</p>
                 </td>
                 <td></td>
             </tr>
             <tr class="bg-secondary">
                 <td colspan="5" style="text-align:right;"><b>VALOR TOTAL COMERCIAL USD</b></td>
-                <td><b>$' . $registro['valorMercancia'] . '</b></td>
+                <td><b>$' . number_format($registro['valorMercancia'], 2, '.', ',') . '</b></td>
             </tr>
             <tr class="bg-secondary">
                 <td colspan="5" style="text-align:right;"><b>VALOR TOTAL COMERCIAL MXN</b></td>
-                <td><b>$' . $registro['valorComercial'] . '</b></td>
+                <td><b>$' . number_format($registro['valorComercial'], 2, '.', ',') . '</b></td>
             </tr>
         </tbody>
     </table>';
@@ -378,8 +378,8 @@ WHERE
                 ' . $incrementables_html . '
             <tr class="bg-secondary">
                 <td style="text-align:right;"><b>Total</b></td>
-                <td><b>$' . $registro['totalIncrementableUsd'] . ' USD</b></td>
-                <td><b>$' . $registro['totalIncrementableMx'] . ' MXN</b></td>
+                <td><b>$' . number_format($registro['totalIncrementableUsd'], 2, '.', ',') . ' USD</b></td>
+                <td><b>$' . number_format($registro['totalIncrementableMx'], 2, '.', ',') . ' MXN</b></td>
             </tr>
         </tbody>
     </table>';
@@ -398,18 +398,18 @@ WHERE
             ' . $gasto_html . '
             <tr class="bg-secondary">
                 <td style="text-align:right;">Subtotal</td>
-                <td>$' . $registro['subtotalFlete'] . ' USD</td>
+                <td>$' . number_format($registro['subtotalFlete'], 2, '.', ',') . ' USD</td>
             </tr>
             <tr class="bg-secondary">
                 <td style="text-align:right;">IVA</td>
-                <td>$' . $registro['impuestosFlete'] . ' USD</td>
+                <td>$' . number_format($registro['impuestosFlete'], 2, '.', ',') . ' USD</td>
             </tr>
             <tr class="bg-secondary">
                 <td style="text-align:right;">Retención</td>
-                <td>$' . $registro['retencionFlete'] . ' USD</td>
+                <td>$' . number_format($registro['retencionFlete'], 2, '.', ',') . ' USD</td>
             </tr><tr class="bg-warning">
                 <td style="text-align:right;"><b>TOTAL USD</b></td>
-                <td><b>$' . $registro['totalCotizacionNumero'] . ' USD</b></td>
+                <td><b>$' . number_format($registro['totalCotizacionNumero'], 2, '.', ',') . ' USD</b></td>
             </tr>
             <tr class="bg-warning" style="text-align:center;">
                 <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . '</b></td>

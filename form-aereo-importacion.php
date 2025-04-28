@@ -70,7 +70,7 @@ if (isset($_SESSION['email'])) {
     <div id="layoutSidenav">
         <div id="layoutSidenav_content">
             <div class="container-fluid p-5">
-                <form action="codeltl.php" method="POST" class="row justify-content-evenly">
+                <form action="codeaereo.php" method="POST" class="row justify-content-evenly">
                     <div class="col-3 mb-3 text-center">
                         <img style="width: 70%;" src="images/logo.png" alt="">
                         <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
@@ -84,7 +84,7 @@ if (isset($_SESSION['email'])) {
                     <div class="col-3 mb-3">
                         <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
                         <?php
-                        $query = "SELECT MAX(id) AS max_id FROM ltl";
+                        $query = "SELECT MAX(id) AS max_id FROM aereo";
                         $result = mysqli_query($con, $query);
                         if ($result && $row = $result->fetch_assoc()) {
                             $lastID = $row['max_id'];
@@ -98,10 +98,10 @@ if (isset($_SESSION['email'])) {
                         <input class="form-control" type="text" name="fecha" id="expedicion" value="">
                     </div>
                     <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                        <select class="form-select bg-warning" name="tipoLtl" id="tipoLtlSelect" required>
+                        <select class="form-select bg-warning" name="tipoAereoImpo" required>
                             <option selected>Selecciona un servicio</option>
                             <?php
-                            $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ltl'";
+                            $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereoimpo'";
                             $result = mysqli_query($con, $query);
 
                             if (mysqli_num_rows($result) > 0) {
@@ -154,7 +154,7 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Destino en frontera</b></p>
-                        <select class="form-select" name="idAduana" id="aduana">
+                        <select class="form-select" name="idDestino" id="aduana">
                             <option selected>Selecciona el destino en frontera</option>
                             <?php
                             $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -174,7 +174,7 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Destino Final</b></p>
-                        <select class="form-select" name="idDestino" id="destino">
+                        <select class="form-select" name="idDestinoFinal" id="destino">
                             <option selected>Selecciona el destino final</option>
                             <?php
                             $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -284,7 +284,7 @@ if (isset($_SESSION['email'])) {
                                 <table class="text-end">
                                     <tr>
                                         <td>Peso físico real</td>
-                                        <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
+                                        <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoFisicoReal" readonly> kgs</td>
                                     </tr>
                                     <tr>
                                         <td>Peso volumétrico</td>
@@ -301,11 +301,11 @@ if (isset($_SESSION['email'])) {
                                 <table class="text-end w-100">
                                     <tr>
                                         <td>VALOR TOTAL DE LA MERCANCÍA USD</td>
-                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly oninput="actualizarSubtotal();"></td>
+                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercanciaUSD" readonly oninput="actualizarSubtotal();"></td>
                                     </tr>
                                     <tr>
                                         <td>VALOR TOTAL DE LA MERCANCÍA MXN</td>
-                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
+                                        <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorMercanciaMXN" readonly></td>
                                     </tr>
                                 </table>
                             </div>
@@ -393,10 +393,10 @@ if (isset($_SESSION['email'])) {
                                         <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="gastosOrigen[]" value="HAWB" readonly></td>
                                         <td><input type="text" name="amountOrigen[]" class="amOrigen form-control" value=""></td>
                                         <td><input type="text" name="totalOrigen[]" class="totOrigen form-control" value="" readonly></td>
-                                        <td colspan="2"><input type="text" style="min-width: 100%;" name="gastosOrigen[]" class="usOrigen form-control" id="hawbOrigen" value="" readonly></td>
+                                        <td colspan="2"><input type="text" style="min-width: 100%;" name="usdOrigen[]" class="usOrigen form-control" id="hawbOrigen" value="" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="airportTransferDos" value="FSC-A" readonly></td>
+                                        <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="gastosOrigen[]" value="FSC-A" readonly></td>
                                         <td><input type="text" name="amountOrigen[]" class="amOrigen form-control" value=""></td>
                                         <td><input type="text" name="totalOrigen[]" class="totOrigen form-control" value="" readonly></td>
                                         <td colspan="2"><input type="text" style="min-width: 100%;" name="usdOrigen[]" class="usOrigen form-control" id="fscaOrigen" value="" readonly></td>
@@ -678,7 +678,7 @@ if (isset($_SESSION['email'])) {
 
                     <div class="modal-footer mt-5">
                         <a href="aereo-importacion.php" class="btn btn-secondary m-1">Cancelar</a>
-                        <button type="submit" class="btn btn-success m-1" name="save" disabled>Guardar</button>
+                        <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
                     </div>
                 </form>
 
