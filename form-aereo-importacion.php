@@ -413,7 +413,7 @@ if (isset($_SESSION['email'])) {
                                     </tr>
                                     <tr>
                                         <td colspan="4" class="text-end"><b>Total</b></td>
-                                        <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="totalOrigen" id="totalOrigen" readonly></td>
+                                        <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="totalOrigenAll" id="totalOrigenAll" readonly></td>
                                     </tr>
                                 </table>
                                 <div class="text-center">
@@ -689,6 +689,39 @@ if (isset($_SESSION['email'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script>
+        function validateFields() {
+            const m3Total = parseFloat(document.getElementById('m3Total')?.value) || 0;
+            const valorMercancia = parseFloat(document.getElementById('valorMercancia')?.value) || 0;
+            const totalIncrementableUsd = parseFloat(document.getElementsByName('totalIncrementableUsd')[0]?.value) || 0;
+
+            const montoGastos = document.getElementsByName('montoGasto[]');
+            let montoGastoValid = true;
+            for (let i = 0; i < montoGastos.length; i++) {
+                const val = parseFloat(montoGastos[i]?.value) || 0;
+                if (val === 0) {
+                    montoGastoValid = false;
+                    break;
+                }
+            }
+
+            const isValid = m3Total !== 0 && valorMercancia !== 0 && totalIncrementableUsd !== 0 && montoGastoValid;
+
+            document.querySelector('button[name="save"]').disabled = !isValid;
+        }
+
+        function actualizarPesoTarifario() {
+            const pesoFisico = parseFloat(document.getElementById("pesoMercanciaKgs")?.value) || 0;
+            const pesoVolumetrico = parseFloat(document.getElementById("pesoVolumetrico")?.value) || 0;
+            const pesoTarifario = Math.max(pesoFisico, pesoVolumetrico);
+
+            const pesoTarifarioInput = document.getElementById("pesoTarifario");
+            if (pesoTarifarioInput) {
+                pesoTarifarioInput.value = pesoTarifario.toFixed(2);
+                actualizarTotalesOrigen(); // Ejecuta el cálculo de totales
+            }
+        }
+
+
         // Obtiene la fecha actual para la cotizacion
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
@@ -887,6 +920,7 @@ if (isset($_SESSION['email'])) {
             }
 
             actualizarTotales(); // Actualiza los totales después de convertir
+            actualizarPesoTarifario();
         }
 
         function convertToInchesAndCalculateVolume(element) {
@@ -1000,6 +1034,7 @@ if (isset($_SESSION['email'])) {
             actualizarValorComercial();
             actualizarValoresUSD_MXN();
             updateTotal();
+            actualizarPesoTarifario();
         }
 
         function actualizarValorComercial() {
@@ -1022,6 +1057,18 @@ if (isset($_SESSION['email'])) {
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("removeRowButton").addEventListener("click", removeRow);
             document.getElementById("valorMoneda").addEventListener("input", actualizarValoresUSD_MXN);
+            document.getElementById('m3Total')?.addEventListener('input', validateFields);
+            document.getElementById('valorMercancia')?.addEventListener('input', validateFields);
+            document.getElementsByName('totalIncrementableUsd')[0]?.addEventListener('input', validateFields);
+
+            const montoGastos = document.getElementsByName('montoGasto[]');
+            for (let i = 0; i < montoGastos.length; i++) {
+                montoGastos[i]?.addEventListener('input', validateFields);
+            }
+
+            // Validar al cargar
+            validateFields(); // También calcular al cargar
+            actualizarPesoTarifario();
 
             // Escuchar cambios en los campos de input
             document.getElementById("origenTable").addEventListener("input", function(e) {
@@ -1071,8 +1118,8 @@ if (isset($_SESSION['email'])) {
                 subtotalField.value = subtotal.toFixed(2);
             }
 
-            // Coloca el total en la última fila (campo totalOrigen)
-            const totalField = document.querySelector('input[name="totalOrigen"]:not(.totOrigen)');
+            // Coloca el total en la última fila (campo totalOrigenAll)
+            const totalField = document.querySelector('input[name="totalOrigenAll"]:not(.totOrigen)');
             if (totalField) {
                 totalField.value = totalUsdOrigen.toFixed(2);
             }
@@ -1309,6 +1356,7 @@ if (isset($_SESSION['email'])) {
                 if (n === 100) return "CIEN";
                 if (n < 10) return unidades[n];
                 if (n < 20) return especiales[n - 10];
+                if (n < 30) return "VEINTI" + unidades[n % 10];
                 if (n < 100) return decenas[Math.floor(n / 10)] + (n % 10 !== 0 ? " Y " + unidades[n % 10] : "");
                 if (n < 1000) return centenas[Math.floor(n / 100)] + (n % 100 !== 0 ? " " + convertir(n % 100) : "");
                 if (n < 1000000) return (n < 2000 ? "MIL" : convertir(Math.floor(n / 1000)) + " MIL") + (n % 1000 !== 0 ? " " + convertir(n % 1000) : "");
@@ -1459,8 +1507,8 @@ if (isset($_SESSION['email'])) {
 
         function actualizarValorTotalFlete() {
             const totalDestino = parseFloat(document.getElementById("totalDestinoUsd")?.value || 0);
-            const totalOrigen = parseFloat(document.getElementById("totalOrigen")?.value || 0);
-            const totalFlete = totalDestino + totalOrigen;
+            const totalOrigenAll = parseFloat(document.getElementById("totalOrigenAll")?.value || 0);
+            const totalFlete = totalDestino + totalOrigenAll;
 
             const totalFleteField = document.getElementById("valorTotalFlete");
             if (totalFleteField) {

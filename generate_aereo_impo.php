@@ -413,7 +413,7 @@ WHERE
             </tr>
             <tr class="bg-secondary">
                 <td colspan="4" style="text-align:right;">Total</td>
-                <td>$' . number_format($registro['totalOrigen'], 2, '.', ',') . '</td>
+                <td>$' . number_format($registro['totalOrigenAll'], 2, '.', ',') . '</td>
             </tr>
         </tbody>
     </table>';

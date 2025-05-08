@@ -579,6 +579,26 @@ if (isset($_SESSION['email'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script>
+        function validateFields() {
+            const m3Total = parseFloat(document.getElementById('m3Total')?.value) || 0;
+            const valorMercancia = parseFloat(document.getElementById('valorMercancia')?.value) || 0;
+            const totalIncrementableUsd = parseFloat(document.getElementsByName('totalIncrementableUsd')[0]?.value) || 0;
+
+            const montoGastos = document.getElementsByName('montoGasto[]');
+            let montoGastoValid = true;
+            for (let i = 0; i < montoGastos.length; i++) {
+                const val = parseFloat(montoGastos[i]?.value) || 0;
+                if (val === 0) {
+                    montoGastoValid = false;
+                    break;
+                }
+            }
+
+            const isValid = m3Total !== 0 && valorMercancia !== 0 && totalIncrementableUsd !== 0 && montoGastoValid;
+
+            document.querySelector('button[name="save"]').disabled = !isValid;
+        }
+
         // Obtiene la fecha actual para la cotizacion
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
@@ -936,6 +956,18 @@ if (isset($_SESSION['email'])) {
             document.getElementById("removeRowButton").addEventListener("click", removeRow);
             document.getElementById("valorMoneda").addEventListener("input", actualizarValoresUSD_MXN);
 
+            document.getElementById('m3Total')?.addEventListener('input', validateFields);
+            document.getElementById('valorMercancia')?.addEventListener('input', validateFields);
+            document.getElementsByName('totalIncrementableUsd')[0]?.addEventListener('input', validateFields);
+
+            const montoGastos = document.getElementsByName('montoGasto[]');
+            for (let i = 0; i < montoGastos.length; i++) {
+                montoGastos[i]?.addEventListener('input', validateFields);
+            }
+
+            // Validar al cargar
+            validateFields();
+
             observarCambio(); // Iniciar la observación del cambio de valor
             convertirNumeroATexto();
             agregarFila()
@@ -1185,6 +1217,7 @@ if (isset($_SESSION['email'])) {
                 if (n === 100) return "CIEN";
                 if (n < 10) return unidades[n];
                 if (n < 20) return especiales[n - 10];
+                if (n < 30) return "VEINTI" + unidades[n % 10];
                 if (n < 100) return decenas[Math.floor(n / 10)] + (n % 10 !== 0 ? " Y " + unidades[n % 10] : "");
                 if (n < 1000) return centenas[Math.floor(n / 100)] + (n % 100 !== 0 ? " " + convertir(n % 100) : "");
                 if (n < 1000000) return (n < 2000 ? "MIL" : convertir(Math.floor(n / 1000)) + " MIL") + (n % 1000 !== 0 ? " " + convertir(n % 1000) : "");

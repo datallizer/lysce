@@ -108,8 +108,8 @@ WHERE
             </td>
             <td>' . htmlspecialchars($row['descripcion']) . '</td>
             <td>
-                <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' inches ' . number_format($row['piesCubicos'], 2, '.', ',') . ' ft3</p>
-                <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' cm ' . htmlspecialchars($row['metrosCubicos']) . ' m3</p>
+                <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' inches ' . number_format($row['piesCubicos'], 2, '.', ',') . ' ft3</p>
+                <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' cm ' . htmlspecialchars($row['metrosCubicos']) . ' m3</p>
             </td>
             <td>
                 <p>' . number_format($row['libras'], 2, '.', ',') . ' Lbs</p>

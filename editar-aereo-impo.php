@@ -338,10 +338,11 @@ if (isset($_SESSION['email'])) {
                                                         <table class="text-end">
                                                             <tr>
                                                                 <td>Peso físico real</td>
-                                                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaLbs" name="pesoFisicoReal" readonly> kgs</td>
+                                                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoFisicoReal" readonly> kgs</td>
                                                             </tr>
                                                             <tr>
-                                                                <td colspan="2"><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoVolumetrico" readonly> kgs</td>
+                                                                <td>Peso volumétrico</td>
+                                                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoVolumetrico" name="pesoVolumetrico" readonly> Kgs</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Peso tarifario</td>
@@ -389,6 +390,16 @@ if (isset($_SESSION['email'])) {
                                                                     $isReadonly = in_array($origen['gastosOrigen'], ['HAWB', 'FSC-A', 'SSC-A']);
                                                                     $readonlyAttr = $isReadonly ? 'readonly' : '';
                                                                     $disabledAttr = $isReadonly ? 'disabled' : '';
+
+                                                                    // Definir el id dependiendo del valor de gastosOrigen
+                                                                    $idAttr = '';
+                                                                    if ($origen['gastosOrigen'] === 'HAWB') {
+                                                                        $idAttr = 'id="hawbOrigen"';
+                                                                    } elseif ($origen['gastosOrigen'] === 'FSC-A') {
+                                                                        $idAttr = 'id="fscaOrigen"';
+                                                                    } elseif ($origen['gastosOrigen'] === 'SSC-A') {
+                                                                        $idAttr = 'id="sscaOrigen"';
+                                                                    }
                                                             ?>
                                                                     <tr>
                                                                         <td style="min-width: 140px;">
@@ -404,7 +415,7 @@ if (isset($_SESSION['email'])) {
                                                                             <input type="text" name="totalOrigen[]" class="totOrigen form-control" value="<?= $origen['totalOrigen']; ?>" readonly>
                                                                         </td>
                                                                         <td>
-                                                                            <input type="text" name="usdOrigen[]" class="usOrigen form-control" value="<?= $origen['usdOrigen']; ?>" readonly>
+                                                                            <input type="text" name="usdOrigen[]" class="usOrigen form-control" value="<?= $origen['usdOrigen']; ?>" readonly <?= $idAttr ?>>
                                                                         </td>
                                                                         <td>
                                                                             <button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaOrigen(this)" <?= $disabledAttr ?>>
@@ -426,7 +437,7 @@ if (isset($_SESSION['email'])) {
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="4" class="text-end"><b>Total</b></td>
-                                                                <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="totalOrigen" id="totalOrigen" readonly></td>
+                                                                <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="totalOrigenAll" id="totalOrigenAll" readonly></td>
                                                             </tr>
                                                         </table>
                                                         <div class="text-center">
@@ -754,14 +765,26 @@ if (isset($_SESSION['email'])) {
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
         <script>
+            function actualizarPesoTarifario() {
+                const pesoFisico = parseFloat(document.getElementById("pesoMercanciaKgs")?.value) || 0;
+                const pesoVolumetrico = parseFloat(document.getElementById("pesoVolumetrico")?.value) || 0;
+                const pesoTarifario = Math.max(pesoFisico, pesoVolumetrico);
+
+                const pesoTarifarioInput = document.getElementById("pesoTarifario");
+                if (pesoTarifarioInput) {
+                    pesoTarifarioInput.value = pesoTarifario.toFixed(2);
+                    actualizarTotalesOrigen(); // Ejecuta el cálculo de totales
+                }
+            }
+
             var idCliente = "<?php echo $registro['idCliente']; ?>";
             var idOrigen = "<?php echo $registro['idOrigen']; ?>";
             var idAduana = "<?php echo $registro['idDestino']; ?>";
             var idDestino = "<?php echo $registro['idDestinoFinal']; ?>";
             var totalFt3 = "<?php echo $registro['totalFt3']; ?>";
             var totalM3 = "<?php echo $registro['totalM3']; ?>";
-            var pesoMercanciaLbs = "<?php echo $registro['pesoFisicoReal']; ?>";
-            var pesoMercanciaKgs = "<?php echo $registro['pesoVolumetrico']; ?>";
+            var pesoMercanciaKgs = "<?php echo $registro['pesoFisicoReal']; ?>";
+            // var pesoMercanciaKgs = "$registro['pesoVolumetrico']; ?>";
             var pesoTarifario = "<?php echo $registro['pesoTarifario']; ?>";
             var valorMercancia = "<?php echo $registro['valorMercanciaUSD']; ?>";
             var valorComercial = "<?php echo $registro['valorMercanciaMXN']; ?>";
@@ -773,7 +796,7 @@ if (isset($_SESSION['email'])) {
 
 
             var subtotalOrigen = "<?php echo $registro['subtotalOrigen']; ?>";
-            var totalOrigen = "<?php echo $registro['totalOrigen']; ?>";
+            var totalOrigenAll = "<?php echo $registro['totalOrigenAll']; ?>";
 
             var subtotalDestinoUsd = "<?php echo $registro['subtotalDestinoUsd']; ?>";
             var subtotalDestinoMx = "<?php echo $registro['subtotalDestinoMx']; ?>";
@@ -784,6 +807,9 @@ if (isset($_SESSION['email'])) {
 
             var lugarDestino = "<?php echo $registro['lugarDestino']; ?>";
             var valorTotalFlete = "<?php echo $registro['valorTotalFlete']; ?>";
+
+            var pesoTarifario = "<?php echo $registro['pesoTarifario']; ?>";
+            var pesoVolumetrico = "<?php echo $registro['pesoVolumetrico']; ?>";
 
             window.onload = function() {
 
@@ -799,8 +825,8 @@ if (isset($_SESSION['email'])) {
 
                 document.getElementById("ft3Total").value = totalFt3;
                 document.getElementById("m3Total").value = totalM3;
-                document.getElementById("pesoMercanciaLbs").value = pesoMercanciaLbs;
                 document.getElementById("pesoMercanciaKgs").value = pesoMercanciaKgs;
+                document.getElementById("pesoVolumetrico").value = pesoVolumetrico;
                 document.getElementById("pesoTarifario").value = pesoTarifario;
                 document.getElementById("valorMercancia").value = valorMercancia;
                 document.getElementById("valorComercial").value = valorComercial;
@@ -811,7 +837,7 @@ if (isset($_SESSION['email'])) {
                 document.querySelector('input[name="retencionFlete"]').value = retencionFlete;
 
                 document.querySelector('input[name="subtotalOrigen"]').value = subtotalOrigen;
-                document.querySelector('input[name="totalOrigen"]').value = totalOrigen;
+                document.querySelector('input[name="totalOrigenAll"]').value = totalOrigenAll;
                 document.querySelector('input[name="subtotalDestinoUsd"]').value = subtotalDestinoUsd;
                 document.querySelector('input[name="subtotalDestinoMx"]').value = subtotalDestinoMx;
                 document.querySelector('input[name="impuestosDestinoUsd"]').value = impuestosDestinoUsd;
@@ -1037,12 +1063,35 @@ if (isset($_SESSION['email'])) {
                 row.querySelector("[placeholder='Largo (mts)']").value = (height * 0.0254).toFixed(2);
                 row.querySelector("[placeholder='Ancho (mts)']").value = (width * 0.0254).toFixed(2);
                 row.querySelector("[placeholder='Alto (mts)']").value = (deep * 0.0254).toFixed(2);
+                const altura = height * 0.0254;
+                const ancho = width * 0.0254;
+                const profundidad = deep * 0.0254;
                 const volumeFt3 = ((height * 0.08333) * (width * 0.08333) * (deep * 0.08333)) * cantidad;
                 row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
                 const volumeM3 = volumeFt3 * 0.0283168;
                 row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
 
+                const volumetrico = (altura * ancho * profundidad) * cantidad / 0.006;
+
+                // Guardar el valor en un campo oculto o atributo data
+                row.dataset.volumetrico = volumetrico;
+
+                // Calcular total
+                let totalVolumetrico = 0;
+                const filas = document.querySelectorAll("#miTablaCotizacion tr");
+                filas.forEach(f => {
+                    const v = parseFloat(f.dataset.volumetrico) || 0;
+                    totalVolumetrico += v;
+                });
+
+                // Mostrar total
+                const campoTotal = document.getElementById("pesoVolumetrico");
+                if (campoTotal) {
+                    campoTotal.value = totalVolumetrico.toFixed(2);
+                }
+
                 actualizarTotales(); // Actualiza los totales después de convertir
+                actualizarPesoTarifario();
             }
 
             function convertToInchesAndCalculateVolume(element) {
@@ -1050,7 +1099,7 @@ if (isset($_SESSION['email'])) {
                 const altura = parseFloat(row.querySelector("[placeholder='Largo (mts)']").value) || 0;
                 const ancho = parseFloat(row.querySelector("[placeholder='Ancho (mts)']").value) || 0;
                 const profundidad = parseFloat(row.querySelector("[placeholder='Alto (mts)']").value) || 0;
-
+                const cantidad = parseFloat(row.querySelector("input[name='cantidad[]']").value) || 1;
                 // Convertir centímetros a pulgadas y calcular volumen
                 row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 0.0254).toFixed(2);
                 row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 0.0254).toFixed(2);
@@ -1062,6 +1111,25 @@ if (isset($_SESSION['email'])) {
                 row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
                 const volumeM3 = volumeFt3 * 0.0283168;
                 row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
+
+                const volumetrico = (altura * ancho * profundidad) * cantidad / 0.006;
+
+                // Guardar el valor en un campo oculto o atributo data
+                row.dataset.volumetrico = volumetrico;
+
+                // Calcular total
+                let totalVolumetrico = 0;
+                const filas = document.querySelectorAll("#miTablaCotizacion tr");
+                filas.forEach(f => {
+                    const v = parseFloat(f.dataset.volumetrico) || 0;
+                    totalVolumetrico += v;
+                });
+
+                // Mostrar total
+                const campoTotal = document.getElementById("pesoVolumetrico");
+                if (campoTotal) {
+                    campoTotal.value = totalVolumetrico.toFixed(2);
+                }
 
                 actualizarTotales(); // Actualiza los totales después de convertir
             }
@@ -1123,8 +1191,8 @@ if (isset($_SESSION['email'])) {
                 }
 
                 // Mostrar los totales en los inputs correspondientes
-                document.getElementById("pesoMercanciaLbs").value = totalLbs.toFixed(2);
-                document.getElementById("pesoMercanciaKgs").value = totalKgs.toFixed(2);
+                document.getElementById("pesoMercanciaKgs").value = totalLbs.toFixed(2);
+                // document.getElementById("pesoMercanciaKgs").value = totalKgs.toFixed(2);
                 document.getElementById("valorMercancia").value = totalValor.toFixed(2);
                 document.getElementById("ft3Total").value = totalFt3.toFixed(2);
                 document.getElementById("m3Total").value = totalM3.toFixed(2);
@@ -1133,6 +1201,7 @@ if (isset($_SESSION['email'])) {
                 actualizarValorComercial();
                 actualizarValoresUSD_MXN();
                 updateTotal();
+                actualizarPesoTarifario();
             }
 
             function actualizarValorComercial() {
@@ -1206,8 +1275,10 @@ if (isset($_SESSION['email'])) {
                     subtotalField.value = subtotal.toFixed(2);
                 }
 
-                // Coloca el total en la última fila (campo totalOrigen)
-                const totalField = document.querySelector('input[name="totalOrigen"]:not(.totOrigen)');
+                console.log('subtotalOrigen', subtotal);
+
+                // Coloca el total en la última fila (campo totalOrigenAll)
+                const totalField = document.querySelector('input[name="totalOrigenAll"]:not(.totOrigen)');
                 if (totalField) {
                     totalField.value = totalUsdOrigen.toFixed(2);
                 }
@@ -1472,6 +1543,7 @@ if (isset($_SESSION['email'])) {
                     if (n === 100) return "CIEN";
                     if (n < 10) return unidades[n];
                     if (n < 20) return especiales[n - 10];
+                    if (n < 30) return "VEINTI" + unidades[n % 10];
                     if (n < 100) return decenas[Math.floor(n / 10)] + (n % 10 !== 0 ? " Y " + unidades[n % 10] : "");
                     if (n < 1000) return centenas[Math.floor(n / 100)] + (n % 100 !== 0 ? " " + convertir(n % 100) : "");
                     if (n < 1000000) return (n < 2000 ? "MIL" : convertir(Math.floor(n / 1000)) + " MIL") + (n % 1000 !== 0 ? " " + convertir(n % 1000) : "");
@@ -1622,8 +1694,8 @@ if (isset($_SESSION['email'])) {
 
             function actualizarValorTotalFlete() {
                 const totalDestino = parseFloat(document.getElementById("totalDestinoUsd")?.value || 0);
-                const totalOrigen = parseFloat(document.getElementById("totalOrigen")?.value || 0);
-                const totalFlete = totalDestino + totalOrigen;
+                const totalOrigenAll = parseFloat(document.getElementById("totalOrigenAll")?.value || 0);
+                const totalFlete = totalDestino + totalOrigenAll;
 
                 const totalFleteField = document.getElementById("valorTotalFlete");
                 if (totalFleteField) {

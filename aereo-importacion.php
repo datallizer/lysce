@@ -160,6 +160,14 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['final_nombre']; ?></p>
                                                     </td>
                                                     <td style="width: 105px;text-align:center;">
+                                                        <a href="generate_aereo_impo.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
+
+                                                        <a href="editar-aereo-impo.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+
+                                                        <form action="codeaereo.php" method="POST" class="d-inline">
+                                                            <input type="hidden" name="id" value="<?= $registro['id']; ?>">
+                                                            <button type="submit" name="delete" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                        </form>
 
                                                         <button type="button" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#myModal<?= $registro['id']; ?>" data-id="<?= $registro['id']; ?>"><i class="bi bi-eye-fill"></i></button>
 
@@ -480,7 +488,7 @@ if (isset($_SESSION['email'])) {
 
                                                                                                     <tr>
                                                                                                         <td colspan="4" class="text-end"><b>Total</b></td>
-                                                                                                        <td>$<?= number_format($ftl['totalOrigen'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($ftl['totalOrigenAll'], 2, '.', ','); ?></td>
                                                                                                     </tr>
                                                                                                 </tbody>
                                                                                             </table>
@@ -705,14 +713,6 @@ if (isset($_SESSION['email'])) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="generate_aereo_impo.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
-
-                                                        <a href="editar-aereo-impo.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
-
-                                                        <form action="codeaereo.php" method="POST" class="d-inline">
-                                                            <input type="hidden" name="id" value="<?= $registro['id']; ?>">
-                                                            <button type="submit" name="delete" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
-                                                        </form>
 
                                                     </td>
                                                 </tr>

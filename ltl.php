@@ -159,7 +159,16 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['fecha']; ?></p>
                                                     </td>
                                                     <td style="width: 105px;text-align:center;">
+                                                    <a href="generate_ltl.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1">
+                                                            <i class="bi bi-download"></i>
+                                                        </a>
 
+                                                        <a href="editar-ltl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
+
+                                                        <form action="codeltl.php" method="POST" class="d-inline">
+                                                            <input type="hidden" name="id" value="<?= $registro['id']; ?>">
+                                                            <button type="submit" name="delete" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                        </form>
                                                         <button type="button" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#myModal<?= $registro['id']; ?>" data-id="<?= $registro['id']; ?>"><i class="bi bi-eye-fill"></i></button>
 
                                                         <div class="modal fade" id="myModal<?= $registro['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel<?= $registro['id']; ?>" aria-hidden="true">
@@ -655,16 +664,7 @@ if (isset($_SESSION['email'])) {
 
 
 
-                                                        <a href="generate_ltl.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1">
-                                                            <i class="bi bi-download"></i>
-                                                        </a>
-
-                                                        <a href="editar-ltl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
-
-                                                        <form action="codeltl.php" method="POST" class="d-inline">
-                                                            <input type="hidden" name="id" value="<?= $registro['id']; ?>">
-                                                            <button type="submit" name="delete" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
-                                                        </form>
+                                                    
 
                                                     </td>
                                                 </tr>

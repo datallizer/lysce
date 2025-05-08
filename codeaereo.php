@@ -47,7 +47,7 @@ if (isset($_POST['delete'])) {
 
 if (isset($_POST['save'])) {
     $email = $_SESSION['email'];
-    $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
+    $fecha = isset($_POST['fecha']) ? mysqli_real_escape_string($con, $_POST['fecha']) : '';
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $idOrigen = mysqli_real_escape_string($con, $_POST['idOrigen']);
     $idDestino = mysqli_real_escape_string($con, $_POST['idDestino']);
@@ -71,7 +71,7 @@ if (isset($_POST['save'])) {
     $valorMercanciaUSD = mysqli_real_escape_string($con, $_POST['valorMercanciaUSD']);
     $valorMercanciaMXN = mysqli_real_escape_string($con, $_POST['valorMercanciaMXN']);
     $subtotalOrigen = mysqli_real_escape_string($con, $_POST['subtotalOrigen']);
-    $totalOrigen = mysqli_real_escape_string($con, $_POST['totalOrigen']);
+    $totalOrigenAll = mysqli_real_escape_string($con, $_POST['totalOrigenAll']);
     $lugarDestino = mysqli_real_escape_string($con, $_POST['lugarDestino']);
     $subtotalDestinoUsd = mysqli_real_escape_string($con, $_POST['subtotalDestinoUsd']);
     $subtotalDestinoMx = mysqli_real_escape_string($con, $_POST['subtotalDestinoMx']);
@@ -96,7 +96,7 @@ if (isset($_POST['save'])) {
         servicio, totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms,
         tiempoRecorridoDestinoFinal, operador, unidad, moneda, valorMoneda,
         pesoFisicoReal, pesoVolumetrico, pesoTarifario, valorMercanciaUSD, valorMercanciaMXN,
-        subtotalOrigen, totalOrigen, lugarDestino, subtotalDestinoUsd, subtotalDestinoMx,
+        subtotalOrigen, totalOrigenAll, lugarDestino, subtotalDestinoUsd, subtotalDestinoMx,
         impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd, totalDestinoMx,
         valorTotalFlete, totalIncrementableUsd, totalIncrementableMx,
         subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero,
@@ -107,7 +107,7 @@ if (isset($_POST['save'])) {
         '$servicio', '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms',
         '$tiempoRecorridoDestinoFinal', '$operador', '$unidad', '$moneda', '$valorMoneda',
         '$pesoFisicoReal', '$pesoVolumetrico', '$pesoTarifario', '$valorMercanciaUSD', '$valorMercanciaMXN',
-        '$subtotalOrigen', '$totalOrigen', '$lugarDestino', '$subtotalDestinoUsd', '$subtotalDestinoMx',
+        '$subtotalOrigen', '$totalOrigenAll', '$lugarDestino', '$subtotalDestinoUsd', '$subtotalDestinoMx',
         '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd', '$totalDestinoMx',
         '$valorTotalFlete', '$totalIncrementableUsd', '$totalIncrementableMx',
         '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero',
@@ -174,17 +174,19 @@ if (isset($_POST['save'])) {
             $usdOrigen = $_POST['usdOrigen'];
 
             for ($i = 0; $i < count($gastosOrigen); $i++) {
-                $origenes = mysqli_real_escape_string($con, $gastosOrigen[$i]);
-                $minimos = mysqli_real_escape_string($con, $minimoOrigen[$i]);
-                $amounts = mysqli_real_escape_string($con, $amountOrigen[$i]);
-                $totales = mysqli_real_escape_string($con, $totalOrigen[$i]);
-                $usds = mysqli_real_escape_string($con, $usdOrigen[$i]);
+                $origenes = isset($gastosOrigen[$i]) ? mysqli_real_escape_string($con, $gastosOrigen[$i]) : '';
+                $minimos = isset($minimoOrigen[$i]) ? mysqli_real_escape_string($con, $minimoOrigen[$i]) : '';
+                $amounts = isset($amountOrigen[$i]) ? mysqli_real_escape_string($con, $amountOrigen[$i]) : '';
+                $totales = isset($totalOrigen[$i]) ? mysqli_real_escape_string($con, $totalOrigen[$i]) : '';
+                $usds = isset($usdOrigen[$i]) ? mysqli_real_escape_string($con, $usdOrigen[$i]) : '';
 
-                $sql_origen = "INSERT INTO gastosorigenaereoimpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen) VALUES ('$idAereo', '$origenes', '$minimos', '$amounts', '$totales', '$usds')";
+                $sql_origen = "INSERT INTO gastosorigenaereoimpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen)
+                               VALUES ('$idAereo', '$origenes', '$minimos', '$amounts', '$totales', '$usds')";
 
                 mysqli_query($con, $sql_origen);
             }
         }
+
 
         if (!empty($_POST['gastoDestino'])) {
             $gastoDestino = $_POST['gastoDestino'];
@@ -276,6 +278,19 @@ if (isset($_POST['update'])) {
     $pesoTarifario = mysqli_real_escape_string($con, $_POST['pesoTarifario']);
     $valorMercanciaUSD = mysqli_real_escape_string($con, $_POST['valorMercanciaUSD']);
     $valorMercanciaMXN = mysqli_real_escape_string($con, $_POST['valorMercanciaMXN']);
+
+
+    $subtotalOrigen = mysqli_real_escape_string($con, $_POST['subtotalOrigen']);
+    $totalOrigenAll = mysqli_real_escape_string($con, $_POST['totalOrigenAll']);
+    $lugarDestino = mysqli_real_escape_string($con, $_POST['lugarDestino']);
+    $subtotalDestinoUsd = mysqli_real_escape_string($con, $_POST['subtotalDestinoUsd']);
+    $subtotalDestinoMx = mysqli_real_escape_string($con, $_POST['subtotalDestinoMx']);
+    $impuestosDestinoUsd = mysqli_real_escape_string($con, $_POST['impuestosDestinoUsd']);
+    $impuestosDestinoMx = mysqli_real_escape_string($con, $_POST['impuestosDestinoMx']);
+    $totalDestinoUsd = mysqli_real_escape_string($con, $_POST['totalDestinoUsd']);
+    $totalDestinoMx = mysqli_real_escape_string($con, $_POST['totalDestinoMx']);
+    $valorTotalFlete = mysqli_real_escape_string($con, $_POST['valorTotalFlete']);
+
     $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
     $impuestosFlete = mysqli_real_escape_string($con, $_POST['impuestosFlete']);
     $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
@@ -291,7 +306,7 @@ if (isset($_POST['update'])) {
         idCliente = '$idCliente',
         idOrigen = '$idOrigen',
         idDestino = '$idDestino',
-        idDestinoFinal = '$idDestinoFinal',
+        idDestino = '$idDestinoFinal',
         distanciaOrigenDestinoMillas = '$distanciaOrigenDestinoMillas',
         distanciaOrigenDestinoKms = '$distanciaOrigenDestinoKms',
         tiempoRecorridoOrigenDestino = '$tiempoRecorridoOrigenDestino',
@@ -310,6 +325,16 @@ if (isset($_POST['update'])) {
         pesoTarifario = '$pesoTarifario',
         valorMercanciaUSD = '$valorMercanciaUSD',
         valorMercanciaMXN = '$valorMercanciaMXN',
+        subtotalOrigen = '$subtotalOrigen',
+        totalOrigenAll = '$totalOrigenAll',
+        lugarDestino = '$lugarDestino',
+        subtotalDestinoUsd = '$subtotalDestinoUsd',
+        subtotalDestinoMx = '$subtotalDestinoMx',
+        impuestosDestinoUsd = '$impuestosDestinoUsd',
+        impuestosDestinoMx = '$impuestosDestinoMx',
+        totalDestinoUsd = '$totalDestinoUsd',
+        totalDestinoMx = '$totalDestinoMx',
+        valorTotalFlete = '$valorTotalFlete',
         subtotalFlete = '$subtotalFlete',
         impuestosFlete = '$impuestosFlete',
         retencionFlete = '$retencionFlete',
@@ -378,14 +403,14 @@ if (isset($_POST['update'])) {
 
         if (!empty($_POST['gastosOrigen']) && is_array($_POST['gastosOrigen'])) {
             foreach ($_POST['gastosOrigen'] as $i => $concepto) {
-                $concepto_val = mysqli_real_escape_string($con, $concepto);
-                $min_val = mysqli_real_escape_string($con, $_POST['minimoOrigen'][$i]);
-                $am_val = mysqli_real_escape_string($con, $_POST['amountOrigen'][$i]);
-                $tot_val = mysqli_real_escape_string($con, $_POST['totalOrigen'][$i]);
-                $usd_val = mysqli_real_escape_string($con, $_POST['usdOrigen'][$i]);
+                $concepto_val = isset($concepto) ? mysqli_real_escape_string($con, $concepto) : '';
+                $min_val = isset($_POST['minimoOrigen'][$i]) ? mysqli_real_escape_string($con, $_POST['minimoOrigen'][$i]) : '';
+                $am_val = isset($_POST['amountOrigen'][$i]) ? mysqli_real_escape_string($con, $_POST['amountOrigen'][$i]) : '';
+                $tot_val = isset($_POST['totalOrigen'][$i]) ? mysqli_real_escape_string($con, $_POST['totalOrigen'][$i]) : '';
+                $usd_val = isset($_POST['usdOrigen'][$i]) ? mysqli_real_escape_string($con, $_POST['usdOrigen'][$i]) : '';
 
                 $sql_origen = "INSERT INTO gastosorigenaereoimpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen)
-                                 VALUES ('$id', '$concepto_val', '$min_val', '$am_val', '$tot_val', '$usd_val')";
+                               VALUES ('$id', '$concepto_val', '$min_val', '$am_val', '$tot_val', '$usd_val')";
                 mysqli_query($con, $sql_origen);
             }
         }
