@@ -42,11 +42,11 @@ if (isset($_SESSION['email'])) {
         exit();
     }
 } else {
-        $_SESSION['alert'] = [
-            'message' => 'Para acceder debes iniciar sesión primero',
-            'title' => 'SESIÓN NO INICIADA',
-            'icon' => 'info'
-        ];
+    $_SESSION['alert'] = [
+        'message' => 'Para acceder debes iniciar sesión primero',
+        'title' => 'SESIÓN NO INICIADA',
+        'icon' => 'info'
+    ];
     header('Location: login.php');
     exit();
 }
@@ -84,11 +84,23 @@ if (isset($_SESSION['email'])) {
                                 <table id="miTabla" class="table table-bordered table-striped" style="width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <?php
+                                            if ($_SESSION['rol'] == 1) {
+                                            ?>
+                                                <th>#</th>
+                                            <?php
+                                            }
+                                            ?>
                                             <th>Nombre</th>
                                             <th>Correo</th>
                                             <th>Rol</th>
-                                            <th>Acción</th>
+                                            <?php
+                                            if ($_SESSION['rol'] == 1) {
+                                            ?>
+                                                <th>Acción</th>
+                                            <?php
+                                            }
+                                            ?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -99,9 +111,15 @@ if (isset($_SESSION['email'])) {
                                             foreach ($query_run as $registro) {
                                         ?>
                                                 <tr>
-                                                    <td>
-                                                        <p><?= $registro['id']; ?></p>
-                                                    </td>
+                                                    <?php
+                                                    if ($_SESSION['rol'] == 1) {
+                                                    ?>
+                                                        <td>
+                                                            <p><?= $registro['id']; ?></p>
+                                                        </td>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                     <td>
                                                         <p><?= $registro['nombre']; ?> <?= $registro['apellidop']; ?> <?= $registro['apellidom']; ?></p>
                                                     </td>
@@ -110,31 +128,36 @@ if (isset($_SESSION['email'])) {
                                                     </td>
                                                     <td>
                                                         <p><?php
-                                                            if ($registro['rol'] === '1') {
+                                                            if ($registro['rol'] == '1') {
                                                                 echo "Administrador/a";
-                                                            } else if ($registro['rol'] === '2') {
+                                                            } else if ($registro['rol'] == '2') {
                                                                 echo "Colaborador/a";
-                                                            } else if ($registro['rol'] === '3') {
+                                                            } else if ($registro['rol'] == '3') {
                                                                 echo "Cliente/a";
                                                             } else {
                                                                 echo "Error, contacte a soporte";
                                                             }
                                                             ?></p>
                                                     </td>
-                                                    <td>
-                                                        <?php
-                                                        if ($registro['id'] != 0) {
+                                                    <?php
+                                                    if ($_SESSION['rol'] == 1) {
+                                                    ?>
+                                                        <td>
 
-                                                        ?>
                                                             <a href="editarusuario.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
-
-                                                            <form action="codeusuarios.php" method="POST" class="d-inline">
-                                                                <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
-                                                            </form>
-                                                        <?php
-                                                        }
-                                                        ?>
-                                                    </td>
+                                                            <?php
+                                                            if ($registro['email'] != 'crispin@lysce.com.mx') {
+                                                            ?>
+                                                                <form action="codeusuarios.php" method="POST" class="d-inline">
+                                                                    <button type="submit" name="delete" value="<?= $registro['id']; ?>" class="btn btn-danger btn-sm m-1"><i class="bi bi-trash-fill"></i></button>
+                                                                </form>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                 </tr>
                                         <?php
                                             }

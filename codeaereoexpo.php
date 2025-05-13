@@ -4,20 +4,20 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 
 if (isset($_POST['delete'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
 
-    $delete_gastos = "DELETE FROM gastosaereoimpo WHERE idAereo='$id'";
-    $delete_incrementables = "DELETE FROM incrementablesaereoimpo WHERE idAereo='$id'";
-    $delete_descripcion = "DELETE FROM descripcionmercanciasaereoimpo WHERE idAereo='$id'";
-    $delete_destino = "DELETE FROM gastosdestinoaereoimpo WHERE idAereo='$id'";
-    $delete_origen = "DELETE FROM gastosorigenaereoimpo WHERE idAereo='$id'";
+    $delete_gastos = "DELETE FROM gastosaereoexpo WHERE idAereo='$id'";
+    $delete_incrementables = "DELETE FROM incrementablesaereoexpo WHERE idAereo='$id'";
+    $delete_descripcion = "DELETE FROM descripcionmercanciasaereoexpo WHERE idAereo='$id'";
+    $delete_destino = "DELETE FROM gastosdestinoaereoexpo WHERE idAereo='$id'";
+    $delete_origen = "DELETE FROM gastosorigenaereoexpo WHERE idAereo='$id'";
 
-    $delete_ftl = "DELETE FROM aereo WHERE id='$id'";
+    $delete_ftl = "DELETE FROM aereoexpo WHERE id='$id'";
 
     $query_run_gastos = mysqli_query($con, $delete_gastos);
     $query_run_incrementables = mysqli_query($con, $delete_incrementables);
@@ -31,7 +31,7 @@ if (isset($_POST['delete'])) {
             'title' => 'ELIMINADO EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: aereo-importacion.php");
+        header("Location: aereo-exportacion.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -39,7 +39,7 @@ if (isset($_POST['delete'])) {
             'title' => 'ERROR AL ELIMINAR',
             'icon' => 'error'
         ];
-        header("Location: aereo-importacion.php");
+        header("Location: aereo-exportacion.php");
         exit(0);
     }
 }
@@ -98,10 +98,10 @@ if (isset($_POST['save'])) {
     $retencionFlete = get_post_value($con, 'retencionFlete');
     $totalCotizacionNumero = get_post_value($con, 'totalCotizacionNumero');
     $totalCotizacionTexto = get_post_value($con, 'totalCotizacionTexto', '');
-    $tipoAereoImpo = get_post_value($con, 'tipoAereoImpo', '');
+    $tipoAereoExpo = get_post_value($con, 'tipoAereoExpo', '');
     $observaciones = get_post_value($con, 'observaciones', '');
 
-    $sql = "INSERT INTO aereo (
+    $sql = "INSERT INTO aereoexpo (
         identificador, asignado, fecha, idCliente, idOrigen, idDestino, idDestinoFinal,
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino,
         servicio, totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms,
@@ -111,7 +111,7 @@ if (isset($_POST['save'])) {
         impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd, totalDestinoMx,
         valorTotalFlete, totalIncrementableUsd, totalIncrementableMx,
         subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero,
-        totalCotizacionTexto, tipoAereoImpo, observaciones
+        totalCotizacionTexto, tipoAereoExpo, observaciones
     ) VALUES (
         '$identificador', '$email', '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino',
@@ -122,7 +122,7 @@ if (isset($_POST['save'])) {
         '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd', '$totalDestinoMx',
         '$valorTotalFlete', '$totalIncrementableUsd', '$totalIncrementableMx',
         '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero',
-        '$totalCotizacionTexto', '$tipoAereoImpo', '$observaciones'
+        '$totalCotizacionTexto', '$tipoAereoExpo', '$observaciones'
     )";
 
 
@@ -164,7 +164,7 @@ if (isset($_POST['save'])) {
             $kilogramos_val = get_post_array_value($con, $kilogramos, $i);
             $valorFactura_val = get_post_array_value($con, $valorFactura, $i);
 
-            $sql_detalle = "INSERT INTO descripcionmercanciasaereoimpo (
+            $sql_detalle = "INSERT INTO descripcionmercanciasaereoexpo (
                 idAereo, cantidad, unidadMedida, descripcion, 
                 largoCm, anchoCm, altoCm, largoPlg, anchoPlg, altoPlg, 
                 piesCubicos, metrosCubicos, libras, kilogramos, valorFactura
@@ -191,7 +191,7 @@ if (isset($_POST['save'])) {
                 $totales = isset($totalOrigen[$i]) ? mysqli_real_escape_string($con, $totalOrigen[$i]) : '';
                 $usds = isset($usdOrigen[$i]) ? mysqli_real_escape_string($con, $usdOrigen[$i]) : '';
 
-                $sql_origen = "INSERT INTO gastosorigenaereoimpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen)
+                $sql_origen = "INSERT INTO gastosorigenaereoexpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen)
                                VALUES ('$idAereo', '$origenes', '$minimos', '$amounts', '$totales', '$usds')";
 
                 mysqli_query($con, $sql_origen);
@@ -209,7 +209,7 @@ if (isset($_POST['save'])) {
                 $usDestino = get_post_array_value($con, $usdDestino, $i);
                 $mxDestino = get_post_array_value($con, $mxnDestino, $i);
 
-                $sql_destino = "INSERT INTO gastosdestinoaereoimpo (idAereo, gastoDestino, usdDestino, mxnDestino) VALUES ('$idAereo', '$destinos', '$usDestino', '$mxDestino')";
+                $sql_destino = "INSERT INTO gastosdestinoaereoexpo (idAereo, gastoDestino, usdDestino, mxnDestino) VALUES ('$idAereo', '$destinos', '$usDestino', '$mxDestino')";
 
                 mysqli_query($con, $sql_destino);
             }
@@ -225,7 +225,7 @@ if (isset($_POST['save'])) {
                 $incrementableUsd = get_post_array_value($con, $incrementablesUsd, $i);
                 $incrementableMx = get_post_array_value($con, $incrementablesMx, $i);
 
-                $sql_incrementable = "INSERT INTO incrementablesaereoimpo (idAereo, incrementable, incrementableUsd, incrementableMx) 
+                $sql_incrementable = "INSERT INTO incrementablesaereoexpo (idAereo, incrementable, incrementableUsd, incrementableMx) 
                                       VALUES ('$idAereo', '$incrementable', '$incrementableUsd', '$incrementableMx')";
 
                 mysqli_query($con, $sql_incrementable);
@@ -242,7 +242,7 @@ if (isset($_POST['save'])) {
                 $monto = get_post_array_value($con, $montoGasto, $i);
                 $iva = isset($ivaGasto[$i]) ? 1 : 0;
 
-                $sql_gasto = "INSERT INTO gastosaereoimpo (idAereo, conceptoGasto, montoGasto, ivaGasto) VALUES ('$idAereo', '$concepto', '$monto', '$iva')";
+                $sql_gasto = "INSERT INTO gastosaereoexpo (idAereo, conceptoGasto, montoGasto, ivaGasto) VALUES ('$idAereo', '$concepto', '$monto', '$iva')";
                 mysqli_query($con, $sql_gasto);
             }
         }
@@ -251,7 +251,7 @@ if (isset($_POST['save'])) {
             'title' => 'COTIZACIÓN REGISTRADA EXITOSAMENTE',
             'icon' => 'success'
         ];
-        header("Location: aereo-importacion.php");
+        header("Location: aereo-exportacion.php");
         exit(0);
     } else {
         $_SESSION['alert'] = [
@@ -259,7 +259,7 @@ if (isset($_POST['save'])) {
             'title' => 'ERROR AL CREAR LA COTIZACIÓN',
             'icon' => 'error'
         ];
-        header("Location: aereo-importacion.php");
+        header("Location: aereo-exportacion.php");
         exit(0);
     }
 }
@@ -311,9 +311,9 @@ if (isset($_POST['update'])) {
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
     $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
     $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
-    $tipoAereoImpo = mysqli_real_escape_string($con, $_POST['tipoAereoImpo']);
+    $tipoAereoExpo = mysqli_real_escape_string($con, $_POST['tipoAereoExpo']);
 
-    $sql = "UPDATE aereo SET 
+    $sql = "UPDATE aereoexpo SET 
         identificador = '$identificador',
         fecha = '$fecha',
         idCliente = '$idCliente',
@@ -356,7 +356,7 @@ if (isset($_POST['update'])) {
         observaciones = '$observaciones',
         totalIncrementableUsd = '$totalIncrementableUsd',
         totalIncrementableMx = '$totalIncrementableMx',
-        tipoAereoImpo = '$tipoAereoImpo'
+        tipoAereoExpo = '$tipoAereoExpo'
     WHERE id = '$id'";
 
     $query_run = mysqli_query($con, $sql);
@@ -365,11 +365,11 @@ if (isset($_POST['update'])) {
         // Actualizar tablas relacionadas
 
         // Eliminar registros actuales y volver a insertar (Alternativa: UPDATE)
-        mysqli_query($con, "DELETE FROM descripcionmercanciasaereoimpo WHERE idAereo = '$id'");
-        mysqli_query($con, "DELETE FROM incrementablesaereoimpo WHERE idAereo = '$id'");
-        mysqli_query($con, "DELETE FROM gastosorigenaereoimpo WHERE idAereo = '$id'");
-        mysqli_query($con, "DELETE FROM gastosdestinoaereoimpo WHERE idAereo = '$id'");
-        mysqli_query($con, "DELETE FROM gastosaereoimpo WHERE idAereo = '$id'");
+        mysqli_query($con, "DELETE FROM descripcionmercanciasaereoexpo WHERE idAereo = '$id'");
+        mysqli_query($con, "DELETE FROM incrementablesaereoexpo WHERE idAereo = '$id'");
+        mysqli_query($con, "DELETE FROM gastosorigenaereoexpo WHERE idAereo = '$id'");
+        mysqli_query($con, "DELETE FROM gastosdestinoaereoexpo WHERE idAereo = '$id'");
+        mysqli_query($con, "DELETE FROM gastosaereoexpo WHERE idAereo = '$id'");
 
         // Insertar nueva información
         foreach ($_POST['cantidad'] as $i => $cantidad) {
@@ -389,7 +389,7 @@ if (isset($_POST['update'])) {
             $valorFactura_val = mysqli_real_escape_string($con, $_POST['valorFactura'][$i]);
 
             // Actualizar los registros en la tabla descripcionmercanciasftl
-            $sql_detalle = "INSERT INTO descripcionmercanciasaereoimpo (
+            $sql_detalle = "INSERT INTO descripcionmercanciasaereoexpo (
                 idAereo, cantidad, unidadMedida, descripcion,
                 largoCm, anchoCm, altoCm, largoPlg, anchoPlg, altoPlg,
                 piesCubicos, metrosCubicos, libras, kilogramos, valorFactura
@@ -408,7 +408,7 @@ if (isset($_POST['update'])) {
                 $usd_val = mysqli_real_escape_string($con, $_POST['usdDestino'][$i]);
                 $mxn_val = mysqli_real_escape_string($con, $_POST['mxnDestino'][$i]);
 
-                $sql_destino = "INSERT INTO gastosdestinoaereoimpo (idAereo, gastoDestino, usdDestino, mxnDestino)
+                $sql_destino = "INSERT INTO gastosdestinoaereoexpo (idAereo, gastoDestino, usdDestino, mxnDestino)
                                  VALUES ('$id', '$concepto_val', '$usd_val', '$mxn_val')";
                 mysqli_query($con, $sql_destino);
             }
@@ -422,7 +422,7 @@ if (isset($_POST['update'])) {
                 $tot_val = isset($_POST['totalOrigen'][$i]) ? mysqli_real_escape_string($con, $_POST['totalOrigen'][$i]) : '';
                 $usd_val = isset($_POST['usdOrigen'][$i]) ? mysqli_real_escape_string($con, $_POST['usdOrigen'][$i]) : '';
 
-                $sql_origen = "INSERT INTO gastosorigenaereoimpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen)
+                $sql_origen = "INSERT INTO gastosorigenaereoexpo (idAereo, gastosOrigen, minimoOrigen, amountOrigen, totalOrigen, usdOrigen)
                                VALUES ('$id', '$concepto_val', '$min_val', '$am_val', '$tot_val', '$usd_val')";
                 mysqli_query($con, $sql_origen);
             }
@@ -434,7 +434,7 @@ if (isset($_POST['update'])) {
                 $usd_val = mysqli_real_escape_string($con, $_POST['incrementableUsd'][$i]);
                 $mx_val = mysqli_real_escape_string($con, $_POST['incrementableMx'][$i]);
 
-                $sql_incrementable = "INSERT INTO incrementablesaereoimpo (idAereo, incrementable, incrementableUsd, incrementableMx)
+                $sql_incrementable = "INSERT INTO incrementablesaereoexpo (idAereo, incrementable, incrementableUsd, incrementableMx)
                                       VALUES ('$id', '$incrementable_val', '$usd_val', '$mx_val')";
                 mysqli_query($con, $sql_incrementable);
             }
@@ -447,7 +447,7 @@ if (isset($_POST['update'])) {
                 $monto_val = mysqli_real_escape_string($con, $_POST['montoGasto'][$i]);
                 $iva_val = isset($_POST['ivaGasto'][$i]) ? 1 : 0;
 
-                $sql_gasto = "INSERT INTO gastosaereoimpo (idAereo, conceptoGasto, montoGasto, ivaGasto)
+                $sql_gasto = "INSERT INTO gastosaereoexpo (idAereo, conceptoGasto, montoGasto, ivaGasto)
                               VALUES ('$id', '$concepto_val', '$monto_val', '$iva_val')";
                 mysqli_query($con, $sql_gasto);
             }
@@ -455,11 +455,11 @@ if (isset($_POST['update'])) {
 
 
         $_SESSION['alert'] = ['title' => "COTIZACIÓN ACTUALIZADA EXITOSAMENTE", 'icon' => 'success'];
-        header("Location: aereo-importacion.php");
+        header("Location: aereo-exportacion.php");
         exit;
     } else {
         $_SESSION['alert'] = ['title' => 'ERROR AL ACTUALIZAR', 'icon' => 'error'];
-        header("Location: aereo-importacion.php");
+        header("Location: aereo-exportacion.php");
         exit;
     }
 }

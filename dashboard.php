@@ -51,15 +51,55 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
-$query = "SELECT COUNT(*) AS total FROM ftl";
-$result = mysqli_query($con, $query);
-$row = mysqli_fetch_assoc($result);
-$totalFTL = $row['total'];
+// Crear los 12 meses del año actual
+$meses = [];
+for ($i = 1; $i <= 12; $i++) {
+    $meses[] = date('Y') . '-' . str_pad($i, 2, '0', STR_PAD_LEFT); // Ej: 2025-01
+}
 
-$query_aereo_impo = "SELECT COUNT(*) AS totalaereoimpo FROM aereo";
-$result_aereo_impo = mysqli_query($con, $query_aereo_impo);
-$row_aereo_impo = mysqli_fetch_assoc($result_aereo_impo);
-$total_aereo_impo = $row_aereo_impo['totalaereoimpo'];
+// Inicializar estructura con 0
+$data = [];
+foreach ($meses as $mes) {
+    $data[$mes] = ['ftl' => 0, 'ltl' => 0, 'aereo' => 0, 'aereoexpo' => 0];
+}
+
+// Consulta para obtener los conteos por mes y tipo
+$sql = "
+    SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'ftl' AS tipo FROM ftl WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
+    UNION ALL
+    SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'ltl' AS tipo FROM ltl WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
+    UNION ALL
+    SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'aereo' AS tipo FROM aereo WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
+    UNION ALL
+    SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'aereoexpo' AS tipo FROM aereoexpo WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
+";
+
+
+$resultado = $con->query($sql);
+
+// Llenar los datos reales
+while ($row = $resultado->fetch_assoc()) {
+    $mes = $row['mes'];
+    $tipo = $row['tipo'];
+    $total = (int)$row['total'];
+
+    if (isset($data[$mes])) {
+        $data[$mes][$tipo] = $total;
+    }
+}
+
+// Preparar para Chart.js
+$labels = array_keys($data);
+$ftl = [];
+$ltl = [];
+$aereo = [];
+
+foreach ($data as $mes => $valores) {
+    $ftl[] = $valores['ftl'];
+    $ltl[] = $valores['ltl'];
+    $aereo[] = $valores['aereo'];
+    $aereoexpo[] = $valores['aereoexpo'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,87 +123,10 @@ $total_aereo_impo = $row_aereo_impo['totalaereoimpo'];
                 <div class="row mt-4 mb-5 justify-content-center align-items-center">
                     <div class="col-12 mb-3">
                         <h3>DASHBOARD</h3>
+                        <p style="color:rgb(180, 180, 180);">Registro de cotizaciones por mes</p>
                     </div>
-                    <div class="col-12 col-md-2 text-center">
-                        <a href="ftl.php" style="text-decoration: none;">
-                            <div class="card border-dark mb-3">
-                                <div class="card-header bg-dark">
-                                    <p style="color: #ffffff;">FTL</p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <h3 class="card-title"><?php echo $totalFTL; ?></h3>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-2 text-center">
-                        <a href="ltl.php" style="text-decoration: none;">
-                            <div class="card border-dark mb-3">
-                                <div class="card-header bg-dark">
-                                    <p style="color: #ffffff;">LTL</p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <h3 class="card-title"><?php echo $totalFTL; ?></h3>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-2 text-center">
-                        <a href="aereo-importacion.php" style="text-decoration: none;">
-                            <div class="card border-dark mb-3">
-                                <div class="card-header bg-dark">
-                                    <p style="color: #ffffff;">AÉREO IMPO</p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <h3 class="card-title"><?php echo $total_aereo_impo; ?></h3>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-2 text-center">
-                        <a href="aereo-exportacion.php" style="text-decoration: none;">
-                            <div class="card border-dark mb-3">
-                                <div class="card-header bg-dark">
-                                    <p style="color: #ffffff;">AÉREO EXPO</p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <h3 class="card-title"><?php echo $totalFTL; ?></h3>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-2 text-center">
-                        <a href="lcl.php" style="text-decoration: none;">
-                            <div class="card border-dark mb-3">
-                                <div class="card-header bg-dark">
-                                    <p style="color: #ffffff;">LCL</p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <h3 class="card-title"><?php echo $totalFTL; ?></h3>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-2 text-center">
-                        <a href="fcl.php" style="text-decoration: none;">
-                            <div class="card border-dark mb-3">
-                                <div class="card-header bg-dark">
-                                    <p style="color: #ffffff;">FCL</p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <h3 class="card-title"><?php echo $totalFTL; ?></h3>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <canvas id="graficaPie" width="400" height="400"></canvas>
+                    <div class="col-12 col-md-10">
+                        <canvas id="lineChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -177,29 +140,77 @@ $total_aereo_impo = $row_aereo_impo['totalaereoimpo'];
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var ctx = document.getElementById('graficaPie').getContext('2d');
-            var graficaPie = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['FTL', 'Aéreo Importación'],
-                    datasets: [{
-                        data: [<?php echo $totalFTL; ?>, <?php echo $total_aereo_impo; ?>],
-                        backgroundColor: ['#4287f5', '#f56c42'], // Colores de la gráfica
-                        hoverOffset: 4
-                    }]
+        const ctx = document.getElementById('lineChart').getContext('2d');
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?= json_encode($labels) ?>,
+                datasets: [{
+                        label: 'FTL',
+                        data: <?= json_encode($ftl) ?>,
+                        borderColor: 'rgb(236, 117, 117)',
+                        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointBackgroundColor: 'rgba(236, 117, 117, 0.5)',
+                        pointBorderColor: 'rgb(236, 117, 117)',
+                        pointHoverRadius: 13,
+                    },
+                    {
+                        label: 'LTL',
+                        data: <?= json_encode($ltl) ?>,
+                        borderColor: 'rgb(44, 129, 185)',
+                        backgroundColor: 'rgba(17, 40, 56, 0.1)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointBackgroundColor: 'rgba(44, 129, 185, 0.5)',
+                        pointBorderColor: 'rgb(44, 129, 185)',
+                        pointHoverRadius: 13,
+                    },
+                    {
+                        label: 'Aéreo',
+                        data: <?= json_encode($aereo) ?>,
+                        borderColor: 'rgb(83, 170, 116)',
+                        backgroundColor: 'rgba(83, 170, 116, 0.1)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointBackgroundColor: 'rgba(83, 170, 116, 0.5)',
+                        pointBorderColor: 'rgb(83, 170, 116)',
+                        pointHoverRadius: 13,
+                    },
+                    {
+                        label: 'Aéreo Expo',
+                        data: <?= json_encode($aereoexpo) ?>,
+                        borderColor: 'rgb(255, 193, 7)',
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointBackgroundColor: 'rgba(255, 193, 7, 0.5)',
+                        pointBorderColor: 'rgb(255, 193, 7)',
+                        pointHoverRadius: 13,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top'
-                        }
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            });
+            }
         });
     </script>
+
 </body>
 
 </html>

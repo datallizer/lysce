@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
     p_final.correo AS final_email,
     p_final.rfc AS final_tax
 FROM 
-    aereo a
+    aereoexpo a
 LEFT JOIN 
     clientes c ON a.idCliente = c.id
 LEFT JOIN 
@@ -90,7 +90,7 @@ WHERE
     a.id = $id;
 ";
 
-    $query_mercancias = "SELECT * FROM descripcionmercanciasaereoimpo WHERE idAereo = $id";
+    $query_mercancias = "SELECT * FROM descripcionmercanciasaereoexpo WHERE idAereo = $id";
     $resultado_mercancias = mysqli_query($con, $query_mercancias);
 
     $mercancias_html = '';
@@ -118,7 +118,7 @@ WHERE
         }
     }
 
-    $query_origen = "SELECT * FROM gastosorigenaereoimpo WHERE idAereo = $id";
+    $query_origen = "SELECT * FROM gastosorigenaereoexpo WHERE idAereo = $id";
     $resultado_origen = mysqli_query($con, $query_origen);
 
     $origen_html = '';
@@ -137,7 +137,7 @@ WHERE
         }
     }
 
-    $query_destino = "SELECT * FROM gastosdestinoaereoimpo WHERE idAereo = $id";
+    $query_destino = "SELECT * FROM gastosdestinoaereoexpo WHERE idAereo = $id";
     $resultado_destino = mysqli_query($con, $query_destino);
 
     $destino_html = '';
@@ -178,7 +178,7 @@ WHERE
     }
 
 
-    $query_incrementables = "SELECT incrementable, incrementableUSD, incrementableMx FROM incrementablesaereoimpo WHERE idAereo = $id";
+    $query_incrementables = "SELECT incrementable, incrementableUSD, incrementableMx FROM incrementablesaereoexpo WHERE idAereo = $id";
     $resultado_incrementables = mysqli_query($con, $query_incrementables);
 
     $incrementables_html = '';
@@ -193,7 +193,7 @@ WHERE
         }
     }
 
-    $query_gasto = "SELECT * FROM gastosaereoimpo WHERE idAereo = $id";
+    $query_gasto = "SELECT * FROM gastosaereoexpo WHERE idAereo = $id";
     $resultado_gasto = mysqli_query($con, $query_gasto);
 
     $gasto_html = '';
@@ -219,7 +219,7 @@ WHERE
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="https://lysce.com.mx/images/ics.ico">
-    <title>Cotización AEREO IMPORTACIÓN | LYSCE</title>
+    <title>Cotización AEREO EXPORTACIÓN | LYSCE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -278,7 +278,7 @@ WHERE
         </tr>
     </table>
     <br>
-    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoAereoImpo'] . '</b></p>
+    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoAereoExpo'] . '</b></p>
     <table class="table">
         <tr>
             <td colspan="3"><b>Cliente</b>
@@ -536,5 +536,5 @@ WHERE
 
     // Salida del PDF (descarga)
     $cliente_nombre_sin_espacios = str_replace(' ', '_', $registro['cliente_nombre']);
-    $dompdf->stream('cotizacion_AEREO_IMPO_' . $cliente_nombre_sin_espacios . '_' . $registro['identificador'] . '.pdf', ['Attachment' => true]);
+    $dompdf->stream('cotizacion_AEREO_EXPO_' . $cliente_nombre_sin_espacios . '_' . $registro['identificador'] . '.pdf', ['Attachment' => true]);
 }

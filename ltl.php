@@ -138,6 +138,10 @@ if (isset($_SESSION['email'])) {
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
+                                                $linkHabilitado = $registro['cliente_nombre'] !== null &&
+                                                    $registro['origen_nombre'] !== null &&
+                                                    $registro['destino_nombre'] !== null &&
+                                                    $registro['final_nombre'] !== null;
                                         ?>
                                                 <tr>
                                                     <td>
@@ -159,8 +163,11 @@ if (isset($_SESSION['email'])) {
                                                         <p><?= $registro['fecha']; ?></p>
                                                     </td>
                                                     <td style="width: 105px;text-align:center;">
-                                                    <a href="generate_ltl.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1">
-                                                            <i class="bi bi-download"></i>
+
+                                                        <a href="<?= $linkHabilitado ? 'generate_ltl.php?id=' . $registro['id'] : '#' ?>"
+                                                            class="file-download btn btn-sm m-1 <?= $linkHabilitado ? 'btn-primary' : 'btn-secondary disabled' ?>"
+                                                            <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
+                                                            <i class="bi bi-file-earmark-arrow-down-fill"></i>
                                                         </a>
 
                                                         <a href="editar-ltl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
@@ -199,7 +206,7 @@ if (isset($_SESSION['email'])) {
 
                                                                             <div class="col-3 mb-4 text-end">
                                                                                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                                                                                <p>LYSCE-<?= str_pad($ltl['id'], 5, '0', STR_PAD_LEFT); ?></p>
+                                                                                <p>Folio: <span style="color:rgb(130, 39, 39);text-transform:uppercase"><?= $ltl['identificador']; ?></span></p>
                                                                                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
                                                                                 <p><?= $ltl['fecha']; ?></p>
                                                                             </div>
@@ -664,7 +671,7 @@ if (isset($_SESSION['email'])) {
 
 
 
-                                                    
+
 
                                                     </td>
                                                 </tr>

@@ -83,7 +83,7 @@ if (isset($_SESSION['email'])) {
                                             </div>
                                             <div class="col-3 mb-3">
                                                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                                                <input class="form-control" value="LYSCE-<?= $registro['id']; ?>" disabled>
+                                                <input class="form-control" name="identificador" value="<?= $registro['identificador']; ?>">
                                                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
                                                 <input class="form-control" type="text" name="fecha" id="" value="<?= $registro['fecha']; ?>">
                                             </div>

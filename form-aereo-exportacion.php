@@ -59,7 +59,7 @@ if (isset($_SESSION['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico">
-    <title>Áereo importación | LYSCE</title>
+    <title>Áereo exportación | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -70,7 +70,7 @@ if (isset($_SESSION['email'])) {
     <div id="layoutSidenav">
         <div id="layoutSidenav_content">
             <div class="container-fluid p-5">
-                <form action="codeaereo.php" method="POST" class="row justify-content-evenly">
+                <form action="codeaereoexpo.php" method="POST" class="row justify-content-evenly">
                     <div class="col-3 mb-3 text-center">
                         <img style="width: 70%;" src="images/logo.png" alt="">
                         <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
@@ -88,10 +88,10 @@ if (isset($_SESSION['email'])) {
                         <input class="form-control" type="text" name="fecha" id="expedicion" value="">
                     </div>
                         <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                            <select class="form-select bg-warning" name="tipoAereoImpo" required>
+                            <select class="form-select bg-warning" name="tipoAereoExpo" required>
                                 <option selected>Selecciona un servicio</option>
                                 <?php
-                                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereoimpo'";
+                                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereoexpo'";
                                 $result = mysqli_query($con, $query);
 
                                 if (mysqli_num_rows($result) > 0) {
@@ -667,7 +667,7 @@ if (isset($_SESSION['email'])) {
                     </div>
 
                     <div class="modal-footer mt-5">
-                        <a href="aereo-importacion.php" class="btn btn-secondary m-1">Cancelar</a>
+                        <a href="aereo-exportacion.php" class="btn btn-secondary m-1">Cancelar</a>
                         <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
                     </div>
                 </form>
@@ -1129,7 +1129,7 @@ if (isset($_SESSION['email'])) {
             <select class="form-select conceptoIncrementable" name="incrementable[]" onchange="actualizarConceptoGasto(this)">
                 <option selected>Selecciona un incrementable</option>
                 <?php
-                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'aereoimpo'";
+                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'aereoexpo'";
                 $result = mysqli_query($con, $query);
 
                 if (mysqli_num_rows($result) > 0) {

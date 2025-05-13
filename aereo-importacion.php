@@ -108,6 +108,7 @@ if (isset($_SESSION['email'])) {
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Tipo</th>
                                             <th>Cliente</th>
                                             <th>Origen</th>
                                             <th>Destino</th>
@@ -139,6 +140,10 @@ if (isset($_SESSION['email'])) {
                                         $query_run = mysqli_query($con, $query);
                                         if (mysqli_num_rows($query_run) > 0) {
                                             foreach ($query_run as $registro) {
+                                                $linkHabilitado = $registro['cliente_nombre'] !== null &&
+                                                    $registro['origen_nombre'] !== null &&
+                                                    $registro['destino_nombre'] !== null &&
+                                                    $registro['final_nombre'] !== null;
                                         ?>
                                                 <tr>
                                                     <td>
@@ -159,8 +164,16 @@ if (isset($_SESSION['email'])) {
                                                     <td>
                                                         <p><?= $registro['final_nombre']; ?></p>
                                                     </td>
+
+                                                    <td>
+                                                        <p><?= $registro['fecha']; ?></p>
+                                                    </td>
                                                     <td style="width: 105px;text-align:center;">
-                                                        <a href="generate_aereo_impo.php?id=<?= $registro['id']; ?>" class="file-download btn btn-primary btn-sm m-1"><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
+                                                        <a href="<?= $linkHabilitado ? 'generate_aereo_impo.php?id=' . $registro['id'] : '#' ?>"
+                                                            class="file-download btn btn-sm m-1 <?= $linkHabilitado ? 'btn-primary' : 'btn-secondary disabled' ?>"
+                                                            <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
+                                                            <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                                                        </a>
 
                                                         <a href="editar-aereo-impo.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
@@ -181,7 +194,7 @@ if (isset($_SESSION['email'])) {
                                                                     $query_run = mysqli_query($con, $query);
 
                                                                     if (mysqli_num_rows($query_run) > 0) {
-                                                                        $ftl = mysqli_fetch_array($query_run);
+                                                                        $aereoimpo = mysqli_fetch_array($query_run);
                                                                     ?>
                                                                         <div class="row justify-content-evenly g-0 p-3 w-100" style="max-height: 600px;overflow-y:scroll;">
 
@@ -199,19 +212,19 @@ if (isset($_SESSION['email'])) {
 
                                                                             <div class="col-3 mb-4 text-end">
                                                                                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                                                                                <p>LYSCE-<?= str_pad($ftl['id'], 5, '0', STR_PAD_LEFT); ?></p>
+                                                                                <p>Folio: <span style="color:rgb(130, 39, 39);text-transform:uppercase"><?= $aereoimpo['identificador']; ?></span></p>
                                                                                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
-                                                                                <p><?= $ftl['fecha']; ?></p>
+                                                                                <p><?= $aereoimpo['fecha']; ?></p>
                                                                             </div>
 
                                                                             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                                                                                <p><?= $ftl['tipoAereoImpo']; ?></p>
+                                                                                <p><?= $aereoimpo['tipoAereoImpo']; ?></p>
                                                                             </div>
 
                                                                             <div class="col-12 p-2 text-start" style="border: 1px solid #666666; border-bottom:0px;">
                                                                                 <p class="mb-1"><b>Cliente</b></p>
                                                                                 <?php
-                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idCliente]'";
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$aereoimpo[idCliente]'";
                                                                                 $query_run_client = mysqli_query($con, $query_client);
                                                                                 if (mysqli_num_rows($query_run_client) > 0) {
                                                                                     while ($client = mysqli_fetch_assoc($query_run_client)) {
@@ -233,7 +246,7 @@ if (isset($_SESSION['email'])) {
                                                                             <div class="col-4 p-2 text-start" style="border: 1px solid #666666;">
                                                                                 <p class="mb-1"><b>Origen</b></p>
                                                                                 <?php
-                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idOrigen]'";
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$aereoimpo[idOrigen]'";
                                                                                 $query_run_client = mysqli_query($con, $query_client);
                                                                                 if (mysqli_num_rows($query_run_client) > 0) {
                                                                                     while ($client = mysqli_fetch_assoc($query_run_client)) {
@@ -255,7 +268,7 @@ if (isset($_SESSION['email'])) {
                                                                             <div class="col-4 p-2 text-start" style="border: 1px solid #666666;">
                                                                                 <p class="mb-1"><b>Destino en frontera</b></p>
                                                                                 <?php
-                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idDestino]'";
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$aereoimpo[idDestino]'";
                                                                                 $query_run_client = mysqli_query($con, $query_client);
                                                                                 if (mysqli_num_rows($query_run_client) > 0) {
                                                                                     while ($client = mysqli_fetch_assoc($query_run_client)) {
@@ -277,7 +290,7 @@ if (isset($_SESSION['email'])) {
                                                                             <div class="col-4 p-2 text-start" style="border: 1px solid #666666;">
                                                                                 <p class="mb-1"><b>Destino Final</b></p>
                                                                                 <?php
-                                                                                $query_client = "SELECT * FROM clientes WHERE id='$ftl[idDestinoFinal]'";
+                                                                                $query_client = "SELECT * FROM clientes WHERE id='$aereoimpo[idDestinoFinal]'";
                                                                                 $query_run_client = mysqli_query($con, $query_client);
                                                                                 if (mysqli_num_rows($query_run_client) > 0) {
                                                                                     while ($client = mysqli_fetch_assoc($query_run_client)) {
@@ -300,24 +313,24 @@ if (isset($_SESSION['email'])) {
                                                                                 <div class="row justify-content-start">
                                                                                     <div class="col-8 text-start">
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Distancia:</b> <?= $ftl['distanciaOrigenDestinoMillas']; ?> millas <?= $ftl['distanciaOrigenDestinoKms']; ?> Kms
+                                                                                            <b>Distancia:</b> <?= $aereoimpo['distanciaOrigenDestinoMillas']; ?> millas <?= $aereoimpo['distanciaOrigenDestinoKms']; ?> Kms
                                                                                         </p>
 
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Tiempo / Recorrido:</b> <?= $ftl['tiempoRecorridoOrigenDestino']; ?>
+                                                                                            <b>Tiempo / Recorrido:</b> <?= $aereoimpo['tiempoRecorridoOrigenDestino']; ?>
                                                                                         </p>
 
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Operador:</b> <?= $ftl['servicio']; ?>
+                                                                                            <b>Operador:</b> <?= $aereoimpo['servicio']; ?>
                                                                                         </p>
                                                                                     </div>
                                                                                     <div class="col-4">
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Total CFT:</b> <?= $ftl['totalFt3']; ?>
+                                                                                            <b>Total CFT:</b> <?= $aereoimpo['totalFt3']; ?>
                                                                                         </p>
 
                                                                                         <p style="margin-bottom: 5px;">
-                                                                                            <b>Total m3:</b> <?= $ftl['totalM3']; ?>
+                                                                                            <b>Total m3:</b> <?= $aereoimpo['totalM3']; ?>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
@@ -325,19 +338,19 @@ if (isset($_SESSION['email'])) {
 
                                                                             <div class="col-5 mt-3 mb-3 text-end">
                                                                                 <p style="display: inline-block;margin-bottom: 5px;">
-                                                                                    <b>Distancia:</b> <?= $ftl['distanciaDestinoFinalMillas']; ?> millas <?= $ftl['distanciaDestinoFinalKms']; ?> Kms
+                                                                                    <b>Distancia:</b> <?= $aereoimpo['distanciaDestinoFinalMillas']; ?> millas <?= $aereoimpo['distanciaDestinoFinalKms']; ?> Kms
                                                                                 </p>
 
                                                                                 <p style="margin-bottom: 5px;">
-                                                                                    <b>Tiempo / Recorrido:</b> <?= $ftl['tiempoRecorridoDestinoFinal']; ?>
+                                                                                    <b>Tiempo / Recorrido:</b> <?= $aereoimpo['tiempoRecorridoDestinoFinal']; ?>
                                                                                 </p>
 
                                                                                 <p style="margin-bottom: 5px;">
-                                                                                    <b>Operador:</b> <?= $ftl['operador']; ?>
+                                                                                    <b>Operador:</b> <?= $aereoimpo['operador']; ?>
                                                                                 </p>
 
                                                                                 <p>
-                                                                                    <b>Unidad:</b> <?= $ftl['unidad']; ?>
+                                                                                    <b>Unidad:</b> <?= $aereoimpo['unidad']; ?>
                                                                                 </p>
 
                                                                             </div>
@@ -409,18 +422,18 @@ if (isset($_SESSION['email'])) {
 
                                                                                     <div class="row justify-content-evenly mt-3 mb-3">
                                                                                         <div class="col-2 text-center">
-                                                                                            <p>1 <?= $ftl['moneda']; ?> = <?= $ftl['valorMoneda']; ?></p>
+                                                                                            <p>1 <?= $aereoimpo['moneda']; ?> = <?= $aereoimpo['valorMoneda']; ?></p>
                                                                                         </div>
 
                                                                                         <div class="col-4">
-                                                                                            <p><b>Peso físico real:</b> <?= number_format($ftl['pesoFisicoReal'], 2, '.', ','); ?> Kgs</p>
-                                                                                            <p><b>Peso volumetrico:</b> <?= number_format($ftl['pesoVolumetrico'], 2, '.', ','); ?> Kgs</p>
-                                                                                            <p><b>Peso tarifario:</b> <?= number_format($ftl['pesoTarifario'], 2, '.', ','); ?> Kgs</p>
+                                                                                            <p><b>Peso físico real:</b> <?= number_format($aereoimpo['pesoFisicoReal'], 2, '.', ','); ?> Kgs</p>
+                                                                                            <p><b>Peso volumetrico:</b> <?= number_format($aereoimpo['pesoVolumetrico'], 2, '.', ','); ?> Kgs</p>
+                                                                                            <p><b>Peso tarifario:</b> <?= number_format($aereoimpo['pesoTarifario'], 2, '.', ','); ?> Kgs</p>
                                                                                         </div>
 
                                                                                         <div class="col-5 text-end p-3">
-                                                                                            <p><b>VALOR TOTAL DE LA MERCANCÍA USD: </b>$<?= number_format($ftl['valorMercanciaUSD'], 2, '.', ','); ?></p>
-                                                                                            <p><b>VALOR TOTAL DE LA MERCANCÍA MXN:</b> $<?= number_format($ftl['valorMercanciaMXN'], 2, '.', ','); ?></p>
+                                                                                            <p><b>VALOR TOTAL DE LA MERCANCÍA USD: </b>$<?= number_format($aereoimpo['valorMercanciaUSD'], 2, '.', ','); ?></p>
+                                                                                            <p><b>VALOR TOTAL DE LA MERCANCÍA MXN:</b> $<?= number_format($aereoimpo['valorMercanciaMXN'], 2, '.', ','); ?></p>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -430,7 +443,7 @@ if (isset($_SESSION['email'])) {
                                                                                 <div class="card">
                                                                                     <div class="card-header bg-secondary">
                                                                                         <p class="text-center" style="color: #fff;"><b>GASTOS POR TRASLADO DE MERCANCIAS A AEROPUERTO</b></p>
-                                                                                        <p style="text-transform: uppercase;" class="text-light">Lugar destino: <?= $ftl['lugarDestino']; ?></p>
+                                                                                        <p style="text-transform: uppercase;" class="text-light">Lugar destino: <?= $aereoimpo['lugarDestino']; ?></p>
                                                                                     </div>
                                                                                     <div class="row">
                                                                                         <div class="col-7">
@@ -483,12 +496,12 @@ if (isset($_SESSION['email'])) {
                                                                                                     ?>
                                                                                                     <tr>
                                                                                                         <td colspan="4" class="text-end"><b>Subtotal (HAWB, FSC-A, SSC-A)</b></td>
-                                                                                                        <td>$<?= number_format($ftl['subtotalOrigen'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['subtotalOrigen'], 2, '.', ','); ?></td>
                                                                                                     </tr>
 
                                                                                                     <tr>
                                                                                                         <td colspan="4" class="text-end"><b>Total</b></td>
-                                                                                                        <td>$<?= number_format($ftl['totalOrigenAll'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['totalOrigenAll'], 2, '.', ','); ?></td>
                                                                                                     </tr>
                                                                                                 </tbody>
                                                                                             </table>
@@ -533,20 +546,20 @@ if (isset($_SESSION['email'])) {
                                                                                                     ?>
                                                                                                     <tr>
                                                                                                         <td class="text-end"><b>Subtotal</b></td>
-                                                                                                        <td>$<?= number_format($ftl['subtotalDestinoUsd'], 2, '.', ','); ?></td>
-                                                                                                        <td>$<?= number_format($ftl['subtotalDestinoMx'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['subtotalDestinoUsd'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['subtotalDestinoMx'], 2, '.', ','); ?></td>
                                                                                                     </tr>
 
                                                                                                     <tr>
                                                                                                         <td class="text-end"><b>Impuestos</b></td>
-                                                                                                        <td>$<?= number_format($ftl['impuestosDestinoUsd'], 2, '.', ','); ?></td>
-                                                                                                        <td>$<?= number_format($ftl['impuestosDestinoMx'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['impuestosDestinoUsd'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['impuestosDestinoMx'], 2, '.', ','); ?></td>
                                                                                                     </tr>
 
                                                                                                     <tr>
                                                                                                         <td class="text-end"><b>Total</b></td>
-                                                                                                        <td>$<?= number_format($ftl['totalDestinoUsd'], 2, '.', ','); ?></td>
-                                                                                                        <td>$<?= number_format($ftl['totalDestinoMx'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['totalDestinoUsd'], 2, '.', ','); ?></td>
+                                                                                                        <td>$<?= number_format($aereoimpo['totalDestinoMx'], 2, '.', ','); ?></td>
                                                                                                     </tr>
                                                                                                 </tbody>
                                                                                             </table>
@@ -599,10 +612,10 @@ if (isset($_SESSION['email'])) {
                                                                                             <tr id="totalRow">
                                                                                                 <td class="text-end"><b>TOTAL</b></td>
                                                                                                 <td>
-                                                                                                    <p>$<?= number_format($ftl['totalIncrementableUsd'], 2, '.', ','); ?> USD</p>
+                                                                                                    <p>$<?= number_format($aereoimpo['totalIncrementableUsd'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                                 <td>
-                                                                                                    <p>$<?= number_format($ftl['totalIncrementableMx'], 2, '.', ','); ?> MXN</p>
+                                                                                                    <p>$<?= number_format($aereoimpo['totalIncrementableMx'], 2, '.', ','); ?> MXN</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                         </tfoot>
@@ -648,25 +661,25 @@ if (isset($_SESSION['email'])) {
                                                                                             <tr class="text-end">
                                                                                                 <td colspan="2">Subtotal</td>
                                                                                                 <td colspan="2" style="width:20%;">
-                                                                                                    <p>$<?= number_format($ftl['subtotalFlete'], 2, '.', ','); ?> USD</p>
+                                                                                                    <p>$<?= number_format($aereoimpo['subtotalFlete'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr class="text-end">
                                                                                                 <td colspan="2">I.V.A 16%</td>
                                                                                                 <td colspan="2">
-                                                                                                    <p>$<?= number_format($ftl['impuestosFlete'], 2, '.', ','); ?> USD</p>
+                                                                                                    <p>$<?= number_format($aereoimpo['impuestosFlete'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr class="text-end">
                                                                                                 <td colspan="2">
                                                                                                     <div class="form-check float-end">
                                                                                                         <input class="form-check-input" type="checkbox" name="retencionFleteCheck" id="retencionCheck"
-                                                                                                            <?= (!empty($ftl['retencionFlete']) && $ftl['retencionFlete'] > 0) ? 'checked' : ''; ?> disabled>
+                                                                                                            <?= (!empty($aereoimpo['retencionFlete']) && $aereoimpo['retencionFlete'] > 0) ? 'checked' : ''; ?> disabled>
                                                                                                         <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
                                                                                                     </div>
                                                                                                 </td>
                                                                                                 <td colspan="2">
-                                                                                                    <p>$<?= number_format($ftl['retencionFlete'], 2, '.', ','); ?> USD</p>
+                                                                                                    <p>$<?= number_format($aereoimpo['retencionFlete'], 2, '.', ','); ?> USD</p>
                                                                                                 </td>
                                                                                             </tr>
                                                                                         </tbody>
@@ -679,12 +692,12 @@ if (isset($_SESSION['email'])) {
                                                                                     <tr class="text-end">
                                                                                         <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
                                                                                         <td style="width: 180px;">
-                                                                                            <p>$<?= number_format($ftl['totalCotizacionNumero'], 2, '.', ','); ?></p>
+                                                                                            <p>$<?= number_format($aereoimpo['totalCotizacionNumero'], 2, '.', ','); ?></p>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
                                                                                         <td colspan="2">
-                                                                                            <p><?= $ftl['totalCotizacionTexto']; ?></p>
+                                                                                            <p><?= $aereoimpo['totalCotizacionTexto']; ?></p>
                                                                                         </td>
                                                                                     </tr>
                                                                                 </table>
@@ -693,7 +706,7 @@ if (isset($_SESSION['email'])) {
 
                                                                             <div class="col-12 mt-3 text-start">
                                                                                 <b>OBSERVACIONES</b>
-                                                                                <pre><?= $ftl['observaciones']; ?></pre>
+                                                                                <pre><?= $aereoimpo['observaciones']; ?></pre>
                                                                             </div>
 
 
@@ -719,7 +732,7 @@ if (isset($_SESSION['email'])) {
                                         <?php
                                             }
                                         } else {
-                                            echo "<td colspan='7'><p> No se encontro ningun registro </p></td>";
+                                            echo "<td colspan='8'><p> No se encontro ningun registro </p></td>";
                                         }
                                         ?>
                                     </tbody>

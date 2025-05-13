@@ -231,7 +231,7 @@ WHERE
             </td>
             <td style="width: 30%;border: 0px;">
                 <h2 style="margin-bottom:10px;"><b>COTIZACIÓN</b></h2>
-                <p>LYSCE-' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '</p>
+                <p>Folio: <span style="color:rgb(159, 41, 41);text-transform:uppercase;">' . $registro['identificador'] . '</span></p>
                 <p>Aguascalientes, Ags a ' . $registro['fecha'] . '</p>
                 <br>
                 <br>
@@ -433,5 +433,5 @@ WHERE
 
     // Salida del PDF (descarga)
     $cliente_nombre_sin_espacios = str_replace(' ', '_', $registro['cliente_nombre']);
-    $dompdf->stream('cotizacion_FTL_' . $cliente_nombre_sin_espacios . '_LYSCE_' . str_pad($registro['id'], 5, '0', STR_PAD_LEFT) . '.pdf', ['Attachment' => true]);
+    $dompdf->stream('cotizacion_FTL_' . $cliente_nombre_sin_espacios . '_' . $registro['identificador'] . '.pdf', ['Attachment' => true]);
 }

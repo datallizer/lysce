@@ -83,7 +83,7 @@ if (isset($_SESSION['email'])) {
                                             </div>
                                             <div class="col-3 mb-3">
                                                 <p style="margin: 5px;"><b>COTIZACIÓN</b></p>
-                                                <input class="form-control" value="LYSCE-<?= $registro['id']; ?>" disabled>
+                                                <input class="form-control" name="identificador" value="<?= $registro['identificador']; ?>">
                                                 <p style="margin: 5px;">Aguascalientes, Ags a</p>
                                                 <input class="form-control" type="text" name="fecha" id="" value="<?= $registro['fecha']; ?>">
                                             </div>
@@ -152,7 +152,7 @@ if (isset($_SESSION['email'])) {
 
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino en frontera</b></p>
-                                                <select class="form-select" name="idAduana" id="aduana">
+                                                <select class="form-select" name="idDestino" id="aduana">
                                                     <option disabled>Selecciona el aduana</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -174,7 +174,7 @@ if (isset($_SESSION['email'])) {
 
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino Final</b></p>
-                                                <select class="form-select" name="idDestino" id="destino">
+                                                <select class="form-select" name="idAduana" id="destino">
                                                     <option disabled>Selecciona el destino final</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";

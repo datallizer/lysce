@@ -44,53 +44,64 @@ if (isset($_POST['delete'])) {
 
 
 if (isset($_POST['save'])) {
+    function get_post_value($con, $key, $default = '0')
+    {
+        return isset($_POST[$key]) && trim($_POST[$key]) !== '' ? mysqli_real_escape_string($con, $_POST[$key]) : $default;
+    }
+
+    function get_post_array_value($con, $array, $index, $default = '0')
+    {
+        return isset($array[$index]) && trim($array[$index]) !== '' ? mysqli_real_escape_string($con, $array[$index]) : $default;
+    }
+
+    $identificador = get_post_value($con, 'identificador');
     $email = $_SESSION['email'];
-    $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
-    $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
-    $idOrigen = mysqli_real_escape_string($con, $_POST['idOrigen']);
-    $idDestino = mysqli_real_escape_string($con, $_POST['idAduana']);
-    $idDestinoFinal = mysqli_real_escape_string($con, $_POST['idDestino']);
-    $distanciaOrigenDestinoMillas = mysqli_real_escape_string($con, $_POST['distanciaOrigenDestinoMillas']);
-    $distanciaOrigenDestinoKms = mysqli_real_escape_string($con, $_POST['distanciaOrigenDestinoKms']);
-    $tiempoRecorridoOrigenDestino = mysqli_real_escape_string($con, $_POST['tiempoRecorridoOrigenDestino']);
-    $servicio = mysqli_real_escape_string($con, $_POST['servicio']);
-    $totalFt3 = mysqli_real_escape_string($con, $_POST['totalFt3']);
-    $totalM3 = mysqli_real_escape_string($con, $_POST['totalM3']);
-    $distanciaDestinoFinalMillas = mysqli_real_escape_string($con, $_POST['distanciaDestinoFinalMillas']);
-    $distanciaDestinoFinalKms = mysqli_real_escape_string($con, $_POST['distanciaDestinoFinalKms']);
-    $tiempoRecorridoDestinoFinal = mysqli_real_escape_string($con, $_POST['tiempoRecorridoDestinoFinal']);
-    $operador = mysqli_real_escape_string($con, $_POST['operador']);
-    $unidad = mysqli_real_escape_string($con, $_POST['unidad']);
-    $moneda = mysqli_real_escape_string($con, $_POST['moneda']);
-    $valorMoneda = mysqli_real_escape_string($con, $_POST['valorMoneda']);
-    $pesoMercanciaLbs = mysqli_real_escape_string($con, $_POST['pesoMercanciaLbs']);
-    $pesoMercanciaKgs = mysqli_real_escape_string($con, $_POST['pesoMercanciaKgs']);
-    $totalBultos = mysqli_real_escape_string($con, $_POST['totalBultos']);
-    $valorMercancia = mysqli_real_escape_string($con, $_POST['valorMercancia']);
-    $valorComercial = mysqli_real_escape_string($con, $_POST['valorComercial']);
-    $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
-    $impuestosFlete = mysqli_real_escape_string($con, $_POST['impuestosFlete']);
-    $retencionFlete = mysqli_real_escape_string($con, $_POST['retencionFlete']);
-    $totalCotizacionNumero = mysqli_real_escape_string($con, $_POST['totalCotizacionNumero']);
-    $totalCotizacionTexto = mysqli_real_escape_string($con, $_POST['totalCotizacionTexto']);
-    $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
-    $totalIncrementableUsd = mysqli_real_escape_string($con, $_POST['totalIncrementableUsd']);
-    $totalIncrementableMx = mysqli_real_escape_string($con, $_POST['totalIncrementableMx']);
-    $tipoltl = mysqli_real_escape_string($con, $_POST['tipoltl']);
-    $porcentajeSeguro = mysqli_real_escape_string($con, $_POST['porcentajeSeguro']);
+    $fecha = get_post_value($con, 'fecha', '');
+    $idCliente = get_post_value($con, 'idCliente');
+    $idOrigen = get_post_value($con, 'idOrigen');
+    $idDestino = get_post_value($con, 'idAduana');
+    $idDestinoFinal = get_post_value($con, 'idDestino');
+    $distanciaOrigenDestinoMillas = get_post_value($con, 'distanciaOrigenDestinoMillas');
+    $distanciaOrigenDestinoKms = get_post_value($con, 'distanciaOrigenDestinoKms');
+    $tiempoRecorridoOrigenDestino = get_post_value($con, 'tiempoRecorridoOrigenDestino');
+    $servicio = get_post_value($con, 'servicio');
+    $totalFt3 = get_post_value($con, 'totalFt3');
+    $totalM3 = get_post_value($con, 'totalM3');
+    $distanciaDestinoFinalMillas = get_post_value($con, 'distanciaDestinoFinalMillas');
+    $distanciaDestinoFinalKms = get_post_value($con, 'distanciaDestinoFinalKms');
+    $tiempoRecorridoDestinoFinal = get_post_value($con, 'tiempoRecorridoDestinoFinal');
+    $operador = get_post_value($con, 'operador', '');
+    $unidad = get_post_value($con, 'unidad', '');
+    $moneda = get_post_value($con, 'moneda', '');
+    $valorMoneda = get_post_value($con, 'valorMoneda');
+    $pesoMercanciaLbs = get_post_value($con, 'pesoMercanciaLbs');
+    $pesoMercanciaKgs = get_post_value($con, 'pesoMercanciaKgs');
+    $totalBultos = get_post_value($con, 'totalBultos');
+    $valorMercancia = get_post_value($con, 'valorMercancia');
+    $valorComercial = get_post_value($con, 'valorComercial');
+    $subtotalFlete = get_post_value($con, 'subtotalFlete');
+    $impuestosFlete = get_post_value($con, 'impuestosFlete');
+    $retencionFlete = get_post_value($con, 'retencionFlete');
+    $totalCotizacionNumero = get_post_value($con, 'totalCotizacionNumero');
+    $totalCotizacionTexto = get_post_value($con, 'totalCotizacionTexto', '');
+    $observaciones = get_post_value($con, 'observaciones', '');
+    $totalIncrementableUsd = get_post_value($con, 'totalIncrementableUsd');
+    $totalIncrementableMx = get_post_value($con, 'totalIncrementableMx');
+    $tipoLtl = get_post_value($con, 'tipoLtl', '');
+    $porcentajeSeguro = get_post_value($con, 'porcentajeSeguro', '0%');
 
     $sql = "INSERT INTO ltl (
         fecha, idCliente, idOrigen, idDestino, idDestinoFinal,
         distanciaOrigenDestinoMillas, distanciaOrigenDestinoKms, tiempoRecorridoOrigenDestino, servicio, 
         totalFt3, totalM3, distanciaDestinoFinalMillas, distanciaDestinoFinalKms, tiempoRecorridoDestinoFinal, 
         operador, unidad, moneda, valorMoneda, pesoMercanciaLbs, pesoMercanciaKgs, totalBultos, 
-        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, tipoltl, porcentajeSeguro, asignado
+        valorMercancia, valorComercial, subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero, totalCotizacionTexto, observaciones, totalIncrementableUsd, totalIncrementableMx, tipoLtl, porcentajeSeguro, asignado, identificador
     ) VALUES (
         '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoltl', '$porcentajeSeguro', '$email'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoltl', '$porcentajeSeguro', '$email', '$identificador'
     )";
 
     $query_run = mysqli_query($con, $sql);
@@ -117,21 +128,21 @@ if (isset($_POST['save'])) {
         $valorFactura = $_POST['valorFactura'];
 
         for ($i = 0; $i < count($cantidad); $i++) {
-            $cantidad_val = mysqli_real_escape_string($con, $cantidad[$i]);
-            $unidadMedida_val = mysqli_real_escape_string($con, $unidadMedida[$i]);
-            $nmfc_val = mysqli_real_escape_string($con, $nmfc[$i]);
-            $descripcion_val = mysqli_real_escape_string($con, $descripcion[$i]);
-            $largoCm_val = mysqli_real_escape_string($con, $largoCm[$i]);
-            $anchoCm_val = mysqli_real_escape_string($con, $anchoCm[$i]);
-            $altoCm_val = mysqli_real_escape_string($con, $altoCm[$i]);
-            $largoPlg_val = mysqli_real_escape_string($con, $largoPlg[$i]);
-            $anchoPlg_val = mysqli_real_escape_string($con, $anchoPlg[$i]);
-            $altoPlg_val = mysqli_real_escape_string($con, $altoPlg[$i]);
-            $piesCubicos_val = mysqli_real_escape_string($con, $piesCubicos[$i]);
-            $metrosCubicos_val = mysqli_real_escape_string($con, $metrosCubicos[$i]);
-            $libras_val = mysqli_real_escape_string($con, $libras[$i]);
-            $kilogramos_val = mysqli_real_escape_string($con, $kilogramos[$i]);
-            $valorFactura_val = mysqli_real_escape_string($con, $valorFactura[$i]);
+            $cantidad_val = get_post_array_value($con, $cantidad, $i);
+            $unidadMedida_val = get_post_array_value($con, $unidadMedida, $i, '');
+            $nmfc_val = get_post_array_value($con, $nmfc, $i);
+            $descripcion_val = get_post_array_value($con, $descripcion, $i, '');
+            $largoCm_val = get_post_array_value($con, $largoCm, $i);
+            $anchoCm_val = get_post_array_value($con, $anchoCm, $i);
+            $altoCm_val = get_post_array_value($con, $altoCm, $i);
+            $largoPlg_val = get_post_array_value($con, $largoPlg, $i);
+            $anchoPlg_val = get_post_array_value($con, $anchoPlg, $i);
+            $altoPlg_val = get_post_array_value($con, $altoPlg, $i);
+            $piesCubicos_val = get_post_array_value($con, $piesCubicos, $i);
+            $metrosCubicos_val = get_post_array_value($con, $metrosCubicos, $i);
+            $libras_val = get_post_array_value($con, $libras, $i);
+            $kilogramos_val = get_post_array_value($con, $kilogramos, $i);
+            $valorFactura_val = get_post_array_value($con, $valorFactura, $i);
 
             $sql_detalle = "INSERT INTO descripcionmercanciasltl (
                 idLtl, cantidad, unidadMedida, nmfc, descripcion, 
@@ -151,8 +162,8 @@ if (isset($_POST['save'])) {
             $tiempoServicio = $_POST['tiempoServicio'];
 
             for ($i = 0; $i < count($conceptoServicio); $i++) {
-                $servicios = mysqli_real_escape_string($con, $conceptoServicio[$i]);
-                $tiempo = mysqli_real_escape_string($con, $tiempoServicio[$i]);
+                $servicios = get_post_array_value($con, $conceptoServicio, $i, '');
+                $tiempo = get_post_array_value($con, $tiempoServicio, $i);
 
                 $sql_servicio = "INSERT INTO servicioltl (idLtl, conceptoServicio, tiempoServicio) 
                                       VALUES ('$idLtl', '$servicios', '$tiempo')";
@@ -167,9 +178,9 @@ if (isset($_POST['save'])) {
             $incrementablesMx = $_POST['incrementableMx'];
 
             for ($i = 0; $i < count($incrementables); $i++) {
-                $incrementable = mysqli_real_escape_string($con, $incrementables[$i]);
-                $incrementableUsd = mysqli_real_escape_string($con, $incrementablesUsd[$i]);
-                $incrementableMx = mysqli_real_escape_string($con, $incrementablesMx[$i]);
+                $incrementable = get_post_array_value($con, $incrementables, $i, '');
+                $incrementableUsd = get_post_array_value($con, $incrementablesUsd, $i);
+                $incrementableMx = get_post_array_value($con, $incrementablesMx, $i);
 
                 $sql_incrementable = "INSERT INTO incrementablesltl (idLtl, incrementable, incrementableUsd, incrementableMx) 
                                       VALUES ('$idLtl', '$incrementable', '$incrementableUsd', '$incrementableMx')";
@@ -184,8 +195,8 @@ if (isset($_POST['save'])) {
             $ivaGasto = isset($_POST['ivaGasto']) ? $_POST['ivaGasto'] : [];
 
             for ($i = 0; $i < count($conceptoGasto); $i++) {
-                $concepto = mysqli_real_escape_string($con, $conceptoGasto[$i]);
-                $monto = mysqli_real_escape_string($con, $montoGasto[$i]);
+                $concepto = get_post_array_value($con, $conceptoGasto, $i, '');
+                $monto = get_post_array_value($con, $montoGasto, $i);
                 $iva = isset($ivaGasto[$i]) ? 1 : 0;
 
                 $sql_gasto = "INSERT INTO gastosltl (idLtl, conceptoGasto, montoGasto, ivaGasto) VALUES ('$idLtl', '$concepto', '$monto', '$iva')";
@@ -212,6 +223,7 @@ if (isset($_POST['save'])) {
 
 if (isset($_POST['update'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
+    $identificador = mysqli_real_escape_string($con, $_POST['identificador']);
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $idOrigen = mysqli_real_escape_string($con, $_POST['idOrigen']);
@@ -246,7 +258,8 @@ if (isset($_POST['update'])) {
     $tipoLtl = mysqli_real_escape_string($con, $_POST['tipoLtl']);
     $porcentajeSeguro = mysqli_real_escape_string($con, $_POST['porcentajeSeguro']);
 
-    $sql = "UPDATE ltl SET 
+    $sql = "UPDATE ltl SET
+        identificador = '$identificador', 
         fecha = '$fecha',
         idCliente = '$idCliente',
         idOrigen = '$idOrigen',
