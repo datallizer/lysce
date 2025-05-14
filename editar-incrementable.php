@@ -83,7 +83,7 @@ if (isset($_SESSION['email'])) {
 
                                                 <div class="form-floating col-12 col-md-3">
                                                     <select class="form-select" name="tipo" id="tipo">
-                                                        <option disabled>Seleccione un tipo</option>
+                                                        <option value="" disabled selected>Selecciona una opción</option>
                                                         <option value="aereoimpo" <?= ($tipo_actual == 'aereoimpo') ? 'selected' : ''; ?>>Aéreo importación</option>
                                                         <option value="aereoexpo" <?= ($tipo_actual == 'aereoexpo') ? 'selected' : ''; ?>>Aéreo exportación</option>
                                                         <option value="ltl" <?= ($tipo_actual == 'ltl') ? 'selected' : ''; ?>>Terrestre LTL</option>

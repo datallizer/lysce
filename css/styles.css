@@ -54,6 +54,20 @@ p {
   width: 80px !important;
 }
 
+/* Margen para el elemento "Show entries" */
+.dataTables_length {
+    margin-bottom: 18px !important;
+}
+
+/* Margen para el elemento "Search" */
+.dataTables_filter {
+    margin-bottom: 18px !important;
+}
+
+.dataTable{
+    border-top: 1px solid #c7c7c7 !important;
+}
+
 @media screen and (max-width: 1000px) {
   .offcanvas {
     width: 70vw !important;

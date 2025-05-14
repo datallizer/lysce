@@ -164,7 +164,7 @@ if (isset($_SESSION['email'])) {
 
                                                 <div class="form-floating col-12 col-md-3">
                                                     <select class="form-select" name="estatus" id="estatus">
-                                                        <option disabled>Seleccione un estatus</option>
+                                                        <option value="" disabled selected>Selecciona una opción</option>
                                                         <option value="0" <?= ($estatus_actual == 0) ? 'selected' : ''; ?>>Inactivo</option>
                                                         <option value="1" <?= ($estatus_actual == 1) ? 'selected' : ''; ?>>Activo</option>
                                                     </select>

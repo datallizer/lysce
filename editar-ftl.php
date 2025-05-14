@@ -89,7 +89,7 @@ if (isset($_SESSION['email'])) {
                                             </div>
                                             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
                                                 <select class="form-select bg-warning" name="tipoFtl" required>
-                                                    <option disabled>Selecciona un servicio</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
                                                     $result = mysqli_query($con, $query);
@@ -108,7 +108,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                                                 <p class="mb-1"><b>Cliente</b></p>
                                                 <select class="form-select mb-3" name="idCliente" id="cliente">
-                                                    <option disabled>Selecciona un cliente</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente'";
                                                     $result = mysqli_query($con, $query);
@@ -130,7 +130,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Origen</b></p>
                                                 <select class="form-select" name="idOrigen" id="origen">
-                                                    <option disabled>Selecciona el origen</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
                                                     $result = mysqli_query($con, $query);
@@ -153,7 +153,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino en frontera</b></p>
                                                 <select class="form-select" name="idAduana" id="aduana">
-                                                    <option disabled>Selecciona el aduana</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
                                                     $result = mysqli_query($con, $query);
@@ -175,7 +175,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino Final</b></p>
                                                 <select class="form-select" name="idDestino" id="destino">
-                                                    <option disabled>Selecciona el destino final</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
                                                     $result = mysqli_query($con, $query);
@@ -390,7 +390,7 @@ if (isset($_SESSION['email'])) {
 
                                                                         <td>
                                                                             <select class="form-select" name="conceptoServicio[]">
-                                                                                <option disabled>Selecciona un tipo de servicio</option>
+                                                                                <option value="" disabled selected>Selecciona una opción</option>
                                                                                 <?php
                                                                                 $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
                                                                                 $result = mysqli_query($con, $query);
@@ -449,7 +449,7 @@ if (isset($_SESSION['email'])) {
                                                                     <tr>
                                                                         <td>
                                                                             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="<?= $uniqueId; ?>" onchange="actualizarConceptoGasto(this)">
-                                                                                <option disabled>Selecciona un incrementable</option>
+                                                                                <option value="" disabled selected>Selecciona una opción</option>
                                                                                 <?php
                                                                                 $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
                                                                                 $result = mysqli_query($con, $query);
@@ -535,10 +535,31 @@ if (isset($_SESSION['email'])) {
                                                                                 <label class="form-check-label"> IVA 16% </label>
                                                                             </div>
                                                                         </td>
-                                                                        <td class="text-end">
-                                                                            <input type="text" value="<?= $gasto['montoGasto']; ?>" class="form-control montoGasto" name="montoGasto[]" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'id="montoSeguro"' : ''; ?> data-id="<?= $uniqueId; ?>" oninput="actualizarSubtotal(); sincronizarIncrementable(this);" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'readonly' : ''; ?>>
-                                                                        </td>
-                                                                        <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)" <?= ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía') ? 'readonly' : ''; ?>><i class="bi bi-trash-fill"></i></button></td>
+                                                                        <?php if ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía'): ?>
+                                                                            <td class="text-end" colspan="2">
+                                                                                <input type="text" value="<?= $gasto['montoGasto']; ?>"
+                                                                                    class="form-control montoGasto"
+                                                                                    name="montoGasto[]"
+                                                                                    id="montoSeguro"
+                                                                                    data-id="<?= $uniqueId; ?>"
+                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);"
+                                                                                    readonly>
+                                                                            </td>
+                                                                        <?php else: ?>
+                                                                            <td class="text-end">
+                                                                                <input type="text" value="<?= $gasto['montoGasto']; ?>"
+                                                                                    class="form-control montoGasto"
+                                                                                    name="montoGasto[]"
+                                                                                    data-id="<?= $uniqueId; ?>"
+                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
+                                                                                    <i class="bi bi-trash-fill"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        <?php endif; ?>
+
                                                                     </tr>
                                                             <?php
                                                                 }
@@ -1117,7 +1138,7 @@ if (isset($_SESSION['email'])) {
                 nuevaFilaServicio.innerHTML = `
         <td>
             <select class="form-select" name="conceptoServicio[]">
-                <option selected>Selecciona un tipo de servicio</option>
+                <option value="" disabled selected>Selecciona una opción</option>
                 <?php
                 $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
                 $result = mysqli_query($con, $query);
@@ -1163,7 +1184,7 @@ if (isset($_SESSION['email'])) {
                 nuevaFila.innerHTML = `
         <td>
             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="${uniqueId}" onchange="actualizarConceptoGasto(this)">
-                <option selected>Selecciona un incrementable</option>
+                <option value="" disabled selected>Selecciona una opción</option>
                 <?php
                 $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
                 $result = mysqli_query($con, $query);

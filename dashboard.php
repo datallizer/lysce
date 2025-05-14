@@ -171,7 +171,7 @@ foreach ($data as $mes => $valores) {
                         pointHoverRadius: 13,
                     },
                     {
-                        label: 'Aéreo',
+                        label: 'Aéreo Importación',
                         data: <?= json_encode($aereo) ?>,
                         borderColor: 'rgb(83, 170, 116)',
                         backgroundColor: 'rgba(83, 170, 116, 0.1)',
@@ -183,7 +183,7 @@ foreach ($data as $mes => $valores) {
                         pointHoverRadius: 13,
                     },
                     {
-                        label: 'Aéreo Expo',
+                        label: 'Aéreo Exportación',
                         data: <?= json_encode($aereoexpo) ?>,
                         borderColor: 'rgb(255, 193, 7)',
                         backgroundColor: 'rgba(255, 193, 7, 0.1)',

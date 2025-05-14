@@ -89,7 +89,7 @@ if (isset($_SESSION['email'])) {
                                             </div>
                                             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
                                                 <select class="form-select bg-warning" name="tipoAereoImpo" required>
-                                                    <option disabled>Selecciona un servicio</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'aereoimpo'";
                                                     $result = mysqli_query($con, $query);
@@ -108,7 +108,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                                                 <p class="mb-1"><b>Cliente</b></p>
                                                 <select class="form-select mb-3" name="idCliente" id="cliente">
-                                                    <option disabled>Selecciona un cliente</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente'";
                                                     $result = mysqli_query($con, $query);
@@ -130,7 +130,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Origen</b></p>
                                                 <select class="form-select" name="idOrigen" id="origen">
-                                                    <option disabled>Selecciona el origen</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
                                                     $result = mysqli_query($con, $query);
@@ -153,7 +153,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino en frontera</b></p>
                                                 <select class="form-select" name="idDestino" id="aduana">
-                                                    <option disabled>Selecciona el aduana</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
                                                     $result = mysqli_query($con, $query);
@@ -175,7 +175,7 @@ if (isset($_SESSION['email'])) {
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino Final</b></p>
                                                 <select class="form-select" name="idAduana" id="destino">
-                                                    <option disabled>Selecciona el destino final</option>
+                                                    <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
                                                     $result = mysqli_query($con, $query);
@@ -466,7 +466,7 @@ if (isset($_SESSION['email'])) {
                                                                         <td style="min-width: 140px;"><input style="min-width: 100%;" type="text" name="gastoDestino[]" class="form-control" value="<?= $destino['gastoDestino']; ?>"></td>
                                                                         <td><input type="text" name="usdDestino[]" class="dolarInputs form-control" value="<?= $destino['usdDestino']; ?>" oninput="updateRowDestinySpents(this)"></td>
                                                                         <td><input type="text" name="mxnDestino[]" class="mxnOutputs form-control" value="<?= $destino['mxnDestino']; ?>"></td>
-                                                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaOrigen(this)"><i class="bi bi-trash3"></i></button></td>
+                                                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaDestino(this)"><i class="bi bi-trash3"></i></button></td>
                                                                     </tr>
                                                             <?php
                                                                 }
@@ -537,7 +537,7 @@ if (isset($_SESSION['email'])) {
                                                                     <tr>
                                                                         <td>
                                                                             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="<?= $uniqueId; ?>" onchange="actualizarConceptoGasto(this)">
-                                                                                <option disabled>Selecciona un incrementable</option>
+                                                                                <option value="" disabled selected>Selecciona una opción</option>
                                                                                 <?php
                                                                                 $query = "SELECT * FROM tipoincrementable WHERE tipo = 'aereoimpo'";
                                                                                 $result = mysqli_query($con, $query);
@@ -694,8 +694,12 @@ if (isset($_SESSION['email'])) {
                                                         subtotalFleteInput.value = sumaGastos.toFixed(2);
                                                     }
 
-                                                    // Calcular el total de la cotización
-                                                    let totalCotizacion = (subtotal + iva - retencion).toFixed(2);
+                                                    // Obtener el valor del input con id="valorTotalFlete" y sumarlo al total
+                                                    let valorTotalFleteInput = document.getElementById("valorTotalFlete");
+                                                    let valorTotalFlete = valorTotalFleteInput ? parseFloat(valorTotalFleteInput.value) || 0 : 0;
+
+                                                    // Calcular el total de la cotización incluyendo valorTotalFlete
+                                                    let totalCotizacion = (subtotal + iva - retencion + valorTotalFlete).toFixed(2);
                                                     document.querySelector('input[name="totalCotizacionNumero"]').value = totalCotizacion;
                                                 }
 
@@ -1295,7 +1299,7 @@ if (isset($_SESSION['email'])) {
                 nuevaFila.innerHTML = `
         <td>
             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="${uniqueId}" onchange="actualizarConceptoGasto(this)">
-                <option selected>Selecciona un incrementable</option>
+                <option value="" disabled selected>Selecciona una opción</option>
                 <?php
                 $query = "SELECT * FROM tipoincrementable WHERE tipo = 'aereoimpo'";
                 $result = mysqli_query($con, $query);
@@ -1602,6 +1606,8 @@ if (isset($_SESSION['email'])) {
                 fila.remove();
 
                 actualizarTotalesOrigen();
+                actualizarSubtotal();
+                actualizarValorTotalFlete();
             }
 
 
@@ -1613,7 +1619,7 @@ if (isset($_SESSION['email'])) {
        <td><input type="text" style="min-width: 100%;" name="gastoDestino[]" class="form-control"></td>
         <td><input type="number" name="usdDestino[]" class="dolarInputs form-control" value="" oninput="updateRowDestinySpents(this)"></td>
         <td><input type="text" name="mxnDestino[]" class="mxnOutputs form-control" oninput="updateFromMXN(this)"></td>
-        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaDestino(this)"><i class="bi bi-trash3"></i></button></td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaDestino(this);"><i class="bi bi-trash3"></i></button></td>
     `;
 
                 filaAMS.parentNode.insertBefore(nuevaFila, filaAMS.nextSibling);
@@ -1622,8 +1628,9 @@ if (isset($_SESSION['email'])) {
             function eliminarFilaDestino(boton) {
                 const fila = boton.closest("tr");
                 fila.remove();
+
                 calcularTotalesDestino();
-                actualizarValorTotalFlete();
+                actualizarSubtotal();
             }
 
             function updateRowDestinySpents(input) {
@@ -1676,6 +1683,7 @@ if (isset($_SESSION['email'])) {
                 document.querySelector("input[name='impuestosDestinoMx']").value = impuestosMx.toFixed(2);
                 document.querySelector("input[name='totalDestinoUsd']").value = (subtotalUsd + impuestosUsd).toFixed(2);
                 document.querySelector("input[name='totalDestinoMx']").value = (subtotalMx + impuestosMx).toFixed(2);
+
 
                 actualizarValorTotalFlete();
 
