@@ -513,7 +513,7 @@ if (isset($_SESSION['email'])) {
                                                                                         </div>
 
                                                                                         <div class="col-5">
-                                                                                        <p><b>Lugar destino:</b> <?= $lcl['lugarDestino']; ?></p>
+                                                                                            <p><b>Lugar destino:</b> <?= $lcl['lugarDestino']; ?></p>
                                                                                             <table class="table table-striped table-bordered" style="margin-bottom: 0px;" id="servicioTable">
                                                                                                 <thead>
                                                                                                     <tr>

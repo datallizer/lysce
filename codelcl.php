@@ -100,6 +100,7 @@ if (isset($_POST['save'])) {
     $retencionFlete = get_post_value($con, 'retencionFlete');
     $totalCotizacionNumero = get_post_value($con, 'totalCotizacionNumero');
     $totalCotizacionTexto = get_post_value($con, 'totalCotizacionTexto', '');
+    $porcentajeSeguro = get_post_value($con, 'porcentajeSeguro', '');
     $tipoLcl = get_post_value($con, 'tipoLcl', '');
     $observaciones = get_post_value($con, 'observaciones', '');
 
@@ -113,7 +114,7 @@ if (isset($_POST['save'])) {
         impuestosDestinoUsd, impuestosDestinoMx, totalDestinoUsd, totalDestinoMx,
         valorTotalFlete, totalIncrementableUsd, totalIncrementableMx,
         subtotalFlete, impuestosFlete, retencionFlete, totalCotizacionNumero,
-        totalCotizacionTexto, tipoLcl, observaciones, lugarOrigen, lugarDestino
+        totalCotizacionTexto, tipoLcl, observaciones, lugarOrigen, lugarDestino, porcentajeSeguro
     ) VALUES (
         '$identificador', '$email', '$fecha', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal',
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino',
@@ -124,7 +125,7 @@ if (isset($_POST['save'])) {
         '$impuestosDestinoUsd', '$impuestosDestinoMx', '$totalDestinoUsd', '$totalDestinoMx',
         '$valorTotalFlete', '$totalIncrementableUsd', '$totalIncrementableMx',
         '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero',
-        '$totalCotizacionTexto', '$tipoLcl', '$observaciones', '$lugarOrigen', '$lugarDestino'
+        '$totalCotizacionTexto', '$tipoLcl', '$observaciones', '$lugarOrigen', '$lugarDestino', '$porcentajeSeguro'
     )";
 
 
@@ -302,6 +303,7 @@ if (isset($_POST['update'])) {
     $totalDestinoUsd = mysqli_real_escape_string($con, $_POST['totalDestinoUsd']);
     $totalDestinoMx = mysqli_real_escape_string($con, $_POST['totalDestinoMx']);
     $valorTotalFlete = mysqli_real_escape_string($con, $_POST['valorTotalFlete']);
+    $porcentajeSeguro = mysqli_real_escape_string($con, $_POST['porcentajeSeguro']);
 
     $subtotalFlete = mysqli_real_escape_string($con, $_POST['subtotalFlete']);
     $impuestosFlete = mysqli_real_escape_string($con, $_POST['impuestosFlete']);
@@ -350,6 +352,7 @@ if (isset($_POST['update'])) {
         subtotalFlete = '$subtotalFlete',
         impuestosFlete = '$impuestosFlete',
         retencionFlete = '$retencionFlete',
+        porcentajeSeguro = '$porcentajeSeguro',
         totalCotizacionNumero = '$totalCotizacionNumero',
         totalCotizacionTexto = '$totalCotizacionTexto',
         observaciones = '$observaciones',

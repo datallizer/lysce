@@ -305,7 +305,7 @@ if (isset($_SESSION['email'])) {
                         <p class="text-center mb-3"><b>GASTOS POR TRASLADO DE MERCANCIAS PUERTO A PUERTO</b></p>
                         <div class="row">
                             <div class="col-6">
-                                 <p style="display: inline-block;margin-bottom: 5px;">
+                                <p style="display: inline-block;margin-bottom: 5px;">
                                     <b>Lugar origen:</b> <input class="form-control" style="width: 300px; display: inline-block;" type="text" name="lugarOrigen">
                                 </p>
                                 <table class="table table-striped origen-table text-start" id="origenTable">
@@ -461,6 +461,28 @@ if (isset($_SESSION['email'])) {
                                         <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                     </tr>
 
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <input type="text" class="form-control" name="conceptoGasto[]" value="Seguro de tránsito de mercancía" readonly>
+                                                </div>
+                                                <div class="col-3">
+                                                    <input type="text" class="form-control" name="porcentajeSeguro" value="35%" oninput="actualizarSubtotal();">
+                                                </div>
+                                                <p style="font-size: 11px;" class="text-end">Establezca el porcentaje en 0% para omitir el calculo de seguro*</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check float-end">
+                                                <input class="form-check-input" type="checkbox" name="ivaGasto[]" id="flexCheck4" checked>
+                                                <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
+                                            </div>
+                                        </td>
+                                        <td colspan="2" class="text-end">
+                                            <input type="text" id="montoSeguro" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()" readonly>
+                                        </td>
+                                    </tr>
                                     <tr class="text-end">
                                         <td colspan="2">Subtotal</td>
                                         <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
@@ -486,7 +508,7 @@ if (isset($_SESSION['email'])) {
                         </div>
                     </div>
 
-                    <script>
+                   <script>
                         function actualizarSubtotal() {
                             let subtotal = 0;
                             let iva = 0;
@@ -527,29 +549,39 @@ if (isset($_SESSION['email'])) {
                                 sumaGastos += valor;
                             });
 
+                            // Calcular el monto del seguro
+                            let valorMercancia = parseFloat(document.querySelector('input[name="valorMercanciaUSD"]').value) || 0;
+                            let porcentajeSeguroInput = document.querySelector('input[name="porcentajeSeguro"]').value;
+                            let montoSeguroInput = document.querySelector('input[id="montoSeguro"]');
+
+                            // Convertir porcentaje a decimal (ejemplo: "35%" -> 0.38)
+                            let porcentajeSeguro = parseFloat(porcentajeSeguroInput.replace('%', '')) / 100;
+                            let montoSeguro = valorMercancia * porcentajeSeguro;
+
+                            // Si el porcentaje es 0%, el monto del seguro debe ser 0
+                            if (porcentajeSeguro === 0) {
+                                montoSeguro = 0;
+                            } else if (montoSeguro < 120 && porcentajeSeguro > 0) {
+                                // Si el monto calculado es menor que 120, se fija en 120
+                                montoSeguro = 120;
+                            }
+
+                            montoSeguroInput.value = montoSeguro.toFixed(2);
+
                             // Actualizar el campo subtotalFlete con la suma
                             var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
                             if (subtotalFleteInput) {
                                 subtotalFleteInput.value = sumaGastos.toFixed(2);
                             }
 
-                            // Obtener el valor del input con id="valorTotalFlete" y sumarlo al total
-                            let valorTotalFleteInput = document.getElementById("valorTotalFlete");
-                            let valorTotalFlete = valorTotalFleteInput ? parseFloat(valorTotalFleteInput.value) || 0 : 0;
-
-                            // Calcular el total de la cotización incluyendo valorTotalFlete
-                            let totalCotizacion = (subtotal + iva - retencion + valorTotalFlete).toFixed(2);
+                            // Calcular el total de la cotización
+                            let totalCotizacion = (subtotal + iva - retencion).toFixed(2);
                             document.querySelector('input[name="totalCotizacionNumero"]').value = totalCotizacion;
                         }
 
                         document.addEventListener("input", actualizarSubtotal);
                         document.addEventListener("change", actualizarSubtotal);
                     </script>
-
-
-
-
-
 
                     <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
                         <tr class="text-end">
@@ -587,7 +619,7 @@ if (isset($_SESSION['email'])) {
                     </div>
 
                     <div class="modal-footer mt-5">
-                        <a href="aereo-exportacion.php" class="btn btn-secondary m-1">Cancelar</a>
+                        <a href="lcl.php" class="btn btn-secondary m-1">Cancelar</a>
                         <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
                     </div>
                 </form>
@@ -798,25 +830,6 @@ if (isset($_SESSION['email'])) {
             const volumeM3 = volumeFt3 * 0.0283168;
             row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
 
-            const volumetrico = (altura * ancho * profundidad) * cantidad / 0.006;
-
-            // Guardar el valor en un campo oculto o atributo data
-            row.dataset.volumetrico = volumetrico;
-
-            // Calcular total
-            let totalVolumetrico = 0;
-            const filas = document.querySelectorAll("#miTablaCotizacion tr");
-            filas.forEach(f => {
-                const v = parseFloat(f.dataset.volumetrico) || 0;
-                totalVolumetrico += v;
-            });
-
-            // Mostrar total
-            const campoTotal = document.getElementById("pesoVolumetrico");
-            if (campoTotal) {
-                campoTotal.value = totalVolumetrico.toFixed(2);
-            }
-
             actualizarTotales();
         }
 
@@ -837,25 +850,6 @@ if (isset($_SESSION['email'])) {
             row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
             const volumeM3 = volumeFt3 * 0.0283168;
             row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
-
-            const volumetrico = (altura * ancho * profundidad) * cantidad / 0.006;
-
-            // Guardar el valor en un campo oculto o atributo data
-            row.dataset.volumetrico = volumetrico;
-
-            // Calcular total
-            let totalVolumetrico = 0;
-            const filas = document.querySelectorAll("#miTablaCotizacion tr");
-            filas.forEach(f => {
-                const v = parseFloat(f.dataset.volumetrico) || 0;
-                totalVolumetrico += v;
-            });
-
-            // Mostrar total
-            const campoTotal = document.getElementById("pesoVolumetrico");
-            if (campoTotal) {
-                campoTotal.value = totalVolumetrico.toFixed(2);
-            }
 
             actualizarTotales(); // Actualiza los totales después de convertir
         }
@@ -914,18 +908,6 @@ if (isset($_SESSION['email'])) {
             document.getElementById("valorMercancia").value = totalValor.toFixed(2);
             document.getElementById("ft3Total").value = totalFt3.toFixed(2);
             document.getElementById("m3Total").value = totalM3.toFixed(2);
-
-            const filas = document.querySelectorAll("#miTablaCotizacion tr");
-
-            filas.forEach(fila => {
-                const v = parseFloat(fila.dataset.volumetrico) || 0;
-                totalVolumetrico += v;
-            });
-
-            const campoTotal = document.getElementById("pesoVolumetrico");
-            if (campoTotal) {
-                campoTotal.value = totalVolumetrico.toFixed(2);
-            }
 
             // Actualizar otros cálculos
             actualizarValorComercial();
