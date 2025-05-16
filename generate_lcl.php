@@ -198,6 +198,11 @@ WHERE
     $gasto_html = '';
     if (mysqli_num_rows($resultado_gasto) > 0) {
         while ($row = mysqli_fetch_assoc($resultado_gasto)) {
+            // Excluir la fila si conceptoGasto es "Seguro de tránsito de mercancía" y montoGasto es "0"
+            if ($row['conceptoGasto'] === "Seguro de tránsito de mercancía" && floatval($row['montoGasto']) == 0) {
+                continue; // Saltar esta iteración del bucle
+            }
+
             $gasto_html .= '
             <tr>
                 <td>' . htmlspecialchars($row['conceptoGasto']) . '</td>

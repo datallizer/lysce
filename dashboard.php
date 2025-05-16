@@ -60,7 +60,7 @@ for ($i = 1; $i <= 12; $i++) {
 // Inicializar estructura con 0
 $data = [];
 foreach ($meses as $mes) {
-    $data[$mes] = ['ftl' => 0, 'ltl' => 0, 'aereo' => 0, 'aereoexpo' => 0];
+    $data[$mes] = ['ftl' => 0, 'ltl' => 0, 'aereo' => 0, 'aereoexpo' => 0, 'lcl' => 0];
 }
 
 // Consulta para obtener los conteos por mes y tipo
@@ -72,6 +72,8 @@ $sql = "
     SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'aereo' AS tipo FROM aereo WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
     UNION ALL
     SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'aereoexpo' AS tipo FROM aereoexpo WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
+    UNION ALL
+    SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'lcl' AS tipo FROM lcl WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
 ";
 
 
@@ -93,12 +95,14 @@ $labels = array_keys($data);
 $ftl = [];
 $ltl = [];
 $aereo = [];
+$lcl = [];
 
 foreach ($data as $mes => $valores) {
     $ftl[] = $valores['ftl'];
     $ltl[] = $valores['ltl'];
     $aereo[] = $valores['aereo'];
     $aereoexpo[] = $valores['aereoexpo'];
+    $lcl[] = $valores['lcl'];
 }
 ?>
 <!DOCTYPE html>
@@ -192,6 +196,18 @@ foreach ($data as $mes => $valores) {
                         pointRadius: 10,
                         pointBackgroundColor: 'rgba(255, 193, 7, 0.5)',
                         pointBorderColor: 'rgb(255, 193, 7)',
+                        pointHoverRadius: 13,
+                    },
+                    {
+                        label: 'Marítimo LCL',
+                        data: <?= json_encode($lcl) ?>,
+                        borderColor: 'rgb(176, 48, 183)',
+                        backgroundColor: 'rgba(176, 48, 183, 0.1)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointBackgroundColor: 'rgba(176, 48, 183, 0.5)',
+                        pointBorderColor: 'rgb(176, 48, 183)',
                         pointHoverRadius: 13,
                     }
                 ]

@@ -508,7 +508,7 @@ if (isset($_SESSION['email'])) {
                         </div>
                     </div>
 
-                   <script>
+                    <script>
                         function actualizarSubtotal() {
                             let subtotal = 0;
                             let iva = 0;
@@ -1183,7 +1183,7 @@ if (isset($_SESSION['email'])) {
                 if (n === 100) return "CIEN";
                 if (n < 10) return unidades[n];
                 if (n < 20) return especiales[n - 10];
-                if (n < 30) return "VEINTI" + unidades[n % 10];
+                if (n < 30) return n === 20 ? "VEINTE" : "VEINTI" + unidades[n % 10];
                 if (n < 100) return decenas[Math.floor(n / 10)] + (n % 10 !== 0 ? " Y " + unidades[n % 10] : "");
                 if (n < 1000) return centenas[Math.floor(n / 100)] + (n % 100 !== 0 ? " " + convertir(n % 100) : "");
                 if (n < 1000000) return (n < 2000 ? "MIL" : convertir(Math.floor(n / 1000)) + " MIL") + (n % 1000 !== 0 ? " " + convertir(n % 1000) : "");
