@@ -564,6 +564,11 @@ if (isset($_SESSION['email'])) {
                                                                                                     </tr>
                                                                                                 </tbody>
                                                                                             </table>
+
+                                                                                            <div class="row mt-4">
+                                                                                                <div class="col-8 text-end"><b>VALOR TOTAL FLETE INTERNACIONAL</b></div>
+                                                                                                <div class="col-4 text-end"><p>$<?= number_format($aereoimpo['valorTotalFlete'], 2, '.', ','); ?> USD</p></div>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>

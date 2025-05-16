@@ -50,6 +50,7 @@ if (isset($_SESSION['email'])) {
     header('Location: login.php');
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -191,7 +192,7 @@ if (isset($_SESSION['email'])) {
                                                                     <?php
 
 
-                                                                    $query = "SELECT * FROM aereoexpo WHERE id='$registro[id];' ";
+                                                                    $query = "SELECT * FROM aereoexpo WHERE id='$registro[id];'";
                                                                     $query_run = mysqli_query($con, $query);
 
                                                                     if (mysqli_num_rows($query_run) > 0) {
@@ -564,6 +565,11 @@ if (isset($_SESSION['email'])) {
                                                                                                     </tr>
                                                                                                 </tbody>
                                                                                             </table>
+
+                                                                                            <div class="row mt-4">
+                                                                                                <div class="col-8 text-end"><b>VALOR TOTAL FLETE INTERNACIONAL</b></div>
+                                                                                                <div class="col-4 text-end"><p>$<?= number_format($aereoexpo['valorTotalFlete'], 2, '.', ','); ?> USD</p></div>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>

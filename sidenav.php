@@ -69,7 +69,7 @@ require 'dbcon.php';
                         <div class="collapse" id="collapseMaritimo" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="lcl.php">- LCL</a>
-                                <a class="nav-link" href="fcl.php">- FCL</a>
+                                <a class="nav-link" href="#">- FCL</a>
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Panel de control</div>
