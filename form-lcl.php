@@ -270,7 +270,7 @@ if (isset($_SESSION['email'])) {
                                 </p>
 
                                 <p style="display: inline-block;margin-bottom: 5px;">
-                                    1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" name="equivalencia" value="EURO"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="equivalencia" name="valorEquivalencia" value="1.1" oninput="actualizarTotales()">
+                                    1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="cambioInput" name="equivalencia" value="EURO"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="equivalencia" name="valorEquivalencia" value="1.1" oninput="actualizarTotales()">
                                 </p>
                             </div>
 
@@ -302,7 +302,7 @@ if (isset($_SESSION['email'])) {
                     </div>
 
                     <div class="col-12 bg-light mt-5">
-                        <p class="text-center mb-3"><b>GASTOS POR TRASLADO DE MERCANCIAS PUERTO A PUERTO</b></p>
+                        <p class="text-center bg-secondary text-light mb-3 p-1"><b>GASTOS POR TRASLADO DE MERCANCIAS PUERTO A PUERTO</b></p>
                         <div class="row">
                             <div class="col-6">
                                 <p style="display: inline-block;margin-bottom: 5px;">
@@ -311,9 +311,11 @@ if (isset($_SESSION['email'])) {
                                 <table class="table table-striped origen-table text-start" id="origenTable">
                                     <tr>
                                         <th>GASTOS EN ORIGEN</th>
-                                        <th>EUROS</th>
+                                        <th>
+                                            <p id="cambioTexto"></p>
+                                        </th>
                                         <th>EQUIV DLLS</th>
-                                        <th>TOTAL</th>
+                                        <th>TOTAL USD</th>
                                     </tr>
                                     <tr>
                                         <td style="min-width: 140px;"><input style="min-width: 100%;" class="form-control" type="text" name="gastosOrigen[]" value="Pick up"></td>
@@ -338,7 +340,7 @@ if (isset($_SESSION['email'])) {
                                     </tr>
                                     <tr id="filaAmsFee"></tr>
                                     <tr>
-                                        <td colspan="2" class="text-end"><b>Total</b></td>
+                                        <td colspan="2" class="text-end"><b>Total USD</b></td>
                                         <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="totalOrigenAll" id="totalOrigenAll" readonly></td>
                                     </tr>
                                 </table>
@@ -380,7 +382,7 @@ if (isset($_SESSION['email'])) {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-end">Total</td>
+                                        <td class="text-end"><b>Total</b></td>
                                         <td><input name="totalDestinoUsd" id="totalDestinoUsd" class="form-control" readonly></td>
                                         <td><input name="totalDestinoMx" class="form-control" readonly></td>
                                     </tr>
@@ -437,6 +439,15 @@ if (isset($_SESSION['email'])) {
                                 <p class="text-center" style="color: #fff;"><b>GASTOS POR FLETE TERRESTRE</b></p>
                             </div>
                             <table class="table table-striped table-bordered" id="tablaGasto" style="margin-bottom: 0px;">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>IVA</th>
+                                        <th>USD</th>
+                                        <th>MX</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr>
                                         <td><input type="text" class="form-control" name="conceptoGasto[]" value="Cruce fronterizo"></td>
@@ -446,7 +457,8 @@ if (isset($_SESSION['email'])) {
                                                 <label class="form-check-label" for="flexCheck1"> IVA 16% </label>
                                             </div>
                                         </td>
-                                        <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                        <td class="text-end"><input type="text" class="form-control montoGastoClass" name="montoGasto[]" oninput="convertir(this, 'aMX');actualizarSubtotal();"></td>
+                                        <td><input type="text" class="form-control montoGastoMx" name="montoGastoMx[]" oninput="convertir(this, 'aUSD');actualizarSubtotal()"></td>
                                         <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                     </tr>
                                     <tr>
@@ -457,7 +469,8 @@ if (isset($_SESSION['email'])) {
                                                 <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
                                             </div>
                                         </td>
-                                        <td class="text-end"><input type="text" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+                                        <td class="text-end"><input type="text" class="form-control montoGastoClass" name="montoGasto[]" oninput="convertir(this, 'aMX');actualizarSubtotal();"></td>
+                                        <td><input type="text" class="form-control montoGastoMx" name="montoGastoMx[]" oninput="convertir(this, 'aUSD');actualizarSubtotal()"></td>
                                         <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
                                     </tr>
 
@@ -479,17 +492,17 @@ if (isset($_SESSION['email'])) {
                                                 <label class="form-check-label" for="flexCheck4"> IVA 16% </label>
                                             </div>
                                         </td>
-                                        <td colspan="2" class="text-end">
+                                        <td colspan="3" class="text-end">
                                             <input type="text" id="montoSeguro" class="form-control" name="montoGasto[]" oninput="actualizarSubtotal()" readonly>
                                         </td>
                                     </tr>
                                     <tr class="text-end">
                                         <td colspan="2">Subtotal</td>
-                                        <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
+                                        <td colspan="3" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
                                     </tr>
                                     <tr class="text-end">
                                         <td colspan="2">I.V.A 16%</td>
-                                        <td colspan="2"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
+                                        <td colspan="3"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
                                     </tr>
                                     <tr class="text-end">
                                         <td colspan="2">
@@ -498,7 +511,7 @@ if (isset($_SESSION['email'])) {
                                                 <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
                                             </div>
                                         </td>
-                                        <td colspan="2"><input class="form-control" name="retencionFlete" type="text" value="0.00" readonly></td>
+                                        <td colspan="3"><input class="form-control" name="retencionFlete" type="text" value="0.00" readonly></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -912,6 +925,7 @@ if (isset($_SESSION['email'])) {
             // Actualizar otros cálculos
             actualizarValorComercial();
             actualizarValoresUSD_MXN();
+            convertirGastos();
             updateTotal();
         }
 
@@ -1063,6 +1077,8 @@ if (isset($_SESSION['email'])) {
                     console.warn("No se encontró el campo correspondiente en montoGasto[]");
                 }
             }
+
+            convertirGastos();
         }
 
 
@@ -1092,7 +1108,8 @@ if (isset($_SESSION['email'])) {
                     <label class="form-check-label">IVA 16%</label>
                 </div>
             </td>
-            <td class="text-end"><input type="text" class="form-control montoGasto" name="montoGasto[]" oninput="actualizarSubtotal()"></td>
+            <td class="text-end"><input type="text" class="form-control montoGasto montoGastoClass" name="montoGasto[]" oninput="convertir(this, 'aMX');actualizarSubtotal();"></td>
+            <td><input type="text" class="form-control montoGastoMx" name="montoGastoMx[]" oninput="convertir(this, 'aUSD');actualizarSubtotal()"></td>
             <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
         `;
 
@@ -1382,6 +1399,64 @@ if (isset($_SESSION['email'])) {
         }
 
         document.getElementById("equivalencia").addEventListener("input", actualizarTotalesOrigen);
+
+        const input = document.getElementById('cambioInput');
+        const parrafo = document.getElementById('cambioTexto');
+
+        // Mostrar el valor inicial
+        parrafo.textContent = input.value;
+
+        // Actualizar cuando se cambie el valor
+        input.addEventListener('input', function() {
+            parrafo.textContent = input.value;
+        });
+
+        function convertir(elemento, tipo) {
+            const fila = elemento.closest('tr');
+            const inputGasto = fila.querySelector('.montoGastoClass');
+            const inputGastoMx = fila.querySelector('.montoGastoMx');
+            const tasa = parseFloat(document.getElementById('valorMoneda').value);
+
+            if (!tasa || isNaN(tasa)) return;
+
+            if (tipo === 'aMX') {
+                const valor = parseFloat(inputGasto.value);
+                if (!isNaN(valor)) {
+                    inputGastoMx.value = (valor * tasa).toFixed(2);
+                } else {
+                    inputGastoMx.value = '';
+                }
+            }
+
+            if (tipo === 'aUSD') {
+                const valor = parseFloat(inputGastoMx.value);
+                if (!isNaN(valor)) {
+                    inputGasto.value = (valor / tasa).toFixed(2);
+                } else {
+                    inputGasto.value = '';
+                }
+            }
+        }
+
+        function convertirGastos() {
+            const tabla = document.getElementById("tablaGasto");
+            const filas = tabla.querySelectorAll('tr');
+
+            filas.forEach(fila => {
+                const inputGasto = fila.querySelector('.montoGastoClass');
+                const inputGastoMx = fila.querySelector('.montoGastoMx');
+
+                // Si hay valor en montoGasto => convertir a MX
+                if (inputGasto && inputGasto.value) {
+                    convertir(fila, 'aMX');
+                }
+
+                // Si hay valor en montoGastoMx pero no en montoGasto => convertir a USD
+                else if (inputGastoMx && inputGastoMx.value) {
+                    convertir(fila, 'aUSD');
+                }
+            });
+        }
     </script>
 </body>
 

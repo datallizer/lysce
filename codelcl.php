@@ -236,14 +236,16 @@ if (isset($_POST['save'])) {
         if (!empty($_POST['conceptoGasto'])) {
             $conceptoGasto = $_POST['conceptoGasto'];
             $montoGasto = $_POST['montoGasto'];
+            $montoGastoMx = $_POST['montoGastoMx'];
             $ivaGasto = isset($_POST['ivaGasto']) ? $_POST['ivaGasto'] : [];
 
             for ($i = 0; $i < count($conceptoGasto); $i++) {
                 $concepto = get_post_array_value($con, $conceptoGasto, $i, '');
                 $monto = get_post_array_value($con, $montoGasto, $i);
+                $montoMx = get_post_array_value($con, $montoGastoMx, $i);
                 $iva = isset($ivaGasto[$i]) ? 1 : 0;
 
-                $sql_gasto = "INSERT INTO gastoslcl (idLcl, conceptoGasto, montoGasto, ivaGasto) VALUES ('$idLcl', '$concepto', '$monto', '$iva')";
+                $sql_gasto = "INSERT INTO gastoslcl (idLcl, conceptoGasto, montoGasto, montoGastoMx, ivaGasto) VALUES ('$idLcl', '$concepto', '$monto', '$montoMx', '$iva')";
                 mysqli_query($con, $sql_gasto);
             }
         }
@@ -417,7 +419,7 @@ if (isset($_POST['update'])) {
                 mysqli_query($con, $sql_destino);
             }
         }
-        
+
 
         if (!empty($_POST['gastosOrigen']) && is_array($_POST['gastosOrigen'])) {
             foreach ($_POST['gastosOrigen'] as $i => $concepto) {
@@ -449,10 +451,11 @@ if (isset($_POST['update'])) {
             foreach ($_POST['conceptoGasto'] as $i => $gasto) {
                 $concepto_val = mysqli_real_escape_string($con, $gasto);
                 $monto_val = mysqli_real_escape_string($con, $_POST['montoGasto'][$i]);
+                $montomx_val = mysqli_real_escape_string($con, $_POST['montoGastoMx'][$i]);
                 $iva_val = isset($_POST['ivaGasto'][$i]) ? 1 : 0;
 
-                $sql_gasto = "INSERT INTO gastoslcl (idLcl, conceptoGasto, montoGasto, ivaGasto)
-                              VALUES ('$id', '$concepto_val', '$monto_val', '$iva_val')";
+                $sql_gasto = "INSERT INTO gastoslcl (idLcl, conceptoGasto, montoGasto, montoGastoMx, ivaGasto)
+                              VALUES ('$id', '$concepto_val', '$monto_val', '$montomx_val', '$iva_val')";
                 mysqli_query($con, $sql_gasto);
             }
         }
