@@ -620,14 +620,14 @@ if (isset($_SESSION['email'])) {
                                                                                     name="montoGasto[]"
                                                                                     id="montoSeguro"
                                                                                     data-id="<?= $uniqueId; ?>"
-                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);"
+                                                                                    oninput="actualizarSubtotal();"
                                                                                     readonly>
                                                                             </td>
                                                                             <input type="hidden" value="0"
                                                                                 class="form-control montoGastoMx"
                                                                                 name="montoGastoMx[]"
                                                                                 data-id="<?= $uniqueId; ?>"
-                                                                                oninput="convertir(this, 'aUSD');actualizarSubtotal(); sincronizarIncrementable(this);">
+                                                                                oninput="convertir(this, 'aUSD');actualizarSubtotal();">
                                                                         <?php else: ?>
                                                                             <td class="text-end">
                                                                                 <input type="text" value="<?= $gasto['montoGasto']; ?>"
@@ -641,7 +641,7 @@ if (isset($_SESSION['email'])) {
                                                                                     class="form-control montoGastoMx"
                                                                                     name="montoGastoMx[]"
                                                                                     data-id="<?= $uniqueId; ?>"
-                                                                                    oninput="convertir(this, 'aUSD');actualizarSubtotal(); sincronizarIncrementable(this);">
+                                                                                    oninput="convertir(this, 'aUSD');actualizarSubtotal();sincronizarIncrementable(this);">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
@@ -1276,6 +1276,7 @@ if (isset($_SESSION['email'])) {
                 // Calcula y actualiza el valor en MXN
                 mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
 
+
                 // Actualiza los totales
                 updateTotal();
             }
@@ -1369,8 +1370,8 @@ if (isset($_SESSION['email'])) {
                     <label class="form-check-label">IVA 16%</label>
                 </div>
             </td>
-            <td class="text-end"><input type="text" class="form-control montoGasto" name="montoGasto[]" data-id="${uniqueId}" oninput="convertir(this, 'aMX');actualizarSubtotal();"></td>
-            <td><input type="text" class="form-control montoGastoMx" name="montoGastoMx[]" data-id="${uniqueId}" oninput="convertir(this, 'aUSD');actualizarSubtotal()"></td>
+            <td class="text-end"><input type="text" class="form-control montoGasto" name="montoGasto[]" data-id="${uniqueId}" oninput="convertir(this, 'aMX');actualizarSubtotal();sincronizarIncrementable(this);"></td>
+            <td><input type="text" class="form-control montoGastoMx" name="montoGastoMx[]" data-id="${uniqueId}" oninput="convertir(this, 'aUSD');actualizarSubtotal();sincronizarIncrementable(this);"></td>
             <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
         `;
 
@@ -1385,16 +1386,34 @@ if (isset($_SESSION['email'])) {
                 if (gastoInput) {
                     gastoInput.value = input.value; // Asigna el mismo valor al campo de gasto correspondiente
                 }
+
+                convertirGastos();
             }
 
             function sincronizarIncrementable(input) {
-                var id = input.getAttribute("data-id");
-                var incrementableInput = document.querySelector(`.usd-input[data-id="${id}"]`);
+                const id = input.getAttribute("data-id");
+                const incrementableInput = document.querySelector(`.usd-input[data-id="${id}"]`);
+                const tasa = parseFloat(document.getElementById('valorMoneda').value);
 
-                if (incrementableInput) {
-                    incrementableInput.value = input.value; // Asigna el mismo valor al campo de incrementable correspondiente
+                if (!incrementableInput || !tasa || isNaN(tasa)) return;
+
+                let valor;
+
+                if (input.classList.contains("montoGasto")) {
+                    // Ya está en USD, se copia tal cual
+                    valor = parseFloat(input.value);
+                } else if (input.classList.contains("montoGastoMx")) {
+                    // Convertir de MXN a USD
+                    valor = parseFloat(input.value) / tasa;
+                }
+
+                if (!isNaN(valor)) {
+                    incrementableInput.value = valor.toFixed(2);
+                } else {
+                    incrementableInput.value = '';
                 }
             }
+
 
 
 
