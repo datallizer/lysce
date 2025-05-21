@@ -118,6 +118,11 @@ WHERE
         }
     }
 
+    $query_lcl = "SELECT valorEquivalencia FROM lcl WHERE id = $id";
+    $resultado_lcl = mysqli_query($con, $query_lcl);
+    $equiv = mysqli_fetch_assoc($resultado_lcl);
+
+
     $query_origen = "SELECT * FROM gastosorigenlcl WHERE idLcl = $id";
     $resultado_origen = mysqli_query($con, $query_origen);
 
@@ -125,16 +130,20 @@ WHERE
     $origen_count = 0;
     if (mysqli_num_rows($resultado_origen) > 0) {
         while ($row = mysqli_fetch_assoc($resultado_origen)) {
-            $origen_html .= '
-            <tr>
-                <td>' . htmlspecialchars($row['gastosOrigen']) . '</td>
-                <td>$' . number_format($row['euros'], 2, '.', ',') . '</td>
-                <td>$' . number_format($row['equivalenciaOrigen'], 2, '.', ',') . '</td>
-                <td>$' . number_format($row['usdOrigen'], 2, '.', ',') . '</td>
-            </tr>';
+            $origen_html .= '<tr>';
+            $origen_html .= '<td>' . htmlspecialchars($row['gastosOrigen']) . '</td>';
+
+            if ((float)$equiv['valorEquivalencia'] != 1) {
+                $origen_html .= '<td>$' . number_format($row['euros'], 2, '.', ',') . '</td>';
+                $origen_html .= '<td>$' . number_format($row['equivalenciaOrigen'], 2, '.', ',') . '</td>';
+            }
+
+            $origen_html .= '<td>$' . number_format($row['usdOrigen'], 2, '.', ',') . '</td>';
+            $origen_html .= '</tr>';
             $origen_count++;
         }
     }
+
 
     $query_destino = "SELECT * FROM gastosdestinolcl WHERE idLcl = $id";
     $resultado_destino = mysqli_query($con, $query_destino);
@@ -207,6 +216,8 @@ WHERE
             <tr>
                 <td>' . htmlspecialchars($row['conceptoGasto']) . '</td>
                 <td>$' . number_format($row['montoGasto'], 2, '.', ',') . '</td>
+                <td>$' . number_format($row['montoGastoMx'] != '' ? $row['montoGastoMx'] : 0, 2, '.', ',') . '</td>
+
             </tr>';
         }
     }
@@ -369,7 +380,9 @@ WHERE
             ' . $mercancias_html . '
             <tr class="bg-secondary">
                 <td></td>
-                <td>1 ' . $registro['moneda'] . ' = ' . $registro['valorMoneda'] . '</td>
+                <td>
+                    <p>1 ' . $registro['moneda'] . ' = ' . $registro['valorMoneda'] . '</p>
+                    <p>1 ' . $registro['equivalencia'] . ' = ' . $registro['valorEquivalencia'] . '</p></td>
                 <td></td>
                 <td colspan="2">
                     <p><b>Peso total de la mercancía</b></p>
@@ -390,34 +403,37 @@ WHERE
     </table>';
 
             $html .= '
-    <h3>GASTOS POR TRASLADO DE MERCANCIAS PUERTO A PUERTO</h3>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td style="border: 0px !important;">
-                <p><b>Lugar origen:</b> ' . $registro['lugarOrigen'] . '</p>';
+<h3>GASTOS POR TRASLADO DE MERCANCIAS PUERTO A PUERTO</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <td style="border: 0px !important;">
+            <p><b>Lugar origen:</b> ' . $registro['lugarOrigen'] . '</p>';
+
             if ($origen_html != '') {
                 $html .= '
-  <table id="servicios" class="table">
+    <table id="servicios" class="table">
         <thead>
             <tr style="background-color:#e7e7e7;">
-                <td>GASTOS EN ORIGEN</td>
-                <td>EUROS</td>
-                <td>EQUIVALENCIA DLLS</td>
-                <td>TOTAL USD</td>
+                <td>GASTOS EN ORIGEN</td>';
+                if ($registro['valorEquivalencia'] != 1) {
+                    $html .= '<td>EUROS</td>
+                  <td>EQUIVALENCIA DLLS</td>';
+                }
+                $html .= '<td>TOTAL USD</td>
             </tr>
         </thead>
-        <tbody>
-            ' . $origen_html . '
-            <tr><td colspan="4" style="color:#ffffff;">-</td></tr>
-            <tr><td colspan="4" style="color:#ffffff;">-</td></tr>
+        <tbody>' . $origen_html . '
+            <tr><td colspan="' . ($registro['valorEquivalencia'] == 1 ? '2' : '4') . '" style="color:#ffffff;">-</td></tr>
+            <tr><td colspan="' . ($registro['valorEquivalencia'] == 1 ? '2' : '4') . '" style="color:#ffffff;">-</td></tr>
             <tr class="bg-secondary">
-                <td colspan="3" style="text-align:right;">Total</td>
+                <td colspan="' . ($registro['valorEquivalencia'] == 1 ? '1' : '3') . '" style="text-align:right;">Total</td>
                 <td>$' . number_format($registro['totalOrigenAll'], 2, '.', ',') . '</td>
             </tr>
         </tbody>
     </table>';
             }
+
             $html .= '</td>
                 <td style="border: 0px !important;">
                 <p><b>Lugar destino:</b> ' . $registro['lugarDestino'] . '</p>';
@@ -495,28 +511,29 @@ WHERE
         <thead>
             <tr style="background-color:#e7e7e7;">
                 <td>Concepto</td>
-                <td>Monto</td>
+                <td>USD</td>
+                <td>MX</td>
             </tr>
         </thead>
         <tbody>
             ' . $gasto_html . '
             <tr class="bg-secondary">
                 <td style="text-align:right;">Subtotal</td>
-                <td>$' . number_format($registro['subtotalFlete'], 2, '.', ',') . ' USD</td>
+                <td colspan="2">$' . number_format($registro['subtotalFlete'], 2, '.', ',') . ' USD</td>
             </tr>
             <tr class="bg-secondary">
                 <td style="text-align:right;">IVA</td>
-                <td>$' . number_format($registro['impuestosFlete'], 2, '.', ',') . ' USD</td>
+                <td colspan="2">$' . number_format($registro['impuestosFlete'], 2, '.', ',') . ' USD</td>
             </tr>
             <tr class="bg-secondary">
                 <td style="text-align:right;">Retención</td>
-                <td>$' . number_format($registro['retencionFlete'], 2, '.', ',') . ' USD</td>
+                <td colspan="2">$' . number_format($registro['retencionFlete'], 2, '.', ',') . ' USD</td>
             </tr><tr class="bg-warning">
                 <td style="text-align:right;"><b>TOTAL USD</b></td>
-                <td><b>$' . number_format($registro['totalCotizacionNumero'], 2, '.', ',') . ' USD</b></td>
+                <td colspan="2"><b>$' . number_format($registro['totalCotizacionNumero'], 2, '.', ',') . ' USD</b></td>
             </tr>
             <tr class="bg-warning" style="text-align:center;">
-                <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . '</b></td>
+                <td colspan="3"><b>' . $registro['totalCotizacionTexto'] . '</b></td>
             </tr>
         </tbody>
     </table>
