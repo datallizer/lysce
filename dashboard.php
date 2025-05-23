@@ -60,7 +60,7 @@ for ($i = 1; $i <= 12; $i++) {
 // Inicializar estructura con 0
 $data = [];
 foreach ($meses as $mes) {
-    $data[$mes] = ['ftl' => 0, 'ltl' => 0, 'aereo' => 0, 'aereoexpo' => 0, 'lcl' => 0];
+    $data[$mes] = ['ftl' => 0, 'ltl' => 0, 'aereo' => 0, 'aereoexpo' => 0, 'lcl' => 0, 'fcl' => 0];
 }
 
 // Consulta para obtener los conteos por mes y tipo
@@ -74,6 +74,8 @@ $sql = "
     SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'aereoexpo' AS tipo FROM aereoexpo WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
     UNION ALL
     SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'lcl' AS tipo FROM lcl WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
+    UNION ALL
+    SELECT DATE_FORMAT(fecha, '%Y-%m') AS mes, COUNT(*) AS total, 'fcl' AS tipo FROM fcl WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY mes
 ";
 
 
@@ -96,6 +98,7 @@ $ftl = [];
 $ltl = [];
 $aereo = [];
 $lcl = [];
+$fcl = [];
 
 foreach ($data as $mes => $valores) {
     $ftl[] = $valores['ftl'];
@@ -103,6 +106,7 @@ foreach ($data as $mes => $valores) {
     $aereo[] = $valores['aereo'];
     $aereoexpo[] = $valores['aereoexpo'];
     $lcl[] = $valores['lcl'];
+    $fcl[] = $valores['fcl'];
 }
 ?>
 <!DOCTYPE html>
@@ -127,7 +131,7 @@ foreach ($data as $mes => $valores) {
                 <div class="row mt-4 mb-5 justify-content-center align-items-center">
                     <div class="col-12 mb-3">
                         <h3>DASHBOARD</h3>
-                        <p style="color:rgb(180, 180, 180);">Registro de cotizaciones por mes</p>
+                        <p class="small" style="color:rgb(180, 180, 180);">Cotizaciones por mes</p>
                     </div>
                     <div class="col-12 col-md-10">
                         <canvas id="lineChart"></canvas>
@@ -208,6 +212,18 @@ foreach ($data as $mes => $valores) {
                         pointRadius: 10,
                         pointBackgroundColor: 'rgba(176, 48, 183, 0.5)',
                         pointBorderColor: 'rgb(176, 48, 183)',
+                        pointHoverRadius: 13,
+                    },
+                    {
+                        label: 'Marítimo FCL',
+                        data: <?= json_encode($fcl) ?>,
+                        borderColor: 'rgb(94, 94, 94)',
+                        backgroundColor: 'rgba(94, 94, 94, 0.1)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointBackgroundColor: 'rgba(94, 94, 94, 0.5)',
+                        pointBorderColor: 'rgb(94, 94, 94)',
                         pointHoverRadius: 13,
                     }
                 ]

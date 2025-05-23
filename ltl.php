@@ -109,6 +109,7 @@ if (isset($_SESSION['email'])) {
                                     <thead>
                                         <tr>
                                             <th>Identificador</th>
+                                            <th>Tipo</th>
                                             <th>Cliente</th>
                                             <th>Origen</th>
                                             <th>Destino</th>
@@ -147,6 +148,9 @@ if (isset($_SESSION['email'])) {
                                                 <tr>
                                                     <td>
                                                         <p><?= $registro['identificador']; ?></p>
+                                                    </td>
+                                                    <td>
+                                                        <p><?= $registro['tipoLtl']; ?></p>
                                                     </td>
                                                     <td>
                                                         <p><?= $registro['cliente_nombre']; ?></p>
@@ -709,9 +713,9 @@ if (isset($_SESSION['email'])) {
         $(document).ready(function() {
             $('#miTabla').DataTable({
                 "order": [
-                    [0, "desc"]
+                    [6, "desc"]
                 ],
-                "pageLength": 25
+                "pageLength": 50
             });
 
             const downloadButtons = document.querySelectorAll(".file-download");

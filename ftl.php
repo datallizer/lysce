@@ -710,9 +710,9 @@ if (isset($_SESSION['email'])) {
         $(document).ready(function() {
             $('#miTabla').DataTable({
                 "order": [
-                    [0, "desc"]
+                    [6, "desc"]
                 ],
-                "pageLength": 25
+                "pageLength": 50
             });
 
             const downloadButtons = document.querySelectorAll(".file-download");
