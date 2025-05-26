@@ -10,9 +10,9 @@ RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.*)$ $1.php
 
 
-ErrorDocument 404 /404page.html
+ErrorDocument 404 /404page.php
 RewriteEngine On
 RewriteBase /
 
 RewriteCond %{REQUEST_URI} ^/404/$
-RewriteRule ^(.*)$ /404page.html [L]
+RewriteRule ^(.*)$ /404page.php [L]
