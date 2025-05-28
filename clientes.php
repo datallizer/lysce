@@ -140,7 +140,7 @@ if (isset($_SESSION['email'])) {
 
                                                         if (mysqli_num_rows($proveedores_run) > 0) {
                                                             while ($proveedor = mysqli_fetch_assoc($proveedores_run)) {
-                                                                echo "<div class='d-flex'><p>{$proveedor['cliente']}</p><form action='codeclientes.php' method='post'>
+                                                                echo "<div class='d-flex mt-1'><p>{$proveedor['cliente']}</p><form action='codeclientes.php' method='post'>
                                                                 <input type='hidden' name='id' value='{$proveedor['idasoc']}'>
                                                                 <input type='hidden' name='ubicacion' value='clientes'>
                                                                 <button class='btn btn-sm btn-outline-danger' type='submit' name='desasociar'><i class='bi bi-x-lg'></i></button>
@@ -259,7 +259,7 @@ if (isset($_SESSION['email'])) {
 
                 <form action="codeclientes.php" method="post">
                     <div class="modal-body row">
-
+                        <input type="hidden" name="tipo" value="Cliente">
                         <div class="form-floating mt-3 mb-3">
                             <select class="form-select" name="idCliente" id="floatingSelect">
                                 <option selected>Selecciona un cliente para asociar</option>
@@ -284,7 +284,7 @@ if (isset($_SESSION['email'])) {
                             <select class="form-select" name="idProveedor" id="floatingSelect">
                                 <option selected>Selecciona un proveedor para asociar</option>
                                 <?php
-                                $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Proveedor'";
+                                $query = "SELECT * FROM clientes WHERE estatus = 1 ";
                                 $result = mysqli_query($con, $query);
 
                                 if (mysqli_num_rows($result) > 0) {
@@ -318,35 +318,13 @@ if (isset($_SESSION['email'])) {
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>
     <script src="js/js.js"></script>
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
             $('#miTabla').DataTable({
                 "order": [
                     [0, "desc"]
                 ],
                 "pageLength": 25
             });
-        });
-        
-        document.getElementById('clienteForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita el envío del formulario de manera tradicional
-
-            const form = event.target;
-            const formData = new FormData(form);
-
-            fetch('codeclientes.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text()) // O .json() si esperas una respuesta JSON
-                .then(data => {
-                    console.log(data); // Procesa la respuesta aquí
-                    alert('Formulario enviado con éxito');
-                    // Aquí podrías actualizar el DOM según la respuesta
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Hubo un problema al enviar el formulario');
-                });
         });
     </script>
 </body>

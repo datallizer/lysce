@@ -36,7 +36,7 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Editar cotización FTL | LYSCE</title>
+    <title>Duplicando marítimo LCL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico" />
@@ -52,8 +52,8 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>EDITAR COTIZACIÓN
-                                    <a href="ftl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
+                                <h4>DUPLICANDO COTIZACIÓN MARÍTIMO LCL
+                                    <a href="lcl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
                                 </h4>
                             </div>
                             <div class="card-body">
@@ -62,14 +62,14 @@ if (isset($_SESSION['email'])) {
 
                                 if (isset($_GET['id'])) {
                                     $registro_id = mysqli_real_escape_string($con, $_GET['id']);
-                                    $query = "SELECT * FROM ftl WHERE id='$registro_id' ";
+                                    $query = "SELECT * FROM lcl WHERE id='$registro_id' ";
                                     $query_run = mysqli_query($con, $query);
 
                                     if (mysqli_num_rows($query_run) > 0) {
                                         $registro = mysqli_fetch_array($query_run);
-                                        $titulo = $registro['tipoFtl'];
+                                        $titulo = $registro['tipoLcl'];
                                 ?>
-                                        <form action="codeftl.php" method="POST" class="row justify-content-evenly">
+                                        <form action="codelcl.php" method="POST" class="row justify-content-evenly">
                                             <input class="form-control" value="<?= $registro['id']; ?>" type="hidden" name="id">
                                             <div class="col-3 mb-3 text-center">
                                                 <img style="width: 70%;" src="images/logo.png" alt="">
@@ -88,16 +88,16 @@ if (isset($_SESSION['email'])) {
                                                 <input class="form-control" type="text" name="fecha" id="" value="<?= $registro['fecha']; ?>">
                                             </div>
                                             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                                                <select class="form-select bg-warning" name="tipoFtl" required>
+                                                <select class="form-select bg-warning" name="tipoLcl" required>
                                                     <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
-                                                    $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
+                                                    $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'lcl'";
                                                     $result = mysqli_query($con, $query);
 
                                                     if (mysqli_num_rows($result) > 0) {
                                                         while ($titulo = mysqli_fetch_assoc($result)) {
                                                             $nombre = $titulo['nombreServicio'];
-                                                            $selected = ($registro['tipoFtl'] == $nombre) ? "selected" : ""; // Verifica si es el seleccionado
+                                                            $selected = ($registro['tipoLcl'] == $nombre) ? "selected" : ""; // Verifica si es el seleccionado
                                                             echo "<option value='$nombre' $selected>$nombre</option>";
                                                         }
                                                     }
@@ -152,7 +152,7 @@ if (isset($_SESSION['email'])) {
 
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino en frontera</b></p>
-                                                <select class="form-select" name="idAduana" id="aduana">
+                                                <select class="form-select" name="idDestino" id="aduana">
                                                     <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -174,7 +174,7 @@ if (isset($_SESSION['email'])) {
 
                                             <div class="col-4 p-3" style="border: 1px solid #666666;">
                                                 <p class="mb-1"><b>Destino Final</b></p>
-                                                <select class="form-select" name="idDestino" id="destino">
+                                                <select class="form-select" name="idAduana" id="destino">
                                                     <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
                                                     $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -269,8 +269,8 @@ if (isset($_SESSION['email'])) {
                                                             <th>Valor factura</th>
                                                         </tr>
                                                         <?php
-                                                        // Obtener los registros de descripcionmercanciasftl relacionados con el ID de ftl
-                                                        $query_desc = "SELECT * FROM descripcionmercanciasftl WHERE idFtl='$registro_id'";
+                                                        // Obtener los registros de descripcionmercanciaslcl relacionados con el ID de lcl
+                                                        $query_desc = "SELECT * FROM descripcionmercanciaslcl WHERE idLcl='$registro_id'";
                                                         $query_run_desc = mysqli_query($con, $query_desc);
 
                                                         if (mysqli_num_rows($query_run_desc) > 0) {
@@ -280,11 +280,9 @@ if (isset($_SESSION['email'])) {
 
                                                                     <td>
                                                                         <input style="width: 60px;" class="form-control mb-3" type="text" name="cantidad[]" value="<?= $mercancia['cantidad']; ?>" oninput="convertToCmAndCalculateVolume(this)">
-                                                                        <p>NMFC</p>
                                                                     </td>
                                                                     <td>
                                                                         <input class="form-control mb-1" type="text" name="unidadMedida[]" value="<?= $mercancia['unidadMedida']; ?>">
-                                                                        <input class="form-control" type="text" name="nmfc[]" value="<?= $mercancia['nmfc']; ?>" readonly>
                                                                     </td>
                                                                     <td>
                                                                         <input class="form-control" type="text" name="descripcion[]" value="<?= $mercancia['descripcion']; ?>">
@@ -332,10 +330,10 @@ if (isset($_SESSION['email'])) {
                                                 <div class="row mt-3 mb-3">
                                                     <div class="col-3 text-center">
                                                         <p style="display: inline-block;margin-bottom: 5px;">
-                                                            Total bultos <input class="form-control" type="text" name="totalBultos" id="totalBultos" style="width: 80px; display: inline-block;" readonly>
+                                                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" name="moneda" id="moneda" value="<?= $registro['moneda']; ?>"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="<?= $registro['valorMoneda']; ?>" oninput="actualizarTotales()">
                                                         </p>
                                                         <p style="display: inline-block;margin-bottom: 5px;">
-                                                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" name="moneda" id="moneda" value="<?= $registro['moneda']; ?>"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="valorMoneda" name="valorMoneda" value="<?= $registro['valorMoneda']; ?>" oninput="actualizarTotales()">
+                                                            1 <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="cambioInput" name="equivalencia" value="EURO"> = <input class="form-control" style="width: 80px; display: inline-block;" type="text" id="equivalencia" name="valorEquivalencia" value="<?= $registro['valorEquivalencia']; ?>" oninput="actualizarTotales()">
                                                         </p>
                                                     </div>
 
@@ -343,10 +341,10 @@ if (isset($_SESSION['email'])) {
                                                         <table class="text-end">
                                                             <tr>
                                                                 <td>Peso total de la mercancía</td>
-                                                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaLbs" name="pesoMercanciaLbs" readonly> lbs</td>
+                                                                <td><input class="form-control" style="width: 120px; display: inline-block;" type="text" value="<?= $registro['pesoMercanciaLbs']; ?>" id="pesoMercanciaLbs" name="pesoMercanciaLbs" readonly> lbs</td>
                                                             </tr>
                                                             <tr>
-                                                                <td colspan="2"><input class="form-control" style="width: 120px; display: inline-block;" type="text" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
+                                                                <td colspan="2"><input class="form-control" style="width: 120px; display: inline-block;" type="text" value="<?= $registro['pesoMercanciaKgs']; ?>" id="pesoMercanciaKgs" name="pesoMercanciaKgs" readonly> kgs</td>
                                                             </tr>
                                                         </table>
                                                     </div>
@@ -355,59 +353,61 @@ if (isset($_SESSION['email'])) {
                                                         <table class="text-end w-100">
                                                             <tr>
                                                                 <td>VALOR TOTAL DE LA MERCANCÍA USD</td>
-                                                                <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercancia" readonly oninput="actualizarSubtotal();"></td>
+                                                                <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorMercancia" name="valorMercanciaUSD" readonly oninput="actualizarSubtotal();"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>VALOR TOTAL DE LA MERCANCÍA MXN</td>
-                                                                <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorComercial" readonly></td>
+                                                                <td>$<input class="form-control mt-1" style="width: 110px; display: inline-block;" type="text" id="valorComercial" name="valorMercanciaMXN" readonly></td>
                                                             </tr>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 mt-5">
-                                                <div class="card">
-                                                    <div class="card-header bg-secondary">
-                                                        <p class="text-center" style="color: #fff;"><b>TIPO DE SERVICIO</b></p>
-                                                    </div>
-                                                    <table class="table table-striped table-bordered" style="margin-bottom: 0px;" id="servicioTable">
-                                                        <thead>
+                                            <div class="col-12 bg-light mt-5">
+                                                <div class="card-header bg-secondary mb-3">
+                                                    <p class="text-center text-light"><b>GASTOS POR TRASLADO DE MERCANCIAS A AEROPUERTO</b></p>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <p style="display: inline-block;margin-bottom: 5px;">
+                                                            <b>Lugar origen:</b> <input class="form-control" style="width: 300px; display: inline-block;" type="text" name="lugarOrigen" value="<?= $registro['lugarOrigen']; ?>">
+                                                        </p>
+                                                        <table class="table table-striped origen-table text-start" id="origenTable">
                                                             <tr>
-                                                                <th>Servicio</th>
-                                                                <th>Tiempo de transito</th>
+                                                                <th>GASTOS EN ORIGEN</th>
+                                                                <th>
+                                                                    <p id="cambioTexto"></p>
+                                                                </th>
+                                                                <th>EQUIV DLLS</th>
+                                                                <th>TOTAL USD</th>
                                                             </tr>
-                                                        </thead>
-                                                        <tbody>
                                                             <?php
-                                                            $query_servicio = "SELECT * FROM servicioftl WHERE idFtl='$registro_id'";
-                                                            $query_run_servicio = mysqli_query($con, $query_servicio);
+                                                            $query_origen = "SELECT * FROM gastosorigenlcl WHERE idLcl='$registro_id'";
+                                                            $query_run_origen = mysqli_query($con, $query_origen);
 
-                                                            if (mysqli_num_rows($query_run_servicio) > 0) {
-                                                                while ($servicio = mysqli_fetch_assoc($query_run_servicio)) {
+                                                            if (mysqli_num_rows($query_run_origen) > 0) {
+                                                                while ($origen = mysqli_fetch_assoc($query_run_origen)) {
+
                                                             ?>
                                                                     <tr>
-
-                                                                        <td>
-                                                                            <select class="form-select" name="conceptoServicio[]">
-                                                                                <option value="" disabled selected>Selecciona una opción</option>
-                                                                                <?php
-                                                                                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
-                                                                                $result = mysqli_query($con, $query);
-                                                                                $conceptoSeleccionado = $servicio['conceptoServicio'];
-
-                                                                                if (mysqli_num_rows($result) > 0) {
-                                                                                    while ($registro_servicio = mysqli_fetch_assoc($result)) {
-                                                                                        $nombre = $registro_servicio['nombreServicio'];
-                                                                                        $selected = ($nombre == $conceptoSeleccionado) ? "selected" : "";
-                                                                                        echo "<option value='$nombre' $selected>$nombre</option>";
-                                                                                    }
-                                                                                }
-                                                                                ?>
-                                                                            </select>
+                                                                        <td style="min-width: 140px;">
+                                                                            <input style="min-width: 100%;" type="text" name="gastosOrigen[]" class="form-control" value="<?= $origen['gastosOrigen']; ?>">
                                                                         </td>
-
-                                                                        <td><input type="text" name="tiempoServicio[]" value="<?= $servicio['tiempoServicio']; ?>" class="form-control"></td>
+                                                                        <td>
+                                                                            <input type="text" name="euros[]" class="euros form-control" value="<?= $origen['euros']; ?>" oninput="actualizarTotalesOrigen();">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" name="equivalenciaOrigen[]" class="equivalencia form-control" value="<?= $origen['equivalenciaOrigen']; ?>">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" name="usdOrigen[]" class="usOrigen form-control" value="<?= $origen['usdOrigen']; ?>" readonly>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaOrigen(this)">
+                                                                                <i class="bi bi-trash3"></i>
+                                                                            </button>
+                                                                        </td>
                                                                     </tr>
                                                             <?php
                                                                 }
@@ -415,11 +415,80 @@ if (isset($_SESSION['email'])) {
                                                                 echo "<tr><td colspan='6' class='text-center'>No se encontraron registros</td></tr>";
                                                             }
                                                             ?>
-                                                        </tbody>
-                                                    </table>
-                                                    <div class="col-12 text-center p-2">
-                                                        <button class="btn btn-danger" id="removeServiceButton" type="button">-</button>
-                                                        <button class="btn btn-secondary" id="addServiceButton" type="button" onclick="agregarTipoServicio()">+</button>
+
+                                                            <tr id="filaAmsFee"></tr>
+                                                            <tr>
+                                                                <td colspan="2" class="text-end"><b>Total USD</b></td>
+                                                                <td colspan="2"><input type="text" style="min-width: 100%;" class="form-control" name="totalOrigenAll" id="totalOrigenAll" readonly></td>
+                                                            </tr>
+                                                        </table>
+                                                        <div class="text-center">
+                                                            <button type="button" class="btn btn-sm btn-secondary" onclick="agregarFilaDespuesDeAMS()">Agregar gasto</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p style="display: inline-block;margin-bottom: 5px;">
+                                                            <b>Lugar destino:</b> <input class="form-control" style="width: 280px; display: inline-block;" type="text" name="lugarDestino">
+                                                        </p>
+                                                        <table class="table table-striped destino-table text-start" id="destinoTable">
+                                                            <tr>
+                                                                <td><b>GASTOS EN DESTINO</b></td>
+                                                                <td><b>USD</b></td>
+                                                                <td><b>MX</b></td>
+                                                            </tr>
+                                                            <?php
+                                                            $query_destino = "SELECT * FROM gastosdestinolcl WHERE idLcl='$registro_id'";
+                                                            $query_run_destino = mysqli_query($con, $query_destino);
+
+                                                            if (mysqli_num_rows($query_run_destino) > 0) {
+                                                                while ($destino = mysqli_fetch_assoc($query_run_destino)) {
+                                                            ?>
+                                                                    <tr>
+                                                                        <td style="min-width: 140px;"><input style="min-width: 100%;" type="text" name="gastoDestino[]" class="form-control" value="<?= $destino['gastoDestino']; ?>"></td>
+                                                                        <td><input type="text" name="usdDestino[]" class="dolarInputs form-control" value="<?= $destino['usdDestino']; ?>" oninput="updateRowDestinySpents(this)"></td>
+                                                                        <td><input type="text" name="mxnDestino[]" class="mxnOutputs form-control" value="<?= $destino['mxnDestino']; ?>"></td>
+                                                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaDestino(this)"><i class="bi bi-trash3"></i></button></td>
+                                                                    </tr>
+                                                            <?php
+                                                                }
+                                                            } else {
+                                                                echo "<tr><td colspan='3' class='text-center'>No se encontraron registros</td></tr>";
+                                                            }
+                                                            ?>
+                                                            <tr id="filaAmsFeeDestino"></tr>
+                                                            <tr>
+                                                                <td class="text-end">Subtotal</td>
+                                                                <td><input name="subtotalDestinoUsd" class="form-control" readonly></td>
+                                                                <td><input name="subtotalDestinoMx" class="form-control" readonly></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-end">Impuestos</td>
+                                                                <td><input name="impuestosDestinoUsd" class="form-control" readonly></td>
+                                                                <td><input name="impuestosDestinoMx" class="form-control" readonly></td>
+                                                                <td>
+                                                                    <div class="form-check float-end">
+                                                                        <input style="width: 15px !important;" class="form-check-input" type="checkbox" name="ivaDestino" checked>
+                                                                        <label class="form-check-label" for="flexCheck2"> IVA 16% </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-end"><b>Total</b></td>
+                                                                <td><input name="totalDestinoUsd" id="totalDestinoUsd" class="form-control" readonly></td>
+                                                                <td><input name="totalDestinoMx" class="form-control" readonly></td>
+                                                            </tr>
+                                                        </table>
+                                                        <div class="text-center">
+                                                            <button type="button" class="btn btn-sm btn-secondary" onclick="agregarFilaDespuesDeAMSDestino()">Agregar gasto</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-10 text-end">
+                                                                <p><b>VALOR TOTAL FLETE INT (USD)</b></p>
+                                                            </div>
+                                                            <div class="col-2 text-end"><input name="valorTotalFlete" class="form-control" readonly id="valorTotalFlete"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -429,7 +498,7 @@ if (isset($_SESSION['email'])) {
                                                     <div class="card-header bg-secondary">
                                                         <p class="text-center" style="color: #fff;"><b>DETERMINACIÓN DE INCREMENTABLES</b></p>
                                                     </div>
-                                                    <table class="table table-striped tabñe-bordered" id="incrementableTable" style="margin-bottom: 0px;">
+                                                    <table class="table table-striped table-bordered" id="incrementableTable" style="margin-bottom: 0px;">
                                                         <thead>
                                                             <tr>
                                                                 <th>Incrementable</th>
@@ -439,7 +508,7 @@ if (isset($_SESSION['email'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                            $query_incrementable = "SELECT * FROM incrementablesftl WHERE idFtl='$registro_id'";
+                                                            $query_incrementable = "SELECT * FROM incrementableslcl WHERE idLcl='$registro_id'";
                                                             $query_run_incrementable = mysqli_query($con, $query_incrementable);
 
                                                             if (mysqli_num_rows($query_run_incrementable) > 0) {
@@ -451,7 +520,7 @@ if (isset($_SESSION['email'])) {
                                                                             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="<?= $uniqueId; ?>" onchange="actualizarConceptoGasto(this)">
                                                                                 <option value="" disabled selected>Selecciona una opción</option>
                                                                                 <?php
-                                                                                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
+                                                                                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'lcl'";
                                                                                 $result = mysqli_query($con, $query);
                                                                                 $actual_incrementable = $incrementable['incrementable'];
 
@@ -497,16 +566,25 @@ if (isset($_SESSION['email'])) {
                                                         <p class="text-center" style="color: #fff;"><b>GASTOS POR FLETE TERRESTRE</b></p>
                                                     </div>
                                                     <table class="table table-striped table-bordered" id="tablaGasto" style="margin-bottom: 0px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Concepto</th>
+                                                                <th>IVA</th>
+                                                                <th>USD</th>
+                                                                <th>MX</th>
+                                                                <th>Accion</th>
+                                                            </tr>
+                                                        </thead>
                                                         <tbody>
                                                             <?php
-                                                            $query_gasto = "SELECT * FROM gastosftl WHERE idFtl='$registro_id'";
+                                                            $query_gasto = "SELECT * FROM gastoslcl WHERE idLcl='$registro_id'";
                                                             $query_run_gasto = mysqli_query($con, $query_gasto);
 
                                                             if (mysqli_num_rows($query_run_gasto) > 0) {
                                                                 while ($gasto = mysqli_fetch_assoc($query_run_gasto)) {
                                                                     // Buscar el ID del incrementable correspondiente según el conceptoGasto
                                                                     $conceptoGasto = $gasto['conceptoGasto'];
-                                                                    $query_incrementable_id = "SELECT id FROM incrementablesftl WHERE incrementable = '$conceptoGasto' AND idFtl='$registro_id' LIMIT 1";
+                                                                    $query_incrementable_id = "SELECT id FROM incrementableslcl WHERE incrementable = '$conceptoGasto' AND idLcl='$registro_id' LIMIT 1";
                                                                     $result_incrementable_id = mysqli_query($con, $query_incrementable_id);
                                                                     $incrementable = mysqli_fetch_assoc($result_incrementable_id);
                                                                     $uniqueId = $incrementable ? $incrementable['id'] : 'null'; // Si no encuentra coincidencia, usa 'null'
@@ -536,22 +614,34 @@ if (isset($_SESSION['email'])) {
                                                                             </div>
                                                                         </td>
                                                                         <?php if ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía'): ?>
-                                                                            <td class="text-end" colspan="2">
+                                                                            <td class="text-end" colspan="3">
                                                                                 <input type="text" value="<?= $gasto['montoGasto']; ?>"
                                                                                     class="form-control montoGasto"
                                                                                     name="montoGasto[]"
                                                                                     id="montoSeguro"
                                                                                     data-id="<?= $uniqueId; ?>"
-                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);"
+                                                                                    oninput="actualizarSubtotal();"
                                                                                     readonly>
                                                                             </td>
+                                                                            <input type="hidden" value="0"
+                                                                                class="form-control montoGastoMx"
+                                                                                name="montoGastoMx[]"
+                                                                                data-id="<?= $uniqueId; ?>"
+                                                                                oninput="convertir(this, 'aUSD');actualizarSubtotal();">
                                                                         <?php else: ?>
                                                                             <td class="text-end">
                                                                                 <input type="text" value="<?= $gasto['montoGasto']; ?>"
                                                                                     class="form-control montoGasto"
                                                                                     name="montoGasto[]"
                                                                                     data-id="<?= $uniqueId; ?>"
-                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
+                                                                                    oninput="convertir(this, 'aMX');actualizarSubtotal();sincronizarIncrementable(this);">
+                                                                            </td>
+                                                                            <td class="text-end">
+                                                                                <input type="text" value="<?= $gasto['montoGastoMx']; ?>"
+                                                                                    class="form-control montoGastoMx"
+                                                                                    name="montoGastoMx[]"
+                                                                                    data-id="<?= $uniqueId; ?>"
+                                                                                    oninput="convertir(this, 'aUSD');actualizarSubtotal();sincronizarIncrementable(this);">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
@@ -570,11 +660,11 @@ if (isset($_SESSION['email'])) {
 
                                                             <tr class="text-end">
                                                                 <td colspan="2">Subtotal</td>
-                                                                <td colspan="2" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
+                                                                <td colspan="3" style="width:20%;"><input class="form-control" name="subtotalFlete" type="text" readonly></td>
                                                             </tr>
                                                             <tr class="text-end">
                                                                 <td colspan="2">I.V.A 16%</td>
-                                                                <td colspan="2"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
+                                                                <td colspan="3"><input class="form-control" name="impuestosFlete" type="text" readonly></td>
                                                             </tr>
                                                             <tr class="text-end">
                                                                 <td colspan="2">
@@ -584,7 +674,7 @@ if (isset($_SESSION['email'])) {
                                                                         <label class="form-check-label" for="retencionCheck"> Retención 4% </label>
                                                                     </div>
                                                                 </td>
-                                                                <td colspan="2"><input class="form-control" name="retencionFlete" type="text" readonly></td>
+                                                                <td colspan="3"><input class="form-control" name="retencionFlete" type="text" readonly></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -636,7 +726,7 @@ if (isset($_SESSION['email'])) {
                                                     });
 
                                                     // Calcular el monto del seguro
-                                                    let valorMercancia = parseFloat(document.querySelector('input[name="valorMercancia"]').value) || 0;
+                                                    let valorMercancia = parseFloat(document.querySelector('input[name="valorMercanciaUSD"]').value) || 0;
                                                     let porcentajeSeguroInput = document.querySelector('input[name="porcentajeSeguro"]').value;
                                                     let montoSeguroInput = document.querySelector('input[id="montoSeguro"]');
 
@@ -654,25 +744,25 @@ if (isset($_SESSION['email'])) {
 
                                                     montoSeguroInput.value = montoSeguro.toFixed(2);
 
+
                                                     // Actualizar el campo subtotalFlete con la suma
                                                     var subtotalFleteInput = document.querySelector("[name='subtotalFlete']");
                                                     if (subtotalFleteInput) {
                                                         subtotalFleteInput.value = sumaGastos.toFixed(2);
                                                     }
 
-                                                    // Calcular el total de la cotización
-                                                    let totalCotizacion = (subtotal + iva - retencion).toFixed(2);
+                                                    // Obtener el valor del input con id="valorTotalFlete" y sumarlo al total
+                                                    let valorTotalFleteInput = document.getElementById("valorTotalFlete");
+                                                    let valorTotalFlete = valorTotalFleteInput ? parseFloat(valorTotalFleteInput.value) || 0 : 0;
+
+                                                    // Calcular el total de la cotización incluyendo valorTotalFlete
+                                                    let totalCotizacion = (subtotal + iva - retencion + valorTotalFlete).toFixed(2);
                                                     document.querySelector('input[name="totalCotizacionNumero"]').value = totalCotizacion;
                                                 }
 
                                                 document.addEventListener("input", actualizarSubtotal);
                                                 document.addEventListener("change", actualizarSubtotal);
                                             </script>
-
-
-
-
-
 
                                             <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
                                                 <tr class="text-end">
@@ -715,8 +805,8 @@ if (isset($_SESSION['email'])) {
                                             </div>
 
                                             <div class="modal-footer mt-5">
-                                                <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
-                                                <button type="submit" class="btn btn-success m-1" name="update">Guardar</button>
+                                                <a href="lcl.php" class="btn btn-secondary m-1">Cancelar</a>
+                                                <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
                                             </div>
                                         </form>
                                 <?php
@@ -740,18 +830,27 @@ if (isset($_SESSION['email'])) {
             var idOrigen = "<?php echo $registro['idOrigen']; ?>";
             var idAduana = "<?php echo $registro['idDestino']; ?>";
             var idDestino = "<?php echo $registro['idDestinoFinal']; ?>";
-            var totalBultos = "<?php echo $registro['totalBultos']; ?>";
             var totalFt3 = "<?php echo $registro['totalFt3']; ?>";
             var totalM3 = "<?php echo $registro['totalM3']; ?>";
-            var pesoMercanciaLbs = "<?php echo $registro['pesoMercanciaLbs']; ?>";
             var pesoMercanciaKgs = "<?php echo $registro['pesoMercanciaKgs']; ?>";
-            var valorMercancia = "<?php echo $registro['valorMercancia']; ?>";
-            var valorComercial = "<?php echo $registro['valorComercial']; ?>";
+            var pesoMercanciaLbs = "<?php echo $registro['pesoMercanciaLbs']; ?>";
+            var valorMercancia = "<?php echo $registro['valorMercanciaUSD']; ?>";
+            var valorComercial = "<?php echo $registro['valorMercanciaMXN']; ?>";
             var totalIncrementableMx = "<?php echo $registro['totalIncrementableMx']; ?>";
             var totalIncrementableUsd = "<?php echo $registro['totalIncrementableUsd']; ?>";
             var subtotalFlete = "<?php echo $registro['subtotalFlete']; ?>";
             var impuestosFlete = "<?php echo $registro['impuestosFlete']; ?>";
             var retencionFlete = "<?php echo $registro['retencionFlete']; ?>";
+            var totalOrigenAll = "<?php echo $registro['totalOrigenAll']; ?>";
+            var subtotalDestinoUsd = "<?php echo $registro['subtotalDestinoUsd']; ?>";
+            var subtotalDestinoMx = "<?php echo $registro['subtotalDestinoMx']; ?>";
+            var impuestosDestinoUsd = "<?php echo $registro['impuestosDestinoUsd']; ?>";
+            var impuestosDestinoMx = "<?php echo $registro['impuestosDestinoMx']; ?>";
+            var totalDestinoUsd = "<?php echo $registro['totalDestinoUsd']; ?>";
+            var totalDestinoMx = "<?php echo $registro['totalDestinoMx']; ?>";
+
+            var lugarDestino = "<?php echo $registro['lugarDestino']; ?>";
+            var valorTotalFlete = "<?php echo $registro['valorTotalFlete']; ?>";
 
             window.onload = function() {
 
@@ -765,11 +864,10 @@ if (isset($_SESSION['email'])) {
                 document.getElementById("destino").value = idDestino;
                 obtenerDetalleDestino(idDestino);
 
-                document.getElementById("totalBultos").value = totalBultos;
                 document.getElementById("ft3Total").value = totalFt3;
                 document.getElementById("m3Total").value = totalM3;
-                document.getElementById("pesoMercanciaLbs").value = pesoMercanciaLbs;
                 document.getElementById("pesoMercanciaKgs").value = pesoMercanciaKgs;
+                document.getElementById("pesoMercanciaLbs").value = pesoMercanciaLbs;
                 document.getElementById("valorMercancia").value = valorMercancia;
                 document.getElementById("valorComercial").value = valorComercial;
                 document.getElementById("totalMXN").value = totalIncrementableMx;
@@ -777,6 +875,15 @@ if (isset($_SESSION['email'])) {
                 document.querySelector('input[name="subtotalFlete"]').value = subtotalFlete;
                 document.querySelector('input[name="impuestosFlete"]').value = impuestosFlete;
                 document.querySelector('input[name="retencionFlete"]').value = retencionFlete;
+                document.querySelector('input[name="totalOrigenAll"]').value = totalOrigenAll;
+                document.querySelector('input[name="subtotalDestinoUsd"]').value = subtotalDestinoUsd;
+                document.querySelector('input[name="subtotalDestinoMx"]').value = subtotalDestinoMx;
+                document.querySelector('input[name="impuestosDestinoUsd"]').value = impuestosDestinoUsd;
+                document.querySelector('input[name="impuestosDestinoMx"]').value = impuestosDestinoMx;
+                document.querySelector('input[name="totalDestinoUsd"]').value = totalDestinoUsd;
+                document.querySelector('input[name="totalDestinoMx"]').value = totalDestinoMx;
+                document.querySelector('input[name="lugarDestino"]').value = lugarDestino;
+                document.querySelector('input[name="valorTotalFlete"]').value = valorTotalFlete;
 
                 setTimeout(actualizarTotales, 100);
             };
@@ -912,10 +1019,8 @@ if (isset($_SESSION['email'])) {
                 nuevaFila.innerHTML = `
                 <td>
                 <input style="width: 60px;" class="form-control mb-3" type="text" name="cantidad[]" oninput="convertToCmAndCalculateVolume(this)">
-                <p>NMFC</p></td>
                 <td>
                     <input class="form-control mb-1" type="text" name="unidadMedida[]">
-                    <input class="form-control" type="text" name="nmfc[]" readonly>
                 </td>
                 <td>
                     <input class="form-control" type="text"  name="descripcion[]">
@@ -996,12 +1101,17 @@ if (isset($_SESSION['email'])) {
                 row.querySelector("[placeholder='Largo (mts)']").value = (height * 0.0254).toFixed(2);
                 row.querySelector("[placeholder='Ancho (mts)']").value = (width * 0.0254).toFixed(2);
                 row.querySelector("[placeholder='Alto (mts)']").value = (deep * 0.0254).toFixed(2);
+                const altura = height * 0.0254;
+                const ancho = width * 0.0254;
+                const profundidad = deep * 0.0254;
                 const volumeFt3 = ((height * 0.08333) * (width * 0.08333) * (deep * 0.08333)) * cantidad;
                 row.querySelector("[placeholder='pies cúbicos']").value = volumeFt3.toFixed(2);
                 const volumeM3 = volumeFt3 * 0.0283168;
                 row.querySelector("[placeholder='metros cúbicos']").value = volumeM3.toFixed(2);
 
+
                 actualizarTotales(); // Actualiza los totales después de convertir
+                actualizarPesoTarifario();
             }
 
             function convertToInchesAndCalculateVolume(element) {
@@ -1009,7 +1119,7 @@ if (isset($_SESSION['email'])) {
                 const altura = parseFloat(row.querySelector("[placeholder='Largo (mts)']").value) || 0;
                 const ancho = parseFloat(row.querySelector("[placeholder='Ancho (mts)']").value) || 0;
                 const profundidad = parseFloat(row.querySelector("[placeholder='Alto (mts)']").value) || 0;
-
+                const cantidad = parseFloat(row.querySelector("input[name='cantidad[]']").value) || 1;
                 // Convertir centímetros a pulgadas y calcular volumen
                 row.querySelector("[placeholder='Largo (pulgadas)']").value = (altura / 0.0254).toFixed(2);
                 row.querySelector("[placeholder='Ancho (pulgadas)']").value = (ancho / 0.0254).toFixed(2);
@@ -1046,7 +1156,6 @@ if (isset($_SESSION['email'])) {
                 let totalValor = 0;
                 let totalFt3 = 0;
                 let totalM3 = 0;
-                let totalCantidad = 0;
 
                 for (let i = 1; i < tabla.rows.length; i++) {
                     const fila = tabla.rows[i];
@@ -1057,8 +1166,6 @@ if (isset($_SESSION['email'])) {
                     const valorInput = fila.querySelector("input[id='valorFilaMercancia']");
                     const ft3Input = fila.querySelector("[placeholder='pies cúbicos']");
                     const m3Input = fila.querySelector("[placeholder='metros cúbicos']");
-                    const cantidadInput = fila.querySelector("input[name='cantidad[]']");
-                    const nmfcInput = fila.querySelector("input[name='nmfc[]']");
 
                     // Obtener valores de la fila
                     let pesoLbs = parseFloat(pesoLbsInput.value) || 0;
@@ -1066,7 +1173,6 @@ if (isset($_SESSION['email'])) {
                     let valor = parseFloat(valorInput.value) || 0;
                     let ft3 = parseFloat(ft3Input.value) || 0;
                     let m3 = parseFloat(m3Input.value) || 0;
-                    let cantidad = parseFloat(cantidadInput.value) || 0;
 
                     // Sumar totales correctamente (solo una vez)
                     totalLbs += pesoLbs;
@@ -1074,34 +1180,7 @@ if (isset($_SESSION['email'])) {
                     totalValor += valor;
                     totalFt3 += ft3;
                     totalM3 += m3;
-                    totalCantidad += cantidad;
 
-                    // Calcular la relación pies cúbicos / peso en libras
-                    let ratio = pesoLbs > 0 ? pesoLbs / ft3 : 0;
-                    let nmfc = '';
-
-                    // Asignar el valor de NMFC según la tabla
-                    if (ratio >= 50) nmfc = 50;
-                    else if (ratio >= 35) nmfc = 55;
-                    else if (ratio >= 30) nmfc = 60;
-                    else if (ratio >= 22.5) nmfc = 65;
-                    else if (ratio >= 15) nmfc = 70;
-                    else if (ratio >= 13.5) nmfc = 77.5;
-                    else if (ratio >= 12) nmfc = 85;
-                    else if (ratio >= 10.5) nmfc = 92.5;
-                    else if (ratio >= 9) nmfc = 100;
-                    else if (ratio >= 8) nmfc = 110;
-                    else if (ratio >= 7) nmfc = 125;
-                    else if (ratio >= 6) nmfc = 150;
-                    else if (ratio >= 5) nmfc = 175;
-                    else if (ratio >= 4) nmfc = 200;
-                    else if (ratio >= 3) nmfc = 250;
-                    else if (ratio >= 2) nmfc = 300;
-                    else if (ratio >= 1) nmfc = 400;
-                    else if (ratio > 0) nmfc = 500;
-
-                    // Asignar el valor calculado al campo NMFC
-                    if (nmfcInput) nmfcInput.value = nmfc;
                 }
 
                 // Mostrar los totales en los inputs correspondientes
@@ -1110,11 +1189,11 @@ if (isset($_SESSION['email'])) {
                 document.getElementById("valorMercancia").value = totalValor.toFixed(2);
                 document.getElementById("ft3Total").value = totalFt3.toFixed(2);
                 document.getElementById("m3Total").value = totalM3.toFixed(2);
-                document.getElementById("totalBultos").value = totalCantidad; // Ahora totalBultos es correcto
 
                 // Actualizar otros cálculos
                 actualizarValorComercial();
                 actualizarValoresUSD_MXN();
+                convertirGastos();
                 updateTotal();
             }
 
@@ -1129,35 +1208,6 @@ if (isset($_SESSION['email'])) {
                 document.getElementById("valorComercial").value = valorComercial.toFixed(2);
             }
 
-            function agregarTipoServicio() {
-                var tabla = document.getElementById("servicioTable").getElementsByTagName("tbody")[0];
-
-                // Crear nueva fila
-                var nuevaFilaServicio = document.createElement("tr");
-
-                nuevaFilaServicio.innerHTML = `
-        <td>
-            <select class="form-select" name="conceptoServicio[]">
-                <option value="" disabled selected>Selecciona una opción</option>
-                <?php
-                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
-                $result = mysqli_query($con, $query);
-
-                if (mysqli_num_rows($result) > 0) {
-                    while ($registro = mysqli_fetch_assoc($result)) {
-                        $nombre = $registro['nombreServicio'];
-                        echo "<option value='$nombre'>" . $nombre . "</option>";
-                    }
-                }
-                ?>
-            </select>
-        </td>
-        <td><input type="text" name="tiempoServicio[]" class="form-control"></td>
-    `;
-
-                // Agregar la nueva fila a la tabla de incrementables
-                tabla.appendChild(nuevaFilaServicio);
-            }
 
             const tableBody = document.querySelector("#incrementableTable tbody");
             const totalUSD = document.getElementById("totalUSD");
@@ -1167,9 +1217,15 @@ if (isset($_SESSION['email'])) {
             const removeRowButton = document.getElementById("removeRowButton");
 
             document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("removeServiceButton").addEventListener("click", removeServiceRow);
                 document.getElementById("removeRowButton").addEventListener("click", removeRow);
                 document.getElementById("valorMoneda").addEventListener("input", actualizarValoresUSD_MXN);
+
+                // Escuchar cambios en los campos de input
+                document.getElementById("origenTable").addEventListener("input", function(e) {
+                    if (e.target.matches(".amOrigen") || e.target.id === "pesoTarifario") {
+                        actualizarTotalesOrigen();
+                    }
+                });
 
                 observarCambio(); // Iniciar la observación del cambio de valor
                 convertirNumeroATexto();
@@ -1186,7 +1242,7 @@ if (isset($_SESSION['email'])) {
             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="${uniqueId}" onchange="actualizarConceptoGasto(this)">
                 <option value="" disabled selected>Selecciona una opción</option>
                 <?php
-                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
+                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'lcl'";
                 $result = mysqli_query($con, $query);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -1219,6 +1275,7 @@ if (isset($_SESSION['email'])) {
 
                 // Calcula y actualiza el valor en MXN
                 mxnOutput.value = (dolarValue * valorCambio).toFixed(2);
+
 
                 // Actualiza los totales
                 updateTotal();
@@ -1260,7 +1317,7 @@ if (isset($_SESSION['email'])) {
             // Función para actualizar el concepto del gasto al seleccionar un incrementable
             function actualizarConceptoGasto(selectElement) {
                 var id = selectElement.getAttribute("data-id"); // Obtener el data-id de la fila seleccionada
-                var conceptoInput = document.querySelector(`.conceptoGasto[data-id="${id}"]`); // Buscar el input correcto en gastosftl
+                var conceptoInput = document.querySelector(`.conceptoGasto[data-id="${id}"]`); // Buscar el input correcto en gastos
 
                 if (conceptoInput) {
                     conceptoInput.value = selectElement.value; // Asigna el nuevo valor del select al campo conceptoGasto correspondiente
@@ -1313,9 +1370,8 @@ if (isset($_SESSION['email'])) {
                     <label class="form-check-label">IVA 16%</label>
                 </div>
             </td>
-            <td class="text-end">
-                <input type="text" class="form-control montoGasto" name="montoGasto[]" data-id="${uniqueId}" oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
-            </td>
+            <td class="text-end"><input type="text" class="form-control montoGasto" name="montoGasto[]" data-id="${uniqueId}" oninput="convertir(this, 'aMX');actualizarSubtotal();sincronizarIncrementable(this);"></td>
+            <td><input type="text" class="form-control montoGastoMx" name="montoGastoMx[]" data-id="${uniqueId}" oninput="convertir(this, 'aUSD');actualizarSubtotal();sincronizarIncrementable(this);"></td>
             <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)"><i class="bi bi-trash-fill"></i></button></td>
         `;
 
@@ -1330,16 +1386,34 @@ if (isset($_SESSION['email'])) {
                 if (gastoInput) {
                     gastoInput.value = input.value; // Asigna el mismo valor al campo de gasto correspondiente
                 }
+
+                convertirGastos();
             }
 
             function sincronizarIncrementable(input) {
-                var id = input.getAttribute("data-id");
-                var incrementableInput = document.querySelector(`.usd-input[data-id="${id}"]`);
+                const id = input.getAttribute("data-id");
+                const incrementableInput = document.querySelector(`.usd-input[data-id="${id}"]`);
+                const tasa = parseFloat(document.getElementById('valorMoneda').value);
 
-                if (incrementableInput) {
-                    incrementableInput.value = input.value; // Asigna el mismo valor al campo de incrementable correspondiente
+                if (!incrementableInput || !tasa || isNaN(tasa)) return;
+
+                let valor;
+
+                if (input.classList.contains("montoGasto")) {
+                    // Ya está en USD, se copia tal cual
+                    valor = parseFloat(input.value);
+                } else if (input.classList.contains("montoGastoMx")) {
+                    // Convertir de MXN a USD
+                    valor = parseFloat(input.value) / tasa;
+                }
+
+                if (!isNaN(valor)) {
+                    incrementableInput.value = valor.toFixed(2);
+                } else {
+                    incrementableInput.value = '';
                 }
             }
+
 
 
 
@@ -1443,6 +1517,7 @@ if (isset($_SESSION['email'])) {
                 return convertir(num);
             }
 
+
             function convertirNumeroATexto() {
                 let numeroInput = document.getElementById("totalCotizacionNumero");
                 let textoInput = document.getElementById("totalCotizacionTexto");
@@ -1470,29 +1545,244 @@ if (isset($_SESSION['email'])) {
                 }, 500); // Verifica cada 500ms si el valor cambió
             }
 
-                  async function obtenerTipoDeCambio() {
-            try {
-                const response = await fetch('tipo-cambio.php');
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos del backend: ${response.status}`);
-                }
+            function agregarFilaDespuesDeAMS() {
+                const filaAMS = document.getElementById("filaAmsFee");
+                const nuevaFila = document.createElement("tr");
 
-                const data = await response.json();
-                const serie = data.bmx.series[0].datos;
+                nuevaFila.innerHTML = `
+        <td><input type="text" style="min-width: 100%;" class="form-control" name="gastosOrigen[]"></td>
+        <td><input type="text" name="euros[]" class="euros form-control" oninput="actualizarTotalesOrigen();"></td>
+        <td><input type="text" name="equivalenciaOrigen[]" class="equivalencia form-control" readonly></td>
+        <td><input type="text" name="usdOrigen[]" class="usOrigen form-control" readonly></td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaOrigen(this)"><i class="bi bi-trash3"></i></button></td>
+    `;
 
-                if (serie && serie.length > 0) {
-                    const ultimoDato = serie[0];
-                    console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
-                    document.getElementById("valorMoneda").value = ultimoDato.dato;
-                } else {
-                    console.warn("No hay datos disponibles en la serie.");
-                }
-            } catch (error) {
-                console.error("Error:", error);
+                filaAMS.parentNode.insertBefore(nuevaFila, filaAMS.nextSibling);
             }
-        }
 
-        obtenerTipoDeCambio();
+            function eliminarFilaOrigen(boton) {
+                const fila = boton.closest("tr");
+                fila.remove();
+
+                actualizarTotalesOrigen();
+                actualizarSubtotal();
+            }
+
+
+            function agregarFilaDespuesDeAMSDestino() {
+                const filaAMS = document.getElementById("filaAmsFeeDestino");
+                const nuevaFila = document.createElement("tr");
+
+                nuevaFila.innerHTML = `
+       <td><input type="text" style="min-width: 100%;" name="gastoDestino[]" class="form-control"></td>
+        <td><input type="number" name="usdDestino[]" class="dolarInputs form-control" value="" oninput="updateRowDestinySpents(this)"></td>
+        <td><input type="text" name="mxnDestino[]" class="mxnOutputs form-control" oninput="updateFromMXN(this)"></td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFilaDestino(this)"><i class="bi bi-trash3"></i></button></td>
+    `;
+
+                filaAMS.parentNode.insertBefore(nuevaFila, filaAMS.nextSibling);
+            }
+
+            function eliminarFilaDestino(boton) {
+                const fila = boton.closest("tr");
+                fila.remove();
+                calcularTotalesDestino();
+                actualizarSubtotal();
+            }
+
+            function updateRowDestinySpents(input) {
+                const row = input.closest("tr");
+                const usdInput = row.querySelector(".dolarInputs");
+                const mxnOutput = row.querySelector(".mxnOutputs");
+                const tipoCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+
+                const usdValue = parseFloat(usdInput.value) || 0;
+                mxnOutput.value = tipoCambio > 0 ? (usdValue * tipoCambio).toFixed(2) : '';
+
+                calcularTotalesDestino();
+                actualizarValorTotalFlete();
+            }
+
+            function updateFromMXN(input) {
+                const row = input.closest("tr");
+                const usdInput = row.querySelector(".dolarInputs");
+                const mxnOutput = row.querySelector(".mxnOutputs");
+                const tipoCambio = parseFloat(document.getElementById("valorMoneda").value) || 0;
+
+                const mxnValue = parseFloat(mxnOutput.value) || 0;
+                usdInput.value = tipoCambio > 0 ? (mxnValue / tipoCambio).toFixed(2) : '';
+
+                calcularTotalesDestino();
+            }
+
+            function calcularTotalesDestino() {
+                const usdInputs = document.querySelectorAll(".dolarInputs");
+                const mxnOutputs = document.querySelectorAll(".mxnOutputs");
+
+                let subtotalUsd = 0;
+                let subtotalMx = 0;
+
+                usdInputs.forEach(input => {
+                    subtotalUsd += parseFloat(input.value) || 0;
+                });
+
+                mxnOutputs.forEach(input => {
+                    subtotalMx += parseFloat(input.value) || 0;
+                });
+
+                const ivaChecked = document.querySelector("input[name='ivaDestino']").checked;
+                const impuestosUsd = ivaChecked ? subtotalUsd * 0.16 : 0;
+                const impuestosMx = ivaChecked ? subtotalMx * 0.16 : 0;
+
+                document.querySelector("input[name='subtotalDestinoUsd']").value = subtotalUsd.toFixed(2);
+                document.querySelector("input[name='subtotalDestinoMx']").value = subtotalMx.toFixed(2);
+                document.querySelector("input[name='impuestosDestinoUsd']").value = impuestosUsd.toFixed(2);
+                document.querySelector("input[name='impuestosDestinoMx']").value = impuestosMx.toFixed(2);
+                document.querySelector("input[name='totalDestinoUsd']").value = (subtotalUsd + impuestosUsd).toFixed(2);
+                document.querySelector("input[name='totalDestinoMx']").value = (subtotalMx + impuestosMx).toFixed(2);
+
+                actualizarValorTotalFlete();
+
+            }
+
+            // Recalcula totales cuando se cambia el checkbox o el tipo de cambio
+            document.addEventListener("DOMContentLoaded", function() {
+                const ivaCheckbox = document.querySelector("input[name='ivaDestino']");
+                const tipoCambioInput = document.getElementById("valorMoneda");
+
+                ivaCheckbox.addEventListener("change", calcularTotalesDestino);
+                tipoCambioInput.addEventListener("input", () => {
+                    document.querySelectorAll(".dolarInputs").forEach(input => updateRowDestinySpents(input));
+                });
+            });
+
+            function actualizarValorTotalFlete() {
+                const totalDestino = parseFloat(document.getElementById("totalDestinoUsd")?.value || 0);
+                const totalOrigenAll = parseFloat(document.getElementById("totalOrigenAll")?.value || 0);
+                const totalFlete = totalDestino + totalOrigenAll;
+
+                const totalFleteField = document.getElementById("valorTotalFlete");
+                if (totalFleteField) {
+                    totalFleteField.value = totalFlete.toFixed(2);
+                }
+            }
+
+            function actualizarTotalesOrigen() {
+                // Obtener valor global de equivalencia
+                const equivalenciaGlobal = parseFloat(document.getElementById("equivalencia").value) || 0;
+
+                // Inicializar suma total
+                let sumaTotal = 0;
+
+                // Iterar sobre cada fila de la tabla
+                document.querySelectorAll("#origenTable tr").forEach(row => {
+                    const eurosInput = row.querySelector(".euros");
+                    const equivalenciaInput = row.querySelector(".equivalencia");
+                    const usdOrigenInput = row.querySelector(".usOrigen");
+
+                    // Si la fila contiene los elementos necesarios
+                    if (eurosInput && equivalenciaInput && usdOrigenInput) {
+                        const euros = parseFloat(eurosInput.value) || 0;
+
+                        // Asignar la equivalencia global si aún no está
+                        equivalenciaInput.value = equivalenciaGlobal;
+
+                        const equivalencia = parseFloat(equivalenciaInput.value) || 0;
+                        const totalUSD = euros * equivalencia;
+
+                        usdOrigenInput.value = totalUSD.toFixed(2);
+                        sumaTotal += totalUSD;
+                    }
+                });
+
+                // Actualizar el campo total
+                document.getElementById("totalOrigenAll").value = sumaTotal.toFixed(2);
+
+                actualizarValorTotalFlete();
+            }
+
+            document.getElementById("equivalencia").addEventListener("input", actualizarTotalesOrigen);
+            const input = document.getElementById('cambioInput');
+            const parrafo = document.getElementById('cambioTexto');
+
+            // Mostrar el valor inicial
+            parrafo.textContent = input.value;
+
+            // Actualizar cuando se cambie el valor
+            input.addEventListener('input', function() {
+                parrafo.textContent = input.value;
+            });
+
+            function convertir(elemento, tipo) {
+                const fila = elemento.closest('tr');
+                const inputGasto = fila.querySelector('.montoGasto');
+                const inputGastoMx = fila.querySelector('.montoGastoMx');
+                const tasa = parseFloat(document.getElementById('valorMoneda').value);
+
+                if (!tasa || isNaN(tasa)) return;
+
+                if (tipo === 'aMX') {
+                    const valor = parseFloat(inputGasto.value);
+                    if (!isNaN(valor)) {
+                        inputGastoMx.value = (valor * tasa).toFixed(2);
+                    } else {
+                        inputGastoMx.value = '';
+                    }
+                }
+
+                if (tipo === 'aUSD') {
+                    const valor = parseFloat(inputGastoMx.value);
+                    if (!isNaN(valor)) {
+                        inputGasto.value = (valor / tasa).toFixed(2);
+                    } else {
+                        inputGasto.value = '';
+                    }
+                }
+            }
+
+            function convertirGastos() {
+                const tabla = document.getElementById("tablaGasto");
+                const filas = tabla.querySelectorAll('tr');
+
+                filas.forEach(fila => {
+                    const inputGasto = fila.querySelector('.montoGasto');
+                    const inputGastoMx = fila.querySelector('.montoGastoMx');
+
+                    // Si hay valor en montoGasto => convertir a MX
+                    if (inputGasto && inputGasto.value) {
+                        convertir(fila, 'aMX');
+                    }
+
+                    // Si hay valor en montoGastoMx pero no en montoGasto => convertir a USD
+                    else if (inputGastoMx && inputGastoMx.value) {
+                        convertir(fila, 'aUSD');
+                    }
+                });
+            }
+
+            async function obtenerTipoDeCambio() {
+                try {
+                    const response = await fetch('tipo-cambio.php');
+                    if (!response.ok) {
+                        throw new Error(`Error al obtener datos del backend: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    const serie = data.bmx.series[0].datos;
+
+                    if (serie && serie.length > 0) {
+                        const ultimoDato = serie[0];
+                        console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
+                        document.getElementById("valorMoneda").value = ultimoDato.dato;
+                    } else {
+                        console.warn("No hay datos disponibles en la serie.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            }
+
+            obtenerTipoDeCambio();
         </script>
 </body>
 

@@ -36,7 +36,7 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Editar cotización FTL | LYSCE</title>
+    <title>Duplicando cotización FTL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico" />
@@ -52,7 +52,7 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>EDITAR COTIZACIÓN
+                                <h4>DUPLICANDO COTIZACIÓN
                                     <a href="ftl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
                                 </h4>
                             </div>
@@ -716,7 +716,7 @@ if (isset($_SESSION['email'])) {
 
                                             <div class="modal-footer mt-5">
                                                 <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
-                                                <button type="submit" class="btn btn-success m-1" name="update">Guardar</button>
+                                                <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
                                             </div>
                                         </form>
                                 <?php

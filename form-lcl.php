@@ -124,61 +124,23 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Origen</b></p>
-                        <select class="form-select" name="idOrigen" id="origen">
-                            <option value="" disabled selected>Selecciona una opción</option>
-                            <?php
-                            $query = "SELECT * FROM clientes WHERE estatus = 1";
-                            $result = mysqli_query($con, $query);
-
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['cliente'];
-                                    $id = $registro['id'];
-                                    $tipo = $registro['tipo'];
-                                    echo "<option value='$id'>" . $nombre . ' - ' . $tipo . "</option>";
-                                }
-                            }
-                            ?>
+                        <select class="form-select" name="idOrigen" id="origen" disabled>
+                            <option value="" disabled selected>Selecciona primero un cliente</option>
                         </select>
+
                         <p id="detalleOrigen"></p>
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Destino en frontera</b></p>
-                        <select class="form-select" name="idAduana" id="aduana">
-                            <option value="" disabled selected>Selecciona una opción</option>
-                            <?php
-                            $query = "SELECT * FROM clientes WHERE estatus = 1";
-                            $result = mysqli_query($con, $query);
-
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['cliente'];
-                                    $id = $registro['id'];
-                                    $tipo = $registro['tipo'];
-                                    echo "<option value='$id'>" . $nombre . ' - ' . $tipo . "</option>";
-                                }
-                            }
-                            ?>
+                        <select class="form-select" name="idAduana" id="aduana" disabled>
+                            <option value="" disabled selected>Selecciona primero un cliente</option>
                         </select>
                         <p id="detalleAduana"></p>
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Destino Final</b></p>
-                        <select class="form-select" name="idDestino" id="destino">
-                            <option value="" disabled selected>Selecciona una opción</option>
-                            <?php
-                            $query = "SELECT * FROM clientes WHERE estatus = 1";
-                            $result = mysqli_query($con, $query);
-
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($registro = mysqli_fetch_assoc($result)) {
-                                    $nombre = $registro['cliente'];
-                                    $id = $registro['id'];
-                                    $tipo = $registro['tipo'];
-                                    echo "<option value='$id'>" . $nombre . ' - ' . $tipo . "</option>";
-                                }
-                            }
-                            ?>
+                        <select class="form-select" name="idDestino" id="destino" disabled>
+                            <option value="" disabled selected>Selecciona primero un cliente</option>
                         </select>
                         <p id="detalleDestino"></p>
                     </div>
@@ -676,16 +638,45 @@ if (isset($_SESSION['email'])) {
 
             if (idCliente) {
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "obtener_cliente.php", true);
+                xhr.open("POST", "obtener_asociados.php", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4 && xhr.status === 200) {
-                        document.getElementById("detalleCliente").innerHTML = xhr.responseText;
+                        const opciones = "<option value='' disabled selected>Selecciona una opción</option>" + xhr.responseText;
+
+                        // Actualizar y habilitar los selects
+                        const origen = document.getElementById("origen");
+                        const aduana = document.getElementById("aduana");
+                        const destino = document.getElementById("destino");
+
+                        origen.innerHTML = opciones;
+                        aduana.innerHTML = opciones;
+                        destino.innerHTML = opciones;
+
+                        origen.disabled = false;
+                        aduana.disabled = false;
+                        destino.disabled = false;
+
+                        // Limpiar detalles anteriores
+                        document.getElementById("detalleOrigen").innerHTML = "";
+                        document.getElementById("detalleAduana").innerHTML = "";
+                        document.getElementById("detalleDestino").innerHTML = "";
                     }
                 };
                 xhr.send("idCliente=" + idCliente);
             } else {
-                document.getElementById("detalleCliente").innerHTML = "";
+                // Si se deselecciona el cliente, limpia y deshabilita todo
+                const selects = ["origen", "aduana", "destino"];
+                selects.forEach(id => {
+                    const select = document.getElementById(id);
+                    select.innerHTML = "<option value='' disabled selected>Selecciona primero un cliente</option>";
+                    select.disabled = true;
+                });
+
+                document.getElementById("detalleOrigen").innerHTML = "";
+                document.getElementById("detalleAduana").innerHTML = "";
+                document.getElementById("detalleDestino").innerHTML = "";
             }
         });
 
@@ -1458,7 +1449,7 @@ if (isset($_SESSION['email'])) {
             });
         }
 
-         async function obtenerTipoDeCambio() {
+        async function obtenerTipoDeCambio() {
             try {
                 const response = await fetch('tipo-cambio.php');
                 if (!response.ok) {

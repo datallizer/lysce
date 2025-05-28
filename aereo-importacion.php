@@ -694,14 +694,14 @@ if (isset($_SESSION['email'])) {
                                                                             </div>
 
                                                                             <div class="col-12">
-                                                                                <table class="mt-3 bg-warning w-100" style="border: 1px solid #000000;padding:5px;">
-                                                                                    <tr class="text-end">
+                                                                                <table class="mt-3 w-100" style="border: 1px solid #000000;padding:5px;">
+                                                                                    <tr class="text-end bg-warning">
                                                                                         <td style="border-right: 1px solid #000000;padding:5px;"><b>TOTAL USD</b></td>
                                                                                         <td style="width: 180px;">
                                                                                             <p>$<?= number_format($aereoimpo['totalCotizacionNumero'], 2, '.', ','); ?></p>
                                                                                         </td>
                                                                                     </tr>
-                                                                                    <tr class="text-center" style="border-top: 1px solid #000000;padding:5px;">
+                                                                                    <tr class="text-center bg-warning" style="border-top: 1px solid #000000;padding:5px;">
                                                                                         <td colspan="2">
                                                                                             <p><?= $aereoimpo['totalCotizacionTexto']; ?></p>
                                                                                         </td>
@@ -732,6 +732,8 @@ if (isset($_SESSION['email'])) {
                                                                 </div>
                                                             </div>
                                                         </div>
+
+                                                        <a href="duplicar-aereo-impo.php?id=<?= $registro['id']; ?>" class="btn btn-secondary btn-sm m-1"><i class="bi bi-copy"></i></a>
 
                                                     </td>
                                                 </tr>

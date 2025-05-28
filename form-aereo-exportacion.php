@@ -722,23 +722,53 @@ if (isset($_SESSION['email'])) {
         document.getElementById('expedicion').value = formattedDate;
 
         // Select de cliente
-        document.getElementById("cliente").addEventListener("change", function() {
-            var idCliente = this.value;
+document.getElementById("cliente").addEventListener("change", function() {
+    var idCliente = this.value;
 
-            if (idCliente) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "obtener_cliente.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        document.getElementById("detalleCliente").innerHTML = xhr.responseText;
-                    }
-                };
-                xhr.send("idCliente=" + idCliente);
-            } else {
-                document.getElementById("detalleCliente").innerHTML = "";
+    if (idCliente) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "obtener_asociados.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const opciones = "<option value='' disabled selected>Selecciona una opción</option>" + xhr.responseText;
+
+                // Actualizar y habilitar los selects
+                const origen = document.getElementById("origen");
+                const aduana = document.getElementById("aduana");
+                const destino = document.getElementById("destino");
+
+                origen.innerHTML = opciones;
+                aduana.innerHTML = opciones;
+                destino.innerHTML = opciones;
+
+                origen.disabled = false;
+                aduana.disabled = false;
+                destino.disabled = false;
+
+                // Limpiar detalles anteriores
+                document.getElementById("detalleOrigen").innerHTML = "";
+                document.getElementById("detalleAduana").innerHTML = "";
+                document.getElementById("detalleDestino").innerHTML = "";
             }
+        };
+        xhr.send("idCliente=" + idCliente);
+    } else {
+        // Si se deselecciona el cliente, limpia y deshabilita todo
+        const selects = ["origen", "aduana", "destino"];
+        selects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = "<option value='' disabled selected>Selecciona primero un cliente</option>";
+            select.disabled = true;
         });
+
+        document.getElementById("detalleOrigen").innerHTML = "";
+        document.getElementById("detalleAduana").innerHTML = "";
+        document.getElementById("detalleDestino").innerHTML = "";
+    }
+});
+
 
         // Select de origen
         document.getElementById("origen").addEventListener("change", function() {

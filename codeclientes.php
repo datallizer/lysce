@@ -159,6 +159,7 @@ if (isset($_POST['save'])) {
 if (isset($_POST['asociar'])) {
     $idCliente = mysqli_real_escape_string($con, $_POST['idCliente']);
     $idProveedor = mysqli_real_escape_string($con, $_POST['idProveedor']);
+    $tipo = mysqli_real_escape_string($con, $_POST['tipo']);
 
     // Verificar si ya existe la asociación
     $check_query = "SELECT * FROM proveedorcliente WHERE idCliente = '$idCliente' AND idProveedor = '$idProveedor'";
@@ -190,7 +191,11 @@ if (isset($_POST['asociar'])) {
         }
     }
 
-    header("Location: proveedores.php");
+    if ($tipo == 'Cliente') {
+        header("Location: clientes.php");
+    } elseif ($tipo == 'Proveedor') {
+        header("Location: proveedores.php");
+    }
     exit();
 }
 

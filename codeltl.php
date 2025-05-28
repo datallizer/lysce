@@ -101,7 +101,7 @@ if (isset($_POST['save'])) {
         '$distanciaOrigenDestinoMillas', '$distanciaOrigenDestinoKms', '$tiempoRecorridoOrigenDestino', '$servicio', 
         '$totalFt3', '$totalM3', '$distanciaDestinoFinalMillas', '$distanciaDestinoFinalKms', '$tiempoRecorridoDestinoFinal', 
         '$operador', '$unidad', '$moneda', '$valorMoneda', '$pesoMercanciaLbs', '$pesoMercanciaKgs', '$totalBultos', 
-        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoltl', '$porcentajeSeguro', '$email', '$identificador'
+        '$valorMercancia', '$valorComercial', '$subtotalFlete', '$impuestosFlete', '$retencionFlete', '$totalCotizacionNumero', '$totalCotizacionTexto', '$observaciones', '$totalIncrementableUsd', '$totalIncrementableMx', '$tipoLtl', '$porcentajeSeguro', '$email', '$identificador'
     )";
 
     $query_run = mysqli_query($con, $sql);

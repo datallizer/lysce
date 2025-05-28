@@ -36,7 +36,7 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Editar cotización FTL | LYSCE</title>
+    <title>Duplicar cotización LTL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico" />
@@ -52,24 +52,23 @@ if (isset($_SESSION['email'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>EDITAR COTIZACIÓN
-                                    <a href="ftl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
+                                <h4>DUPLICANDO COTIZACIÓN LTL
+                                    <a href="ltl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
                                 </h4>
                             </div>
                             <div class="card-body">
 
                                 <?php
-
                                 if (isset($_GET['id'])) {
                                     $registro_id = mysqli_real_escape_string($con, $_GET['id']);
-                                    $query = "SELECT * FROM ftl WHERE id='$registro_id' ";
+                                    $query = "SELECT * FROM ltl WHERE id='$registro_id' ";
                                     $query_run = mysqli_query($con, $query);
 
                                     if (mysqli_num_rows($query_run) > 0) {
                                         $registro = mysqli_fetch_array($query_run);
-                                        $titulo = $registro['tipoFtl'];
+                                        $titulo = $registro['tipoLtl'];
                                 ?>
-                                        <form action="codeftl.php" method="POST" class="row justify-content-evenly">
+                                        <form action="codeltl.php" method="POST" class="row justify-content-evenly">
                                             <input class="form-control" value="<?= $registro['id']; ?>" type="hidden" name="id">
                                             <div class="col-3 mb-3 text-center">
                                                 <img style="width: 70%;" src="images/logo.png" alt="">
@@ -88,16 +87,16 @@ if (isset($_SESSION['email'])) {
                                                 <input class="form-control" type="text" name="fecha" id="" value="<?= $registro['fecha']; ?>">
                                             </div>
                                             <div class="col-12 text-center bg-warning p-1" style="border: 1px solid #666666;border-bottom:0px;">
-                                                <select class="form-select bg-warning" name="tipoFtl" required>
+                                                <select class="form-select bg-warning" name="tipoLtl" required>
                                                     <option value="" disabled selected>Selecciona una opción</option>
                                                     <?php
-                                                    $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
+                                                    $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ltl'";
                                                     $result = mysqli_query($con, $query);
 
                                                     if (mysqli_num_rows($result) > 0) {
                                                         while ($titulo = mysqli_fetch_assoc($result)) {
                                                             $nombre = $titulo['nombreServicio'];
-                                                            $selected = ($registro['tipoFtl'] == $nombre) ? "selected" : ""; // Verifica si es el seleccionado
+                                                            $selected = ($registro['tipoLtl'] == $nombre) ? "selected" : ""; // Verifica si es el seleccionado
                                                             echo "<option value='$nombre' $selected>$nombre</option>";
                                                         }
                                                     }
@@ -269,8 +268,8 @@ if (isset($_SESSION['email'])) {
                                                             <th>Valor factura</th>
                                                         </tr>
                                                         <?php
-                                                        // Obtener los registros de descripcionmercanciasftl relacionados con el ID de ftl
-                                                        $query_desc = "SELECT * FROM descripcionmercanciasftl WHERE idFtl='$registro_id'";
+                                                        // Obtener los registros de descripcionmercanciasltl relacionados con el ID de ltl
+                                                        $query_desc = "SELECT * FROM descripcionmercanciasltl WHERE idLtl='$registro_id'";
                                                         $query_run_desc = mysqli_query($con, $query_desc);
 
                                                         if (mysqli_num_rows($query_run_desc) > 0) {
@@ -380,7 +379,7 @@ if (isset($_SESSION['email'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                            $query_servicio = "SELECT * FROM servicioftl WHERE idFtl='$registro_id'";
+                                                            $query_servicio = "SELECT * FROM servicioltl WHERE idLtl='$registro_id'";
                                                             $query_run_servicio = mysqli_query($con, $query_servicio);
 
                                                             if (mysqli_num_rows($query_run_servicio) > 0) {
@@ -392,7 +391,7 @@ if (isset($_SESSION['email'])) {
                                                                             <select class="form-select" name="conceptoServicio[]">
                                                                                 <option value="" disabled selected>Selecciona una opción</option>
                                                                                 <?php
-                                                                                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
+                                                                                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ltl'";
                                                                                 $result = mysqli_query($con, $query);
                                                                                 $conceptoSeleccionado = $servicio['conceptoServicio'];
 
@@ -439,7 +438,7 @@ if (isset($_SESSION['email'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                            $query_incrementable = "SELECT * FROM incrementablesftl WHERE idFtl='$registro_id'";
+                                                            $query_incrementable = "SELECT * FROM incrementablesltl WHERE idLtl='$registro_id'";
                                                             $query_run_incrementable = mysqli_query($con, $query_incrementable);
 
                                                             if (mysqli_num_rows($query_run_incrementable) > 0) {
@@ -451,7 +450,7 @@ if (isset($_SESSION['email'])) {
                                                                             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="<?= $uniqueId; ?>" onchange="actualizarConceptoGasto(this)">
                                                                                 <option value="" disabled selected>Selecciona una opción</option>
                                                                                 <?php
-                                                                                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
+                                                                                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ltl'";
                                                                                 $result = mysqli_query($con, $query);
                                                                                 $actual_incrementable = $incrementable['incrementable'];
 
@@ -499,14 +498,14 @@ if (isset($_SESSION['email'])) {
                                                     <table class="table table-striped table-bordered" id="tablaGasto" style="margin-bottom: 0px;">
                                                         <tbody>
                                                             <?php
-                                                            $query_gasto = "SELECT * FROM gastosftl WHERE idFtl='$registro_id'";
+                                                            $query_gasto = "SELECT * FROM gastosltl WHERE idLtl='$registro_id'";
                                                             $query_run_gasto = mysqli_query($con, $query_gasto);
 
                                                             if (mysqli_num_rows($query_run_gasto) > 0) {
                                                                 while ($gasto = mysqli_fetch_assoc($query_run_gasto)) {
                                                                     // Buscar el ID del incrementable correspondiente según el conceptoGasto
                                                                     $conceptoGasto = $gasto['conceptoGasto'];
-                                                                    $query_incrementable_id = "SELECT id FROM incrementablesftl WHERE incrementable = '$conceptoGasto' AND idFtl='$registro_id' LIMIT 1";
+                                                                    $query_incrementable_id = "SELECT id FROM incrementablesltl WHERE incrementable = '$conceptoGasto' AND idLtl='$registro_id' LIMIT 1";
                                                                     $result_incrementable_id = mysqli_query($con, $query_incrementable_id);
                                                                     $incrementable = mysqli_fetch_assoc($result_incrementable_id);
                                                                     $uniqueId = $incrementable ? $incrementable['id'] : 'null'; // Si no encuentra coincidencia, usa 'null'
@@ -537,21 +536,11 @@ if (isset($_SESSION['email'])) {
                                                                         </td>
                                                                         <?php if ($gasto['conceptoGasto'] == 'Seguro de tránsito de mercancía'): ?>
                                                                             <td class="text-end" colspan="2">
-                                                                                <input type="text" value="<?= $gasto['montoGasto']; ?>"
-                                                                                    class="form-control montoGasto"
-                                                                                    name="montoGasto[]"
-                                                                                    id="montoSeguro"
-                                                                                    data-id="<?= $uniqueId; ?>"
-                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);"
-                                                                                    readonly>
+                                                                                <input type="text" value="<?= $gasto['montoGasto']; ?>" class="form-control montoGasto" name="montoGasto[]" id="montoSeguro" data-id="<?= $uniqueId; ?>" oninput="actualizarSubtotal(); sincronizarIncrementable(this);" readonly>
                                                                             </td>
                                                                         <?php else: ?>
                                                                             <td class="text-end">
-                                                                                <input type="text" value="<?= $gasto['montoGasto']; ?>"
-                                                                                    class="form-control montoGasto"
-                                                                                    name="montoGasto[]"
-                                                                                    data-id="<?= $uniqueId; ?>"
-                                                                                    oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
+                                                                                <input type="text" value="<?= $gasto['montoGasto']; ?>" class="form-control montoGasto" name="montoGasto[]" data-id="<?= $uniqueId; ?>" oninput="actualizarSubtotal(); sincronizarIncrementable(this);">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
@@ -715,8 +704,8 @@ if (isset($_SESSION['email'])) {
                                             </div>
 
                                             <div class="modal-footer mt-5">
-                                                <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
-                                                <button type="submit" class="btn btn-success m-1" name="update">Guardar</button>
+                                                <a href="ltl.php" class="btn btn-secondary m-1">Cancelar</a>
+                                                <button type="submit" class="btn btn-success m-1" name="save">Guardar</button>
                                             </div>
                                         </form>
                                 <?php
@@ -1140,7 +1129,7 @@ if (isset($_SESSION['email'])) {
             <select class="form-select" name="conceptoServicio[]">
                 <option value="" disabled selected>Selecciona una opción</option>
                 <?php
-                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ftl'";
+                $query = "SELECT * FROM tiposervicio WHERE tipoServicio = 'ltl'";
                 $result = mysqli_query($con, $query);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -1186,7 +1175,7 @@ if (isset($_SESSION['email'])) {
             <select class="form-select conceptoIncrementable" name="incrementable[]" data-id="${uniqueId}" onchange="actualizarConceptoGasto(this)">
                 <option value="" disabled selected>Selecciona una opción</option>
                 <?php
-                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ftl'";
+                $query = "SELECT * FROM tipoincrementable WHERE tipo = 'ltl'";
                 $result = mysqli_query($con, $query);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -1198,7 +1187,7 @@ if (isset($_SESSION['email'])) {
                 ?>
             </select>
         </td>
-        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" data-id="${uniqueId}" value="" oninput="updateRow(this); sincronizarGasto(this);"></td>
+        <td><input type="number" name="incrementableUsd[]" class="form-control usd-input" data-id="${uniqueId}" value="" oninput="actualizarMontoGasto(this); updateRow(this); sincronizarGasto(this);"></td>
         <td><input type="text" name="incrementableMx[]" class="form-control mxn-input" value="0" readonly></td>
     `;
 
@@ -1260,7 +1249,7 @@ if (isset($_SESSION['email'])) {
             // Función para actualizar el concepto del gasto al seleccionar un incrementable
             function actualizarConceptoGasto(selectElement) {
                 var id = selectElement.getAttribute("data-id"); // Obtener el data-id de la fila seleccionada
-                var conceptoInput = document.querySelector(`.conceptoGasto[data-id="${id}"]`); // Buscar el input correcto en gastosftl
+                var conceptoInput = document.querySelector(`.conceptoGasto[data-id="${id}"]`); // Buscar el input correcto en gastosltl
 
                 if (conceptoInput) {
                     conceptoInput.value = selectElement.value; // Asigna el nuevo valor del select al campo conceptoGasto correspondiente
@@ -1470,29 +1459,29 @@ if (isset($_SESSION['email'])) {
                 }, 500); // Verifica cada 500ms si el valor cambió
             }
 
-                  async function obtenerTipoDeCambio() {
-            try {
-                const response = await fetch('tipo-cambio.php');
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos del backend: ${response.status}`);
-                }
+            async function obtenerTipoDeCambio() {
+                try {
+                    const response = await fetch('tipo-cambio.php');
+                    if (!response.ok) {
+                        throw new Error(`Error al obtener datos del backend: ${response.status}`);
+                    }
 
-                const data = await response.json();
-                const serie = data.bmx.series[0].datos;
+                    const data = await response.json();
+                    const serie = data.bmx.series[0].datos;
 
-                if (serie && serie.length > 0) {
-                    const ultimoDato = serie[0];
-                    console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
-                    document.getElementById("valorMoneda").value = ultimoDato.dato;
-                } else {
-                    console.warn("No hay datos disponibles en la serie.");
+                    if (serie && serie.length > 0) {
+                        const ultimoDato = serie[0];
+                        console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
+                        document.getElementById("valorMoneda").value = ultimoDato.dato;
+                    } else {
+                        console.warn("No hay datos disponibles en la serie.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
                 }
-            } catch (error) {
-                console.error("Error:", error);
             }
-        }
 
-        obtenerTipoDeCambio();
+            obtenerTipoDeCambio();
         </script>
 </body>
 

@@ -1710,6 +1710,30 @@ if (isset($_SESSION['email'])) {
                     totalFleteField.value = totalFlete.toFixed(2);
                 }
             }
+
+                  async function obtenerTipoDeCambio() {
+            try {
+                const response = await fetch('tipo-cambio.php');
+                if (!response.ok) {
+                    throw new Error(`Error al obtener datos del backend: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const serie = data.bmx.series[0].datos;
+
+                if (serie && serie.length > 0) {
+                    const ultimoDato = serie[0];
+                    console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
+                    document.getElementById("valorMoneda").value = ultimoDato.dato;
+                } else {
+                    console.warn("No hay datos disponibles en la serie.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        obtenerTipoDeCambio();
         </script>
 </body>
 
