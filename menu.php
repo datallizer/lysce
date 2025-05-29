@@ -1,3 +1,4 @@
+
 <div class="container-fluid" style="background-color: #ffffff;padding:10px 10px;overflow-x:hidden;">
   <div class="row">
     <div class="col-6">
@@ -8,7 +9,7 @@
     </div>
   </div>
 </div>
-<nav class="navbar navbar-expand-md navbar-light" style="position: sticky; top: 0; z-index: 99; background-color: #f5f5f5; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+<nav class="navbar navbar-expand-md navbar-light" style="position: sticky; top: 0; z-index: 99; background-color: #f5f5f5; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);overflow-x:hidden">
   <div class="container-fluid" style="margin: 0px;">
     <a class="navbar-brand" href="index.html">
       <div class="row justify-content-center align-items-center">

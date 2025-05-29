@@ -30,6 +30,10 @@
   background-position: center;
 }
 
+body, div{
+  overflow-x: hidden;
+}
+
 .card-header {
   background-color: #222222 !important;
 }
