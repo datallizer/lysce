@@ -134,7 +134,7 @@ foreach ($data as $mes => $valores) {
                         <p class="small" style="color:rgb(180, 180, 180);">Cotizaciones por mes</p>
                     </div>
                     <div class="col-12 col-md-10">
-                        <canvas id="lineChart"></canvas>
+                        <canvas style="min-height: 450px;" id="lineChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -230,6 +230,7 @@ foreach ($data as $mes => $valores) {
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 interaction: {
                     mode: 'index',
                     intersect: false
