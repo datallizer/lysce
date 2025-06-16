@@ -106,6 +106,14 @@ if (isset($_POST['save'])) {
 
     $query_run = mysqli_query($con, $sql);
 
+    $sql_carta = "INSERT INTO ftl (
+        tipoFtl, folio, idCliente, idOrigen, idDestino, idDestinoFinal, usuario
+    ) VALUES (
+        '$tipoFtl', '$identificador', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$email'
+    )";
+
+    $query_carta_run = mysqli_query($con, $sql_carta);
+
     if ($query_run) {
         // Obtener el ID insertado en la tabla `ftl`
         $idFtl = mysqli_insert_id($con);

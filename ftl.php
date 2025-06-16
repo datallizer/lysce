@@ -653,8 +653,6 @@ if (isset($_SESSION['email'])) {
 
                                                                     ?>
 
-
-
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                                                     </div>
@@ -670,7 +668,9 @@ if (isset($_SESSION['email'])) {
 
                                                         <a href="editar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
-                                                         <a href="duplicar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-secondary btn-sm m-1"><i class="bi bi-copy"></i></a>
+                                                        <a href="duplicar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-secondary btn-sm m-1"><i class="bi bi-copy"></i></a>
+
+                                                         <a href="carta-de-instrucciones-ftl.php?id=<?= $registro['identificador']; ?>" class="btn btn-success btn-sm m-1"><i class="bi bi-card-text"></i></a>
 
                                                         <form action="codeftl.php" method="POST" class="d-inline">
                                                             <input type="hidden" name="id" value="<?= $registro['id']; ?>">
