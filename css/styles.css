@@ -72,6 +72,13 @@ p {
     border-top: 1px solid #c7c7c7 !important;
 }
 
+.card-dashboard{
+  padding: 15px;
+  background-color: #e7e7e7;
+  margin-bottom: 30px;
+  border-radius: 10px;
+}
+
 @media screen and (max-width: 1000px) {
   .offcanvas {
     width: 70vw !important;
