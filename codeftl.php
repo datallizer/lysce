@@ -15,6 +15,7 @@ if (isset($_POST['delete'])) {
     $delete_incrementables = "DELETE FROM incrementablesftl WHERE idFtl='$id'";
     $delete_descripcion = "DELETE FROM descripcionmercanciasftl WHERE idFtl='$id'";
     $delete_servicio = "DELETE FROM servicioftl WHERE idFtl='$id'";
+    $delete_carta = "DELETE FROM cartainstruccionesftl WHERE idFtl='$id'";
 
     $delete_ftl = "DELETE FROM ftl WHERE id='$id'";
 
@@ -22,9 +23,10 @@ if (isset($_POST['delete'])) {
     $query_run_incrementables = mysqli_query($con, $delete_incrementables);
     $query_run_descripcion = mysqli_query($con, $delete_descripcion);
     $query_run_servicio = mysqli_query($con, $delete_servicio);
+    $query_run_carta = mysqli_query($con, $delete_carta);
     $query_run_ftl = mysqli_query($con, $delete_ftl);
 
-    if ($query_run_gastos && $query_run_incrementables && $query_run_descripcion && $query_run_servicio && $query_run_ftl) {
+    if ($query_run_gastos && $query_run_incrementables && $query_run_descripcion && $query_run_servicio && $query_run_carta && $query_run_ftl) {
         $_SESSION['alert'] = [
             'title' => 'ELIMINADO EXITOSAMENTE',
             'icon' => 'success'
@@ -106,17 +108,14 @@ if (isset($_POST['save'])) {
 
     $query_run = mysqli_query($con, $sql);
 
-    $sql_carta = "INSERT INTO ftl (
-        tipoFtl, folio, idCliente, idOrigen, idDestino, idDestinoFinal, usuario
-    ) VALUES (
-        '$tipoFtl', '$identificador', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$email'
-    )";
-
-    $query_carta_run = mysqli_query($con, $sql_carta);
-
     if ($query_run) {
         // Obtener el ID insertado en la tabla `ftl`
         $idFtl = mysqli_insert_id($con);
+
+        $sql_carta = "INSERT INTO ftl (idFtl, tipoFtl, folio, idCliente, idOrigen, idDestino, idDestinoFinal, usuario
+    ) VALUES ('$idFtl','$tipoFtl', '$identificador', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$email')";
+
+        $query_carta_run = mysqli_query($con, $sql_carta);
 
         // Insertar los datos de cada fila en `descripcionMercanciasFtl`
         $cantidad = $_POST['cantidad'];
@@ -303,6 +302,16 @@ if (isset($_POST['update'])) {
         porcentajeSeguro = '$porcentajeSeguro'
     WHERE id = '$id'";
 
+    $sql_carta = "UPDATE cartainstruccionesftl SET 
+        folio = '$identificador',
+        idCliente = '$idCliente',
+        idOrigen = '$idOrigen',
+        idDestino = '$idDestino',
+        idDestinoFinal = '$idDestinoFinal',
+        tipoFtl = '$tipoFtl' WHERE idFtl = '$id'";
+
+    $query_run_carta = mysqli_query($con, $sql_carta);
+
     $query_run = mysqli_query($con, $sql);
 
     if ($query_run) {
@@ -314,26 +323,26 @@ if (isset($_POST['update'])) {
         mysqli_query($con, "DELETE FROM incrementablesftl WHERE idFtl = '$id'");
         mysqli_query($con, "DELETE FROM gastosftl WHERE idFtl = '$id'");
 
-        // Insertar nueva información
-        foreach ($_POST['cantidad'] as $i => $cantidad) {
-            $cantidad_val = mysqli_real_escape_string($con, $cantidad);
-            $unidadMedida_val = mysqli_real_escape_string($con, $_POST['unidadMedida'][$i]);
-            $nmfc_val = mysqli_real_escape_string($con, $_POST['nmfc'][$i]);
-            $descripcion_val = mysqli_real_escape_string($con, $_POST['descripcion'][$i]);
-            $largoCm_val = mysqli_real_escape_string($con, $_POST['largoCm'][$i]);
-            $anchoCm_val = mysqli_real_escape_string($con, $_POST['anchoCm'][$i]);
-            $altoCm_val = mysqli_real_escape_string($con, $_POST['altoCm'][$i]);
-            $largoPlg_val = mysqli_real_escape_string($con, $_POST['largoPlg'][$i]);
-            $anchoPlg_val = mysqli_real_escape_string($con, $_POST['anchoPlg'][$i]);
-            $altoPlg_val = mysqli_real_escape_string($con, $_POST['altoPlg'][$i]);
-            $piesCubicos_val = mysqli_real_escape_string($con, $_POST['piesCubicos'][$i]);
-            $metrosCubicos_val = mysqli_real_escape_string($con, $_POST['metrosCubicos'][$i]);
-            $libras_val = mysqli_real_escape_string($con, $_POST['libras'][$i]);
-            $kilogramos_val = mysqli_real_escape_string($con, $_POST['kilogramos'][$i]);
-            $valorFactura_val = mysqli_real_escape_string($con, $_POST['valorFactura'][$i]);
+        if (!empty($_POST['cantidad']) && is_array($_POST['cantidad'])) {
+            foreach ($_POST['cantidad'] as $i => $cantidad) {
+                $cantidad_val = mysqli_real_escape_string($con, $cantidad);
+                $unidadMedida_val = mysqli_real_escape_string($con, $_POST['unidadMedida'][$i]);
+                $nmfc_val = mysqli_real_escape_string($con, $_POST['nmfc'][$i]);
+                $descripcion_val = mysqli_real_escape_string($con, $_POST['descripcion'][$i]);
+                $largoCm_val = mysqli_real_escape_string($con, $_POST['largoCm'][$i]);
+                $anchoCm_val = mysqli_real_escape_string($con, $_POST['anchoCm'][$i]);
+                $altoCm_val = mysqli_real_escape_string($con, $_POST['altoCm'][$i]);
+                $largoPlg_val = mysqli_real_escape_string($con, $_POST['largoPlg'][$i]);
+                $anchoPlg_val = mysqli_real_escape_string($con, $_POST['anchoPlg'][$i]);
+                $altoPlg_val = mysqli_real_escape_string($con, $_POST['altoPlg'][$i]);
+                $piesCubicos_val = mysqli_real_escape_string($con, $_POST['piesCubicos'][$i]);
+                $metrosCubicos_val = mysqli_real_escape_string($con, $_POST['metrosCubicos'][$i]);
+                $libras_val = mysqli_real_escape_string($con, $_POST['libras'][$i]);
+                $kilogramos_val = mysqli_real_escape_string($con, $_POST['kilogramos'][$i]);
+                $valorFactura_val = mysqli_real_escape_string($con, $_POST['valorFactura'][$i]);
 
-            // Actualizar los registros en la tabla descripcionmercanciasftl
-            $sql_detalle = "INSERT INTO descripcionmercanciasftl (
+                // Actualizar los registros en la tabla descripcionmercanciasftl
+                $sql_detalle = "INSERT INTO descripcionmercanciasftl (
                 idFtl, cantidad, unidadMedida, nmfc, descripcion,
                 largoCm, anchoCm, altoCm, largoPlg, anchoPlg, altoPlg,
                 piesCubicos, metrosCubicos, libras, kilogramos, valorFactura
@@ -342,8 +351,10 @@ if (isset($_POST['update'])) {
                 '$largoCm_val', '$anchoCm_val', '$altoCm_val', '$largoPlg_val', '$anchoPlg_val', '$altoPlg_val',
                 '$piesCubicos_val', '$metrosCubicos_val', '$libras_val', '$kilogramos_val', '$valorFactura_val'
             )";
-            mysqli_query($con, $sql_detalle);
+                mysqli_query($con, $sql_detalle);
+            }
         }
+
 
 
         if (!empty($_POST['conceptoServicio']) && is_array($_POST['conceptoServicio'])) {
@@ -364,6 +375,99 @@ if (isset($_POST['update'])) {
                 $mx_val = mysqli_real_escape_string($con, $_POST['incrementableMx'][$i]);
 
                 $sql_incrementable = "INSERT INTO incrementablesftl (idFtl, incrementable, incrementableUsd, incrementableMx)
+                                      VALUES ('$id', '$incrementable_val', '$usd_val', '$mx_val')";
+                mysqli_query($con, $sql_incrementable);
+            }
+        }
+
+
+        if (!empty($_POST['conceptoGasto']) && is_array($_POST['conceptoGasto'])) {
+            foreach ($_POST['conceptoGasto'] as $i => $gasto) {
+                $concepto_val = mysqli_real_escape_string($con, $gasto);
+                $monto_val = mysqli_real_escape_string($con, $_POST['montoGasto'][$i]);
+                $iva_val = isset($_POST['ivaGasto'][$i]) ? 1 : 0;
+
+                $sql_gasto = "INSERT INTO gastosftl (idFtl, conceptoGasto, montoGasto, ivaGasto)
+                              VALUES ('$id', '$concepto_val', '$monto_val', '$iva_val')";
+                mysqli_query($con, $sql_gasto);
+            }
+        }
+
+
+        $_SESSION['alert'] = ['title' => "COTIZACIÓN ACTUALIZADA EXITOSAMENTE", 'icon' => 'success'];
+        header("Location: ftl.php");
+        exit;
+    } else {
+        $_SESSION['alert'] = ['title' => 'ERROR AL ACTUALIZAR', 'icon' => 'error'];
+        header("Location: ftl.php");
+        exit;
+    }
+}
+
+if (isset($_POST['instrucciones'])) {
+    $id = mysqli_real_escape_string($con, $_POST['id']);
+    $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
+    $transportista = mysqli_real_escape_string($con, $_POST['transportista']);
+    $unidad = mysqli_real_escape_string($con, $_POST['unidad']);
+    $numero = mysqli_real_escape_string($con, $_POST['numero']);
+    $placas = mysqli_real_escape_string($con, $_POST['placas']);
+    $transfer = mysqli_real_escape_string($con, $_POST['transfer']);
+    $caat = mysqli_real_escape_string($con, $_POST['caat']);
+    $scac = mysqli_real_escape_string($con, $_POST['scac']);
+    $carga = mysqli_real_escape_string($con, $_POST['carga']);
+    $horacarga = mysqli_real_escape_string($con, $_POST['horacarga']);
+    $recorrido = mysqli_real_escape_string($con, $_POST['recorrido']);
+    $arribo = mysqli_real_escape_string($con, $_POST['arribo']);
+    $horadescarga = mysqli_real_escape_string($con, $_POST['horadescarga']);
+    $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
+    $usuario = mysqli_real_escape_string($con, $_POST['usuario']);
+
+    $sql = "UPDATE cartainstruccionesftl SET 
+        fecha = '$fecha',
+        transportista = '$transportista',
+        unidad = '$unidad',
+        numero = '$numero',
+        placas = '$placas',
+        transfer = '$transfer',
+        caat = '$caat',
+        scac = '$scac',
+        carga = '$carga',
+        horacarga = '$horacarga',
+        recorrido = '$recorrido',
+        arribo = '$arribo',
+        horadescarga = '$horadescarga',
+        observaciones = '$observaciones',
+        usuario = '$usuario'
+    WHERE id = '$id'";
+
+    $query_run = mysqli_query($con, $sql);
+
+    if ($query_run) {
+
+        // Actualizar tablas relacionadas
+        mysqli_query($con, "DELETE FROM referenciaftl WHERE idDesc = '$id'");
+        mysqli_query($con, "DELETE FROM ccpftl WHERE idFtl = '$id'");
+
+
+        if (!empty($_POST['factura']) && is_array($_POST['factura'])) {
+            foreach ($_POST['factura'] as $i => $factura) {
+                $factura_val = mysqli_real_escape_string($con, $factura);
+                $idDesc = mysqli_real_escape_string($con, $_POST['idDesc'][$i]);
+                $pedimento_val = mysqli_real_escape_string($con, $_POST['pedimento'][$i]);
+
+                $sql_servicio = "INSERT INTO referenciaftl (idDesc, factura, pedimento)
+                                 VALUES ('$idDesc', '$factura_val', '$pedimento_val')";
+                mysqli_query($con, $sql_servicio);
+            }
+        }
+
+        if (!empty($_POST['clave']) && is_array($_POST['clave'])) {
+            foreach ($_POST['clave'] as $i => $clave) {
+                $clave_val = mysqli_real_escape_string($con, $clave);
+                $usd_val = mysqli_real_escape_string($con, $_POST['incrementableUsd'][$i]);
+                $mx_val = mysqli_real_escape_string($con, $_POST['incrementableMx'][$i]);
+
+                $sql_incrementable = "INSERT INTO ccpftl (idFtl, incrementable, incrementableUsd, incrementableMx)
                                       VALUES ('$id', '$incrementable_val', '$usd_val', '$mx_val')";
                 mysqli_query($con, $sql_incrementable);
             }

@@ -31,7 +31,7 @@ if (isset($_SESSION['email'])) {
 
 $ftlId = null;
 if (isset($_GET['id'])) {
-    $stmt = $con->prepare("SELECT id FROM ftl WHERE identificador = ?");
+    $stmt = $con->prepare("SELECT id FROM ftl WHERE id = ?");
     $stmt->bind_param("s", $_GET['id']);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -62,7 +62,7 @@ if (isset($_GET['id'])) {
     <?php include 'sidenav.php'; ?>
     <div id="layoutSidenav">
         <div id="layoutSidenav_content">
-            <div class="container mt-3">
+            <div class="container mt-5 mb-3">
                 <div class="row justify-content-center mb-5">
                     <div class="col-md-12">
                         <div class="card">
@@ -75,7 +75,7 @@ if (isset($_GET['id'])) {
 
                                 if (isset($_GET['id'])) {
                                     $registro_id = mysqli_real_escape_string($con, $_GET['id']);
-                                    $query = "SELECT * FROM cartainstruccionesftl WHERE folio='$registro_id' ";
+                                    $query = "SELECT * FROM cartainstruccionesftl WHERE idFtl='$registro_id' ";
                                     $query_run = mysqli_query($con, $query);
 
                                     if (mysqli_num_rows($query_run) > 0) {
@@ -191,11 +191,11 @@ if (isset($_GET['id'])) {
                                                     <div class="col-8">
                                                         <p style="display: inline-block;margin-bottom: 5px;">
                                                             <b>Transportista:</b>
-                                                            <input name="servicio" class="form-control" style="width: 217px; display: inline-block;" type="text">
+                                                            <input name="transportista" id="transportista" class="form-control" style="width: 217px; display: inline-block;" type="text">
                                                         </p>
                                                     </div>
                                                     <div class="col-4">
-                                                        <select class="form-select bg-info" name="idDestino" id="destino">
+                                                        <select class="form-select bg-info" id="transportistasSelect">
                                                             <option value="" disabled selected>Transportistas</option>
                                                             <?php
                                                             $query = "SELECT * FROM transportistas WHERE estatus = 1";
@@ -206,7 +206,7 @@ if (isset($_GET['id'])) {
                                                                     $nombre = $destino['transportista'];
                                                                     $id = $destino['id'];
                                                                     $tipo = $destino['placas'];
-                                                                    $selected = ($registro['idDestinoFinal'] == $id) ? "selected" : ""; // Verifica si es el seleccionado
+                                                                    $selected = ($registro['transportista'] == $id) ? "selected" : ""; // Verifica si es el seleccionado
                                                                     echo "<option value='$id' $selected>$nombre - $tipo</option>";
                                                                 }
                                                             }
@@ -216,30 +216,53 @@ if (isset($_GET['id'])) {
                                                 </div>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Unidad:</b>
-                                                    <input name="servicio" class="form-control" style="width: 262px; display: inline-block;" type="text">
+                                                    <input name="unidad" id="unidad" class="form-control" style="width: 262px; display: inline-block;" type="text">
                                                 </p><br>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>No.</b>
-                                                    <input name="servicio" class="form-control" style="width: 292px; display: inline-block;" type="text">
+                                                    <input name="numero" id="numero" class="form-control" style="width: 292px; display: inline-block;" type="text">
                                                 </p><br>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Placas:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="placas" id="placas" class="form-control" style="width: 267px; display: inline-block;" type="text">
                                                 </p>
                                             </div>
 
                                             <div class="col-6 mt-3 mb-3 p-1 text-end">
-                                                <p style="display: inline-block;margin-bottom: 5px;">
-                                                    <b>Transfer:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
-                                                </p><br>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <select class="form-select bg-info" id="transferSelect">
+                                                            <option value="" disabled selected>Transfer</option>
+                                                            <?php
+                                                            $query = "SELECT * FROM transfers WHERE estatus = 1";
+                                                            $result = mysqli_query($con, $query);
+
+                                                            if (mysqli_num_rows($result) > 0) {
+                                                                while ($destino = mysqli_fetch_assoc($result)) {
+                                                                    $nombre = $destino['transfer'];
+                                                                    $id = $destino['id'];
+                                                                    $tipo = $destino['caat'];
+                                                                    $selected = ($registro['transfer'] == $id) ? "selected" : ""; // Verifica si es el seleccionado
+                                                                    echo "<option value='$id' $selected>$nombre - $tipo</option>";
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <p style="display: inline-block;margin-bottom: 5px;">
+                                                            <b>Transfer:</b>
+                                                            <input name="transfer" id="transfer" class="form-control" style="width: 217px; display: inline-block;" type="text">
+                                                        </p>
+                                                    </div>
+                                                </div>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>CAAT:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="caat" id="caat" class="form-control" style="width: 267px; display: inline-block;" type="text">
                                                 </p><br>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>SCAC:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="scac" id="scac" class="form-control" style="width: 267px; display: inline-block;" type="text">
                                                 </p>
                                             </div>
 
@@ -356,14 +379,14 @@ if (isset($_GET['id'])) {
                                                 <p style="margin: 0px;">Tel / Fax +52 (449) 300 3265</p>
                                             </div>
 
-                                             <div class="col-6 mt-5">
+                                            <div class="col-6 mt-5">
                                                 <h2 class="text-danger"><b>MOVIENDO SOLUCIONES</b></h2>
                                             </div>
 
 
                                             <div class="modal-footer mt-5">
                                                 <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
-                                                <button type="submit" class="btn btn-success m-1" name="save" disabled>Guardar</button>
+                                                <button type="submit" class="btn btn-success m-1" name="instrucciones" disabled>Guardar</button>
                                             </div>
                                         </form>
                                 <?php
@@ -532,7 +555,7 @@ if (isset($_GET['id'])) {
             function agregarIncrementable() {
                 var tbody = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
 
-                // HTML que contiene múltiples filas
+             
                 var filasHTML = `
         <tr class="bg-dark text-center">
             <td class="text-light">CLAVE SAT DEL PRODUCTO</td>
@@ -570,7 +593,7 @@ if (isset($_GET['id'])) {
         </tr>
     `;
 
-                // Añadir filas al final del tbody
+               
                 tbody.insertAdjacentHTML('beforeend', filasHTML);
             }
 
@@ -578,10 +601,10 @@ if (isset($_GET['id'])) {
                 var tbody = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
                 var totalFilas = tbody.rows.length;
 
-                // Verifica que existan al menos 4 filas para eliminar una serie completa
+               
                 if (totalFilas >= 4) {
                     for (let i = 0; i < 4; i++) {
-                        tbody.deleteRow(tbody.rows.length - 1); // Elimina la última fila
+                        tbody.deleteRow(tbody.rows.length - 1);
                     }
                 }
             }
@@ -589,6 +612,59 @@ if (isset($_GET['id'])) {
             document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById("addRowButton").addEventListener("click", agregarIncrementable);
                 document.getElementById("removeRowButton").addEventListener("click", eliminarUltimaSerie);
+            });
+
+            $(document).ready(function() {
+                $("#transportistasSelect").on("change", function() {
+                    let idTransportista = $(this).val();
+
+                    if (idTransportista) {
+                        $.ajax({
+                            url: "getTransportista.php",
+                            type: "POST",
+                            data: {
+                                id: idTransportista
+                            },
+                            dataType: "json",
+                            success: function(data) {
+                                if (data) {
+                                    $("#transportista").val(data.transportista);
+                                    $("#unidad").val(data.unidad);
+                                    $("#numero").val(data.numero);
+                                    $("#placas").val(data.placas);
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error en AJAX:", error);
+                            }
+                        });
+                    }
+                });
+
+                $("#transferSelect").on("change", function() {
+                    let idTransfer = $(this).val();
+
+                    if (idTransfer) {
+                        $.ajax({
+                            url: "getTransfer.php", 
+                            type: "POST",
+                            data: {
+                                id: idTransfer
+                            },
+                            dataType: "json",
+                            success: function(data) {
+                                if (data) {
+                                    $("#transfer").val(data.transfer);
+                                    $("#caat").val(data.caat);
+                                    $("#scac").val(data.scac);
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error en AJAX:", error);
+                            }
+                        });
+                    }
+                });
             });
         </script>
 </body>

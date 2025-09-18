@@ -89,6 +89,14 @@ require 'dbcon.php';
                             <div class="sb-nav-link-icon"><i class="bi bi-graph-up-arrow"></i></div>
                             Incrementables
                         </a>
+                        <a class="nav-link" href="transportistas.php">
+                            <div class="sb-nav-link-icon"><i class="bi bi-truck"></i></div>
+                            Transportistas
+                        </a>
+                        <a class="nav-link" href="transfers.php">
+                            <div class="sb-nav-link-icon"><i class="bi bi-buildings"></i></div>
+                            Transfers
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">

@@ -670,7 +670,7 @@ if (isset($_SESSION['email'])) {
 
                                                         <a href="duplicar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-secondary btn-sm m-1"><i class="bi bi-copy"></i></a>
 
-                                                         <a href="carta-de-instrucciones-ftl.php?id=<?= $registro['identificador']; ?>" class="btn btn-success btn-sm m-1"><i class="bi bi-card-text"></i></a>
+                                                         <a href="carta-de-instrucciones-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-success btn-sm m-1"><i class="bi bi-card-text"></i></a>
 
                                                         <form action="codeftl.php" method="POST" class="d-inline">
                                                             <input type="hidden" name="id" value="<?= $registro['id']; ?>">

@@ -110,7 +110,7 @@ if (isset($_SESSION['email'])) {
                                                 LEFT JOIN 
                                                     clientes p_destino ON a.idDestino = p_destino.id
                                                 LEFT JOIN
-                                                    clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                                    clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC LIMIT 10
                                                 ";
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
@@ -668,7 +668,7 @@ if (isset($_SESSION['email'])) {
                                                 LEFT JOIN 
                                                     clientes p_destino ON a.idDestino = p_destino.id
                                                 LEFT JOIN
-                                                    clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                                    clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC LIMIT 10
                                                 ";
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
@@ -1189,7 +1189,7 @@ if (isset($_SESSION['email'])) {
                                     <?php
                                         }
                                     } else {
-                                        echo "<td colspan='8'><p> No se encontro ningun registro </p></td>";
+                                        echo "<td colspan='5'><p> No se encontro ningun registro </p></td>";
                                     }
                                     ?>
                                 </tbody>
@@ -1228,7 +1228,7 @@ if (isset($_SESSION['email'])) {
                                     LEFT JOIN 
                                         clientes p_destino ON a.idDestino = p_destino.id
                                     LEFT JOIN
-                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC LIMIT 10
                                     ";
 
                                     $query_run = mysqli_query($con, $query);
@@ -1807,7 +1807,7 @@ if (isset($_SESSION['email'])) {
                                     <?php
                                         }
                                     } else {
-                                        echo "<td colspan='8'><p> No se encontro ningun registro </p></td>";
+                                        echo "<td colspan='5'><p> No se encontro ningun registro </p></td>";
                                     }
                                     ?>
                                 </tbody>
@@ -1846,7 +1846,7 @@ if (isset($_SESSION['email'])) {
                                     LEFT JOIN 
                                         clientes p_destino ON a.idDestino = p_destino.id
                                     LEFT JOIN
-                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC LIMIT 10
                                     ";
 
                                     $query_run = mysqli_query($con, $query);
@@ -2467,7 +2467,7 @@ if (isset($_SESSION['email'])) {
                                     LEFT JOIN 
                                         clientes p_destino ON a.idDestino = p_destino.id
                                     LEFT JOIN
-                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC LIMIT 10
                                     ";
 
                                     $query_run = mysqli_query($con, $query);
@@ -3092,7 +3092,7 @@ if (isset($_SESSION['email'])) {
                                     LEFT JOIN 
                                         clientes p_destino ON a.idDestino = p_destino.id
                                     LEFT JOIN
-                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC
+                                        clientes p_final ON a.idDestinoFinal = p_final.id ORDER BY id DESC LIMIT 10
                                     ";
 
                                     $query_run = mysqli_query($con, $query);
