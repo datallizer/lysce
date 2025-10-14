@@ -4,7 +4,7 @@ include 'dbcon.php';
 function obtenerDetallesCliente($idCliente) {
     global $con;
 
-    $query = "SELECT * FROM clientes WHERE id = '$idCliente' AND estatus = 1";
+    $query = "SELECT * FROM clientes WHERE id = '$idCliente' AND estatus = 1 ORDER BY cliente ASC";
     $result = mysqli_query($con, $query);
 
     if (mysqli_num_rows($result) > 0) {

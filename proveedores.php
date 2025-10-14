@@ -88,7 +88,7 @@ if (isset($_SESSION['email'])) {
 
                                 </h4>
                             </div>
-                            <div class="card-body" style="overflow-y:scroll;">
+                            <div class="card-body" style="overflow-y: scroll;">
                                 <table id="miTabla" class="table table-bordered table-striped" style="width: 100%;">
                                     <thead>
                                         <tr>
@@ -266,7 +266,7 @@ if (isset($_SESSION['email'])) {
                             <select class="form-select" name="idCliente" id="floatingSelect">
                                 <option selected>Selecciona un cliente para asociar</option>
                                 <?php
-                                $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente'";
+                                $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente' ORDER BY cliente ASC";
                                 $result = mysqli_query($con, $query);
 
                                 if (mysqli_num_rows($result) > 0) {
@@ -286,7 +286,7 @@ if (isset($_SESSION['email'])) {
                             <select class="form-select" name="idProveedor" id="floatingSelect">
                                 <option selected>Selecciona un proveedor para asociar</option>
                                 <?php
-                                $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Proveedor'";
+                                $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Proveedor' ORDER BY cliente ASC";
                                 $result = mysqli_query($con, $query);
 
                                 if (mysqli_num_rows($result) > 0) {

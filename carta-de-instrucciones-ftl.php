@@ -386,7 +386,7 @@ if (isset($_GET['id'])) {
 
                                             <div class="modal-footer mt-5">
                                                 <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
-                                                <button type="submit" class="btn btn-success m-1" name="instrucciones" disabled>Guardar</button>
+                                                <button type="submit" class="btn btn-success m-1" name="instrucciones">Guardar</button>
                                             </div>
                                         </form>
                                 <?php

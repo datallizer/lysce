@@ -8,7 +8,7 @@ if (isset($_POST['idCliente'])) {
         SELECT c.id, c.cliente, c.tipo
         FROM proveedorcliente pc
         INNER JOIN clientes c ON c.id = pc.idProveedor
-        WHERE pc.idCliente = $idCliente AND c.estatus = 1
+        WHERE pc.idCliente = $idCliente AND c.estatus = 1 ORDER BY cliente ASC
     ";
     
     $result = mysqli_query($con, $query);

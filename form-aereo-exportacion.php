@@ -105,10 +105,10 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                         <p class="mb-1"><b>Cliente</b></p>
-                        <select class="form-select mb-3" name="idCliente" id="cliente">
+                        <select class="form-select mb-3" name="idCliente" required id="cliente">
                             <option value="" disabled selected>Selecciona una opción</option>
                             <?php
-                            $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente'";
+                            $query = "SELECT * FROM clientes WHERE estatus = 1 AND tipo = 'Cliente' ORDER BY cliente ASC";
                             $result = mysqli_query($con, $query);
 
                             if (mysqli_num_rows($result) > 0) {
@@ -124,7 +124,7 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Origen</b></p>
-                        <select class="form-select" name="idOrigen" id="origen">
+                        <select class="form-select" name="idOrigen" required id="origen">
                             <option value="" disabled selected>Selecciona una opción</option>
                             <?php
                             $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -144,7 +144,7 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Destino en frontera</b></p>
-                        <select class="form-select" name="idAduana" id="aduana">
+                        <select class="form-select" name="idAduana" required id="aduana">
                             <option value="" disabled selected>Selecciona una opción</option>
                             <?php
                             $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -164,7 +164,7 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="col-4 p-3" style="border: 1px solid #666666;">
                         <p class="mb-1"><b>Destino Final</b></p>
-                        <select class="form-select" name="idDestino" id="destino">
+                        <select class="form-select" name="idDestino" required id="destino">
                             <option value="" disabled selected>Selecciona una opción</option>
                             <?php
                             $query = "SELECT * FROM clientes WHERE estatus = 1";
@@ -722,52 +722,67 @@ if (isset($_SESSION['email'])) {
         document.getElementById('expedicion').value = formattedDate;
 
         // Select de cliente
-document.getElementById("cliente").addEventListener("change", function() {
-    var idCliente = this.value;
+        document.getElementById("cliente").addEventListener("change", function() {
+            var idCliente = this.value;
 
-    if (idCliente) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "obtener_asociados.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            if (idCliente) {
+                // --- PRIMERA PETICIÓN: obtener los asociados ---
+                var xhr1 = new XMLHttpRequest();
+                xhr1.open("POST", "obtener_asociados.php", true);
+                xhr1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                const opciones = "<option value='' disabled selected>Selecciona una opción</option>" + xhr.responseText;
+                xhr1.onreadystatechange = function() {
+                    if (xhr1.readyState === 4 && xhr1.status === 200) {
+                        const opciones = "<option value='' disabled selected>Selecciona una opción</option>" + xhr1.responseText;
 
-                // Actualizar y habilitar los selects
-                const origen = document.getElementById("origen");
-                const aduana = document.getElementById("aduana");
-                const destino = document.getElementById("destino");
+                        // Actualizar y habilitar los selects
+                        const origen = document.getElementById("origen");
+                        const aduana = document.getElementById("aduana");
+                        const destino = document.getElementById("destino");
 
-                origen.innerHTML = opciones;
-                aduana.innerHTML = opciones;
-                destino.innerHTML = opciones;
+                        origen.innerHTML = opciones;
+                        aduana.innerHTML = opciones;
+                        destino.innerHTML = opciones;
 
-                origen.disabled = false;
-                aduana.disabled = false;
-                destino.disabled = false;
+                        origen.disabled = false;
+                        aduana.disabled = false;
+                        destino.disabled = false;
 
-                // Limpiar detalles anteriores
+                        // Limpiar detalles anteriores
+                        document.getElementById("detalleOrigen").innerHTML = "";
+                        document.getElementById("detalleAduana").innerHTML = "";
+                        document.getElementById("detalleDestino").innerHTML = "";
+                    }
+                };
+                xhr1.send("idCliente=" + idCliente);
+
+                // --- SEGUNDA PETICIÓN: obtener el detalle del cliente seleccionado ---
+                var xhr2 = new XMLHttpRequest();
+                xhr2.open("POST", "obtener_cliente.php", true);
+                xhr2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                xhr2.onreadystatechange = function() {
+                    if (xhr2.readyState === 4 && xhr2.status === 200) {
+                        document.getElementById("detalleCliente").innerHTML = xhr2.responseText;
+                    }
+                };
+                xhr2.send("idCliente=" + idCliente);
+            } else {
+                // Si se deselecciona el cliente, limpiar todo
+                const selects = ["origen", "aduana", "destino"];
+                selects.forEach(id => {
+                    const select = document.getElementById(id);
+                    select.innerHTML = "<option value='' disabled selected>Selecciona primero un cliente</option>";
+                    select.disabled = true;
+                });
+
+                document.getElementById("detalleCliente").innerHTML = "";
                 document.getElementById("detalleOrigen").innerHTML = "";
                 document.getElementById("detalleAduana").innerHTML = "";
                 document.getElementById("detalleDestino").innerHTML = "";
             }
-        };
-        xhr.send("idCliente=" + idCliente);
-    } else {
-        // Si se deselecciona el cliente, limpia y deshabilita todo
-        const selects = ["origen", "aduana", "destino"];
-        selects.forEach(id => {
-            const select = document.getElementById(id);
-            select.innerHTML = "<option value='' disabled selected>Selecciona primero un cliente</option>";
-            select.disabled = true;
         });
 
-        document.getElementById("detalleOrigen").innerHTML = "";
-        document.getElementById("detalleAduana").innerHTML = "";
-        document.getElementById("detalleDestino").innerHTML = "";
-    }
-});
 
 
         // Select de origen
@@ -1542,7 +1557,7 @@ document.getElementById("cliente").addEventListener("change", function() {
             }
         }
 
-         async function obtenerTipoDeCambio() {
+        async function obtenerTipoDeCambio() {
             try {
                 const response = await fetch('tipo-cambio.php');
                 if (!response.ok) {
