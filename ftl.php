@@ -660,17 +660,42 @@ if (isset($_SESSION['email'])) {
                                                             </div>
                                                         </div>
 
-                                                        <a href="<?= $linkHabilitado ? 'generate_ftl.php?id=' . $registro['id'] : '#' ?>"
-                                                            class="file-download btn btn-sm m-1 <?= $linkHabilitado ? 'btn-primary' : 'btn-secondary disabled' ?>"
-                                                            <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
-                                                            <i class="bi bi-file-earmark-arrow-down-fill"></i>
-                                                        </a>
+
+
+                                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#downloadModal<?= $registro['id']; ?>"><i class="bi bi-file-earmark-arrow-down-fill"></i></button>
+
+                                                        <!-- Modal -->
+                                                        <div style="z-index: 5000 !important;" class="modal fade" id="downloadModal<?= $registro['id']; ?>" tabindex="-1" aria-labelledby="downloadModalLabel<?= $registro['id']; ?>" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5" id="downloadModalLabel">DESCARGAS <?= $registro['identificador']; ?></h1>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <a href="<?= $linkHabilitado ? 'generate_ftl.php?id=' . $registro['id'] : '#' ?>"
+                                                                            class="file-download btn btn-sm m-1 <?= $linkHabilitado ? 'btn-primary' : 'btn-secondary disabled' ?>"
+                                                                            <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
+                                                                            <i style="font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+                                                                            <p>Cotización (Español)</p>
+                                                                        </a>
+
+                                                                        <a href="<?= $linkHabilitado ? 'generate_carta_instrucciones_ftl.php?id=' . $registro['id'] : '#' ?>"
+                                                                            class="file-download btn btn-sm m-1 <?= $linkHabilitado ? 'btn-success' : 'btn-secondary disabled' ?>"
+                                                                            <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
+                                                                            <i style="font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+                                                                            <p>Carta de instrucciones</p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <a href="editar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
                                                         <a href="duplicar-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-secondary btn-sm m-1"><i class="bi bi-copy"></i></a>
 
-                                                         <a href="carta-de-instrucciones-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-success btn-sm m-1"><i class="bi bi-card-text"></i></a>
+                                                        <a href="carta-de-instrucciones-ftl.php?id=<?= $registro['id']; ?>" class="btn btn-success btn-sm m-1"><i class="bi bi-card-text"></i></a>
 
                                                         <form action="codeftl.php" method="POST" class="d-inline">
                                                             <input type="hidden" name="id" value="<?= $registro['id']; ?>">

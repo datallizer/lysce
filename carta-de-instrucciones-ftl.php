@@ -75,7 +75,7 @@ if (isset($_GET['id'])) {
 
                                 if (isset($_GET['id'])) {
                                     $registro_id = mysqli_real_escape_string($con, $_GET['id']);
-                                    $query = "SELECT * FROM cartainstruccionesftl WHERE idFtl='$registro_id' ";
+                                    $query = "SELECT * FROM cartainstruccionesftl WHERE idFtl='$registro_id'";
                                     $query_run = mysqli_query($con, $query);
 
                                     if (mysqli_num_rows($query_run) > 0) {
@@ -84,17 +84,18 @@ if (isset($_GET['id'])) {
                                 ?>
                                         <form action="codeftl.php" method="POST" class="row justify-content-evenly">
                                             <input class="form-control" value="<?= $registro['id']; ?>" type="hidden" name="id">
+                                            <input class="form-control" value="<?= $registro['idFtl']; ?>" type="hidden" name="idFtl">
                                             <div class="col-4 mb-3 text-start">
                                                 <img style="width: 70%;" src="images/logo.png" alt="">
                                                 <p><b>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</b></p>
                                             </div>
                                             <div class="col-6 mb-3">
                                                 <h2><b>CARTA DE INSTRUCCIONES</b></h2>
-                                                <input class="form-control bg-warning" name="tipoFtl" value="<?= $registro['tipoFtl']; ?>" readonly>
+                                                <input class="form-control bg-warning" name="tipoFtl" value="<?= $registro['tipoFtl']; ?>" disabled>
                                                 <p>No.</p>
-                                                <input class="form-control" type="text" name="identificador" value="<?= $registro['folio']; ?>" readonly>
+                                                <input class="form-control" type="text" name="folio" value="<?= $registro['folio']; ?>" disabled>
                                                 <p>Fecha</p>
-                                                <input class="form-control mb-1" type="text" name="fecha" id="expedicion" value="">
+                                                <input class="form-control mb-1" type="date" name="fecha" id="expedicion" value="">
                                             </div>
                                             <div class="col-12 p-3" style="border: 1px solid #666666; border-bottom:0px;">
                                                 <p class="mb-1"><b>Cliente</b></p>
@@ -191,7 +192,7 @@ if (isset($_GET['id'])) {
                                                     <div class="col-8">
                                                         <p style="display: inline-block;margin-bottom: 5px;">
                                                             <b>Transportista:</b>
-                                                            <input name="transportista" id="transportista" class="form-control" style="width: 217px; display: inline-block;" type="text">
+                                                            <input name="transportista" id="transportista" class="form-control" style="width: 217px; display: inline-block;" type="text" value="<?= $registro['transportista']; ?>">
                                                         </p>
                                                     </div>
                                                     <div class="col-4">
@@ -216,15 +217,15 @@ if (isset($_GET['id'])) {
                                                 </div>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Unidad:</b>
-                                                    <input name="unidad" id="unidad" class="form-control" style="width: 262px; display: inline-block;" type="text">
+                                                    <input name="unidad" id="unidad" class="form-control" style="width: 262px; display: inline-block;" type="text" value="<?= $registro['unidad']; ?>">
                                                 </p><br>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>No.</b>
-                                                    <input name="numero" id="numero" class="form-control" style="width: 292px; display: inline-block;" type="text">
+                                                    <input name="numero" id="numero" class="form-control" style="width: 292px; display: inline-block;" type="text" value="<?= $registro['numero']; ?>">
                                                 </p><br>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Placas:</b>
-                                                    <input name="placas" id="placas" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="placas" id="placas" class="form-control" style="width: 267px; display: inline-block;" type="text" value="<?= $registro['placas']; ?>">
                                                 </p>
                                             </div>
 
@@ -252,17 +253,17 @@ if (isset($_GET['id'])) {
                                                     <div class="col-8">
                                                         <p style="display: inline-block;margin-bottom: 5px;">
                                                             <b>Transfer:</b>
-                                                            <input name="transfer" id="transfer" class="form-control" style="width: 217px; display: inline-block;" type="text">
+                                                            <input name="transfer" id="transfer" class="form-control" style="width: 217px; display: inline-block;" type="text" value="<?= $registro['transfer']; ?>">
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>CAAT:</b>
-                                                    <input name="caat" id="caat" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="caat" id="caat" class="form-control" style="width: 267px; display: inline-block;" type="text" value="<?= $registro['caat']; ?>">
                                                 </p><br>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>SCAC:</b>
-                                                    <input name="scac" id="scac" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="scac" id="scac" class="form-control" style="width: 267px; display: inline-block;" type="text" value="<?= $registro['scac']; ?>">
                                                 </p>
                                             </div>
 
@@ -277,12 +278,14 @@ if (isset($_GET['id'])) {
                                                             <th colspan="2">Referencia</th>
                                                         </tr>
                                                         <?php
-                                                        $query_desc = "SELECT * FROM descripcionmercanciasftl WHERE idFtl= $ftlId";
+                                                        $query_desc = "SELECT d.*, d.id AS idmerca, r.factura AS factura_ref, r.pedimento AS pedimento_ref FROM descripcionmercanciasftl d LEFT JOIN referenciaftl r ON r.idDesc = d.id WHERE d.idFtl = $ftlId";
+
                                                         $query_run_desc = mysqli_query($con, $query_desc);
 
                                                         if (mysqli_num_rows($query_run_desc) > 0) {
                                                             while ($mercancia = mysqli_fetch_assoc($query_run_desc)) {
                                                         ?>
+                                                                <input type="hidden" name="idDesc[]" value="<?= $mercancia['idmerca']; ?>">
                                                                 <tr>
                                                                     <td>
                                                                         <p><?= $mercancia['cantidad']; ?></p>
@@ -307,8 +310,10 @@ if (isset($_GET['id'])) {
                                                                     </td>
                                                                     <td>
                                                                         <div>
-                                                                            <input class="form-control mb-1" type="text">
-                                                                            <input class="form-control mt-1" type="text">
+                                                                            <input class="form-control mb-1" type="text" name="factura[]"
+                                                                                value="<?= htmlspecialchars($mercancia['factura_ref']); ?>">
+                                                                            <input class="form-control mt-1" type="text" name="pedimento[]"
+                                                                                value="<?= htmlspecialchars($mercancia['pedimento_ref']); ?>">
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -317,6 +322,7 @@ if (isset($_GET['id'])) {
                                                         } else {
                                                             echo "<tr><td colspan='6' class='text-center'>No se encontraron registros</td></tr>";
                                                         }
+
                                                         ?>
                                                     </table>
                                                 </div>
@@ -329,6 +335,55 @@ if (isset($_GET['id'])) {
                                                     </div>
                                                     <table class="table table-striped table-bordered" id="incrementableTable" style="margin-bottom: 0px;">
                                                         <tbody>
+                                                            <?php
+                                                            $query_desc = "SELECT * FROM ccpftl WHERE idFtl = $registro_id";
+
+                                                            $query_run_desc = mysqli_query($con, $query_desc);
+
+                                                            if (mysqli_num_rows($query_run_desc) > 0) {
+                                                                while ($ccp = mysqli_fetch_assoc($query_run_desc)) {
+                                                            ?>
+                                                                    <tr class="bg-dark text-center">
+                                                                        <td class="text-light">CLAVE SAT DEL PRODUCTO</td>
+                                                                        <td class="text-light">DESCRIPCION CATALOGO SAT</td>
+                                                                        <td class="text-light">CANTIDAD</td>
+                                                                        <td class="text-light">CLAVE DE UNIDAD</td>
+                                                                        <td class="text-light">KILOGRAMOS</td>
+                                                                        <td class="text-light">FRACCION ARANCELARIA</td>
+                                                                        <td class="text-light">TIPO DE MATERIAL</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><input class="form-control" type="text" name="clave[]" value="<?= $ccp['clave']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="descripcion[]" value="<?= $ccp['descripcion']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="cantidad[]" value="<?= $ccp['cantidad']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="unidadCpp[]" value="<?= $ccp['unidad']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="kilogramos[]" value="<?= $ccp['kilogramos']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="fraccion[]" value="<?= $ccp['fraccion']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="tipo[]" value="<?= $ccp['tipo']; ?>"></td>
+                                                                    </tr>
+                                                                    <tr class="text-center">
+                                                                        <td>PEDIMENTO</td>
+                                                                        <td>CLAVE MATERIAL PELIGROSO</td>
+                                                                        <td>CLAVE TIPO DE EMBALAJE</td>
+                                                                        <td>DOCUMENTO ADUANERO</td>
+                                                                        <td>REGIMEN ADUANERO</td>
+                                                                        <td colspan="2">RFC DE IMPORTADOR</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><input class="form-control" type="text" name="pedimento[]" value="<?= $ccp['pedimento']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="material[]" value="<?= $ccp['material']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="embalaje[]" value="<?= $ccp['embalaje']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="aduanero[]" value="<?= $ccp['aduanero']; ?>"></td>
+                                                                        <td><input class="form-control" type="text" name="regimen[]" value="<?= $ccp['regimen']; ?>"></td>
+                                                                        <td colspan="2"><input class="form-control" type="text" name="importador[]" value="<?= $ccp['importador']; ?>"></td>
+                                                                    </tr>
+                                                            <?php
+                                                                }
+                                                            } else {
+                                                                echo "<tr><td colspan='6' class='text-center'>No se encontraron registros</td></tr>";
+                                                            }
+
+                                                            ?>
                                                         </tbody>
                                                     </table>
                                                     <div class="col-12 text-center p-2">
@@ -341,31 +396,31 @@ if (isset($_GET['id'])) {
                                             <div class="col-6">
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Fecha de carga:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="carga" class="form-control" style="width: 267px; display: inline-block;" type="date" value="<?= $registro['carga']; ?>">
                                                 </p>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Horario de carga:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="horacarga" class="form-control" style="width: 267px; display: inline-block;" type="time" value="<?= $registro['horacarga']; ?>">
                                                 </p>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Tiempo de recorrido:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="recorrido" class="form-control" style="width: 267px; display: inline-block;" type="text" value="<?= $registro['recorrido']; ?>">
                                                 </p>
                                             </div>
                                             <div class="col-6">
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Fecha de arribo:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="arribo" class="form-control" style="width: 267px; display: inline-block;" type="date" value="<?= $registro['arribo']; ?>">
                                                 </p>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Horario de descarga:</b>
-                                                    <input name="servicio" class="form-control" style="width: 267px; display: inline-block;" type="text">
+                                                    <input name="horadescarga" class="form-control" style="width: 267px; display: inline-block;" type="time" value="<?= $registro['horadescarga']; ?>">
                                                 </p>
                                             </div>
 
                                             <div class="col-12 mt-5">
                                                 <p><b>Observaciones:</b></p>
-                                                <textarea class="form-control" style="min-height: 150px;" name="" id=""></textarea>
+                                                <textarea class="form-control" style="min-height: 150px;" name="observaciones"><?= $registro['observaciones']; ?></textarea>
                                                 <div class="text-center">
                                                     <p><b>ATENTAMENTE</b></p>
                                                     <p>EQUIPO LYSCE</p>
@@ -555,7 +610,7 @@ if (isset($_GET['id'])) {
             function agregarIncrementable() {
                 var tbody = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
 
-             
+
                 var filasHTML = `
         <tr class="bg-dark text-center">
             <td class="text-light">CLAVE SAT DEL PRODUCTO</td>
@@ -593,7 +648,7 @@ if (isset($_GET['id'])) {
         </tr>
     `;
 
-               
+
                 tbody.insertAdjacentHTML('beforeend', filasHTML);
             }
 
@@ -601,7 +656,7 @@ if (isset($_GET['id'])) {
                 var tbody = document.getElementById("incrementableTable").getElementsByTagName("tbody")[0];
                 var totalFilas = tbody.rows.length;
 
-               
+
                 if (totalFilas >= 4) {
                     for (let i = 0; i < 4; i++) {
                         tbody.deleteRow(tbody.rows.length - 1);
@@ -646,7 +701,7 @@ if (isset($_GET['id'])) {
 
                     if (idTransfer) {
                         $.ajax({
-                            url: "getTransfer.php", 
+                            url: "getTransfer.php",
                             type: "POST",
                             data: {
                                 id: idTransfer

@@ -114,7 +114,7 @@ if (isset($_POST['save'])) {
         // Obtener el ID insertado en la tabla `ftl`
         $idFtl = mysqli_insert_id($con);
 
-        $sql_carta = "INSERT INTO ftl (idFtl, tipoFtl, folio, idCliente, idOrigen, idDestino, idDestinoFinal, usuario
+        $sql_carta = "INSERT INTO cartainstruccionesftl (idFtl, tipoFtl, folio, idCliente, idOrigen, idDestino, idDestinoFinal, usuario
     ) VALUES ('$idFtl','$tipoFtl', '$identificador', '$idCliente', '$idOrigen', '$idDestino', '$idDestinoFinal', '$email')";
 
         $query_carta_run = mysqli_query($con, $sql_carta);
@@ -408,6 +408,7 @@ if (isset($_POST['update'])) {
 
 if (isset($_POST['instrucciones'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
+    $idFtl = mysqli_real_escape_string($con, $_POST['idFtl']);
     $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
     $transportista = mysqli_real_escape_string($con, $_POST['transportista']);
     $unidad = mysqli_real_escape_string($con, $_POST['unidad']);
@@ -422,7 +423,20 @@ if (isset($_POST['instrucciones'])) {
     $arribo = mysqli_real_escape_string($con, $_POST['arribo']);
     $horadescarga = mysqli_real_escape_string($con, $_POST['horadescarga']);
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
-    $usuario = mysqli_real_escape_string($con, $_POST['usuario']);
+    $usuario = $_SESSION['email'];
+
+    $numero = strtoupper($numero);
+    $placas = strtoupper($placas);
+
+    // Verificar si ya existen en la tabla transportistas
+    $sql_check = "SELECT id FROM transportistas WHERE numero = '$numero' AND placas = '$placas' LIMIT 1";
+    $query_check = mysqli_query($con, $sql_check);
+
+    if (mysqli_num_rows($query_check) == 0) {
+        // No existe → insertar nuevo registro
+        $sql_insert = "INSERT INTO transportistas (transportista, unidad, numero, placas, estatus) VALUES ('$transportista', '$unidad', '$numero', '$placas', '1')";
+        mysqli_query($con, $sql_insert);
+    }
 
     $sql = "UPDATE cartainstruccionesftl SET 
         fecha = '$fecha',
@@ -447,8 +461,7 @@ if (isset($_POST['instrucciones'])) {
     if ($query_run) {
 
         // Actualizar tablas relacionadas
-        mysqli_query($con, "DELETE FROM referenciaftl WHERE idDesc = '$id'");
-        mysqli_query($con, "DELETE FROM ccpftl WHERE idFtl = '$id'");
+        mysqli_query($con, "DELETE FROM ccpftl WHERE idFtl = '$idFtl'");
 
 
         if (!empty($_POST['factura']) && is_array($_POST['factura'])) {
@@ -456,6 +469,7 @@ if (isset($_POST['instrucciones'])) {
                 $factura_val = mysqli_real_escape_string($con, $factura);
                 $idDesc = mysqli_real_escape_string($con, $_POST['idDesc'][$i]);
                 $pedimento_val = mysqli_real_escape_string($con, $_POST['pedimento'][$i]);
+                mysqli_query($con, "DELETE FROM referenciaftl WHERE idDesc = '$idDesc'");
 
                 $sql_servicio = "INSERT INTO referenciaftl (idDesc, factura, pedimento)
                                  VALUES ('$idDesc', '$factura_val', '$pedimento_val')";
@@ -466,28 +480,23 @@ if (isset($_POST['instrucciones'])) {
         if (!empty($_POST['clave']) && is_array($_POST['clave'])) {
             foreach ($_POST['clave'] as $i => $clave) {
                 $clave_val = mysqli_real_escape_string($con, $clave);
-                $usd_val = mysqli_real_escape_string($con, $_POST['incrementableUsd'][$i]);
-                $mx_val = mysqli_real_escape_string($con, $_POST['incrementableMx'][$i]);
+                $descripcion_val = mysqli_real_escape_string($con, $_POST['descripcion'][$i]);
+                $cantidad_val = mysqli_real_escape_string($con, $_POST['cantidad'][$i]);
+                $unidad_val = mysqli_real_escape_string($con, $_POST['unidadCpp'][$i]);
+                $kilogramos_val = mysqli_real_escape_string($con, $_POST['kilogramos'][$i]);
+                $fraccion_val = mysqli_real_escape_string($con, $_POST['fraccion'][$i]);
+                $tipo_val = mysqli_real_escape_string($con, $_POST['tipo'][$i]);
+                $pedimento_val = mysqli_real_escape_string($con, $_POST['pedimento'][$i]);
+                $material_val = mysqli_real_escape_string($con, $_POST['material'][$i]);
+                $embalaje_val = mysqli_real_escape_string($con, $_POST['embalaje'][$i]);
+                $aduanero_val = mysqli_real_escape_string($con, $_POST['aduanero'][$i]);
+                $regimen_val = mysqli_real_escape_string($con, $_POST['regimen'][$i]);
+                $importador_val = mysqli_real_escape_string($con, $_POST['importador'][$i]);
 
-                $sql_incrementable = "INSERT INTO ccpftl (idFtl, incrementable, incrementableUsd, incrementableMx)
-                                      VALUES ('$id', '$incrementable_val', '$usd_val', '$mx_val')";
-                mysqli_query($con, $sql_incrementable);
+                $sql_cpp = "INSERT INTO ccpftl (idFtl, clave, descripcion, cantidad, unidad, kilogramos, fraccion, tipo, pedimento, material, embalaje, aduanero, regimen, importador) VALUES ('$idFtl', '$clave_val', '$descripcion_val', '$cantidad_val', '$unidad_val', '$kilogramos_val', '$fraccion_val', '$tipo_val', '$pedimento_val', '$material_val', '$embalaje_val', '$aduanero_val', '$regimen_val', '$importador_val')";
+                mysqli_query($con, $sql_cpp);
             }
         }
-
-
-        if (!empty($_POST['conceptoGasto']) && is_array($_POST['conceptoGasto'])) {
-            foreach ($_POST['conceptoGasto'] as $i => $gasto) {
-                $concepto_val = mysqli_real_escape_string($con, $gasto);
-                $monto_val = mysqli_real_escape_string($con, $_POST['montoGasto'][$i]);
-                $iva_val = isset($_POST['ivaGasto'][$i]) ? 1 : 0;
-
-                $sql_gasto = "INSERT INTO gastosftl (idFtl, conceptoGasto, montoGasto, ivaGasto)
-                              VALUES ('$id', '$concepto_val', '$monto_val', '$iva_val')";
-                mysqli_query($con, $sql_gasto);
-            }
-        }
-
 
         $_SESSION['alert'] = ['title' => "COTIZACIÓN ACTUALIZADA EXITOSAMENTE", 'icon' => 'success'];
         header("Location: ftl.php");
