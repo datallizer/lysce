@@ -102,18 +102,19 @@ WHERE
     if (mysqli_num_rows($resultado_mercancias) > 0) {
         while ($row = mysqli_fetch_assoc($resultado_mercancias)) {
             $mercancias_html .= '
-            <td>
+            <tr>
+                <td>
                 <table class="noBorder">
-                    <td>
+                    <td style="min-width:30px">
                         <p>' . htmlspecialchars($row['cantidad']) . '</p>
                     </td>
-                    <td>
+                    <td style="min-width:80px">
                         <p>' . htmlspecialchars($row['unidadMedida']) . '</p>
                     </td>
-                    <td>' . htmlspecialchars($row['descripcion']) . '</td>
-                    <td>
-                        <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' inches ' . number_format($row['piesCubicos'], 2, '.', ',') . ' ft3</p>
-                        <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' cm ' . number_format($row['metrosCubicos'], 2, '.', ',') . ' m3</p>
+                    <td style="min-width:80px">' . htmlspecialchars($row['descripcion']) . '</td>
+                    <td style="min-width:200px">
+                        <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' <b>inches</b> - ' . number_format($row['piesCubicos'], 2, '.', ',') . ' <b>ft3</b></p>
+                        <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' <b>cm</b> - ' . number_format($row['metrosCubicos'], 2, '.', ',') . ' <b>m3</b></p>
                     </td>
                     <td>
                         <p>' . number_format($row['libras'], 2, '.', ',') . ' Lbs</p>
@@ -125,6 +126,7 @@ WHERE
             <p><b>Factura: </b>' . htmlspecialchars($row['factura']) . '</p>
             <p><b>Pedimento: </b>' . htmlspecialchars($row['pedimento']) . '</p>
         </td>
+            </tr>
         ';
         }
     }
@@ -226,11 +228,15 @@ WHERE
 <body>
     <table class="table" style="border: 0px;">
         <tr style="border: 0px;">
-            <td style="width: 30%;border: 0px;">
+            <td class="text-center" style="width: 20%;border: 0px;">
                 <img class="logo" src="https://lysce.com.mx/assets/img/lysce/lysce_logo.png">
-                <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
+                 <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
             </td>
-            <td style="width: 30%;border: 0px;">
+            <td style="width: 40%;border: 0px;">
+                <h2><b>GRUPO LYSCE S.C.</b></h2>
+                <p style="margin: 0;">R.F.C GLY170421ES6</p>
+                <p style="margin: 0;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte,<br> Aguascalientes, Ags. C.P. 20127</p>
+                <p style="margin: 0;">Tel / Fax +52 (449) 300 3265</p>
             </td>
             <td style="width: 30%;border: 0px;">
                 <h2 style="margin-bottom:10px;"><b>CARTA DE INSTRUCCIONES</b></h2>
@@ -305,8 +311,8 @@ WHERE
   <table id="mercancias" class="table">
         <thead>
             <tr style="background-color:#e7e7e7;">
-                <td>Contenido</td>
-                <td>Referencia</td>
+                <td class="text-center">Contenido</td>
+                <td class="text-center">Referencia</td>
             </tr>
         </thead>
         <tbody>
@@ -323,28 +329,6 @@ WHERE
         </tbody>
     </table>';
             }
-
-    //         if ($incrementables_html != '') {
-    //             $html .= '
-    //     <h3>INCREMENTABLES</h3>
-    //     <table id="incrementables" class="table">
-    //         <thead>
-    //         <tr style="background-color:#e7e7e7;">
-    //             <td>Incrementable</td>
-    //             <td>USD</td>
-    //             <td>MX</td>
-    //         </tr>
-    //     </thead>
-    //         <tbody>
-    //             ' . $incrementables_html . '
-    //         <tr class="bg-secondary">
-    //             <td style="text-align:right;"><b>Total</b></td>
-    //             <td><b>$' . number_format($registro['totalIncrementableUsd'], 2, '.', ',') . ' USD</b></td>
-    //             <td><b>$' . number_format($registro['totalIncrementableMx'], 2, '.', ',') . ' MXN</b></td>
-    //         </tr>
-    //     </tbody>
-    // </table>';
-    //         }
 
             $html .= '
     <h2>OBSERVACIONES</h2>

@@ -277,8 +277,8 @@ if (isset($_SESSION['email'])) {
                                                             while ($mercancia = mysqli_fetch_assoc($query_run_desc)) {
                                                         ?>
                                                                 <tr>
-
                                                                     <td>
+                                                                    <input type="hidden" name="idDesc[]" value="<?= $mercancia['id']; ?>">
                                                                         <input style="width: 60px;" class="form-control mb-3" type="text" name="cantidad[]" value="<?= $mercancia['cantidad']; ?>" oninput="convertToCmAndCalculateVolume(this)">
                                                                         <p>NMFC</p>
                                                                     </td>
@@ -1470,29 +1470,29 @@ if (isset($_SESSION['email'])) {
                 }, 500); // Verifica cada 500ms si el valor cambió
             }
 
-                  async function obtenerTipoDeCambio() {
-            try {
-                const response = await fetch('tipo-cambio.php');
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos del backend: ${response.status}`);
-                }
+            async function obtenerTipoDeCambio() {
+                try {
+                    const response = await fetch('tipo-cambio.php');
+                    if (!response.ok) {
+                        throw new Error(`Error al obtener datos del backend: ${response.status}`);
+                    }
 
-                const data = await response.json();
-                const serie = data.bmx.series[0].datos;
+                    const data = await response.json();
+                    const serie = data.bmx.series[0].datos;
 
-                if (serie && serie.length > 0) {
-                    const ultimoDato = serie[0];
-                    console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
-                    document.getElementById("valorMoneda").value = ultimoDato.dato;
-                } else {
-                    console.warn("No hay datos disponibles en la serie.");
+                    if (serie && serie.length > 0) {
+                        const ultimoDato = serie[0];
+                        console.log(`Tipo de cambio: ${ultimoDato.dato} (Fecha: ${ultimoDato.fecha})`);
+                        document.getElementById("valorMoneda").value = ultimoDato.dato;
+                    } else {
+                        console.warn("No hay datos disponibles en la serie.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
                 }
-            } catch (error) {
-                console.error("Error:", error);
             }
-        }
 
-        obtenerTipoDeCambio();
+            obtenerTipoDeCambio();
         </script>
 </body>
 

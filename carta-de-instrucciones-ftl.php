@@ -622,13 +622,13 @@ if (isset($_GET['id'])) {
             <td class="text-light">TIPO DE MATERIAL</td>
         </tr>
         <tr>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
+            <td><input class="form-control" type="text" name="clave[]"></td>
+            <td><input class="form-control" type="text" name="descripcion[]"></td>
+            <td><input class="form-control" type="text" name="cantidad[]"></td>
+            <td><input class="form-control" type="text" name="unidadCpp[]"></td>
+            <td><input class="form-control" type="text" name="kilogramos[]"></td>
+            <td><input class="form-control" type="text" name="fraccion[]"></td>
+            <td><input class="form-control" type="text" name="tipo[]"></td>
         </tr>
         <tr class="text-center">
             <td>PEDIMENTO</td>
@@ -639,12 +639,12 @@ if (isset($_GET['id'])) {
             <td colspan="2">RFC DE IMPORTADOR</td>
         </tr>
         <tr>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td><input class="form-control" type="text" name=""></td>
-            <td colspan="2"><input class="form-control" type="text" name=""></td>
+            <td><input class="form-control" type="text" name="pedimento[]"></td>
+            <td><input class="form-control" type="text" name="material[]"></td>
+            <td><input class="form-control" type="text" name="embalaje[]"></td>
+            <td><input class="form-control" type="text" name="aduanero[]"></td>
+            <td><input class="form-control" type="text" name="regimen[]"></td>
+            <td colspan="2"><input class="form-control" type="text" name="importador[]"></td>
         </tr>
     `;
 

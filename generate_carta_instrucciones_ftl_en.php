@@ -24,6 +24,7 @@ if (isset($_GET['id'])) {
     a.*,
     a.id,
     a.fecha,
+    a.folio,
     c.cliente AS cliente_nombre,
     c.calle AS cliente_calle,
     c.numexterior AS cliente_numexterior,
@@ -87,87 +88,92 @@ LEFT JOIN
 LEFT JOIN
     clientes p_final ON a.idDestinoFinal = p_final.id
 WHERE 
-    a.id = $id;
+    a.idFtl = $id;
 ";
 
-    $query_mercancias = "SELECT * FROM ccpftl WHERE idFtl = $id";
+    $query_mercancias = "SELECT d.*, r.factura, r.pedimento
+    FROM descripcionmercanciasftl d
+    LEFT JOIN referenciaftl r ON r.idDesc = d.id
+    WHERE d.idFtl = $id";
+
     $resultado_mercancias = mysqli_query($con, $query_mercancias);
 
     $mercancias_html = '';
     if (mysqli_num_rows($resultado_mercancias) > 0) {
         while ($row = mysqli_fetch_assoc($resultado_mercancias)) {
             $mercancias_html .= '
-        <tr>
-            <td>
-                <p>' . htmlspecialchars($row['cantidad']) . '</p>
-                <p>NMFC</p>
-            </td>
-            <td>
-                <p>' . htmlspecialchars($row['unidadMedida']) . '</p>
-                <p>' . htmlspecialchars($row['nmfc']) . '</p>
-            </td>
-            <td>' . htmlspecialchars($row['descripcion']) . '</td>
-            <td>
-                <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' inches ' . number_format($row['piesCubicos'], 2, '.', ',') . ' ft3</p>
-                <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' cm ' . number_format($row['metrosCubicos'], 2, '.', ',') . ' m3</p>
-            </td>
-            <td>
-                <p>' . number_format($row['libras'], 2, '.', ',') . ' Lbs</p>
-                <p>' . number_format($row['kilogramos'], 2, '.', ',') . ' Kgs</p>
-            </td>
-            <td>$' . number_format($row['valorFactura'], 2, '.', ',') . '</td>
-        </tr>';
+            <tr>
+                <td>
+                <table class="noBorder">
+                    <td style="min-width:30px">
+                        <p>' . htmlspecialchars($row['cantidad']) . '</p>
+                    </td>
+                    <td style="min-width:80px">
+                        <p>' . htmlspecialchars($row['unidadMedida']) . '</p>
+                    </td>
+                    <td style="min-width:80px">' . htmlspecialchars($row['descripcion']) . '</td>
+                    <td style="min-width:200px">
+                        <p>' . htmlspecialchars($row['largoCm']) . ' x ' . htmlspecialchars($row['anchoCm']) . ' x ' . htmlspecialchars($row['altoCm']) . ' <b>inches</b> - ' . number_format($row['piesCubicos'], 2, '.', ',') . ' <b>ft3</b></p>
+                        <p>' . htmlspecialchars($row['largoPlg']) . ' x ' . htmlspecialchars($row['anchoPlg']) . ' x ' . htmlspecialchars($row['altoPlg']) . ' <b>cm</b> - ' . number_format($row['metrosCubicos'], 2, '.', ',') . ' <b>m3</b></p>
+                    </td>
+                    <td>
+                        <p>' . number_format($row['libras'], 2, '.', ',') . ' Lbs</p>
+                        <p>' . number_format($row['kilogramos'], 2, '.', ',') . ' Kgs</p>
+                    </td>
+            </table>
+        </td>
+        <td>
+            <p><b>Factura: </b>' . htmlspecialchars($row['factura']) . '</p>
+            <p><b>Pedimento: </b>' . htmlspecialchars($row['pedimento']) . '</p>
+        </td>
+            </tr>
+        ';
         }
     }
 
-    $query_servicios = "SELECT conceptoServicio, tiempoServicio FROM servicioftl WHERE idFtl = $id";
+    $query_servicios = "SELECT * FROM ccpftl WHERE idFtl = $id";
     $resultado_servicios = mysqli_query($con, $query_servicios);
 
     $servicios_html = '';
     if (mysqli_num_rows($resultado_servicios) > 0) {
         while ($row = mysqli_fetch_assoc($resultado_servicios)) {
             $servicios_html .= '
-        <tr>
-            <td>' . htmlspecialchars($row['conceptoServicio']) . '</td>
-            <td>' . htmlspecialchars($row['tiempoServicio']) . '</td>
+        <tr style="background-color: #c8c8c8ff;text-align:center;">
+            <td><p><b>CLAVE SAT DEL PRODUCTO</b></p></td>
+            <td><p><b>DESCRIPCIÓN CATALOGO SAT</b></p></td>
+            <td><p><b>CANTIDAD</b></p></td>
+            <td><p><b>CLAVE DE UNIDAD</b></p></td>
+            <td><p><b>KILOGRAMOS</b></p></td>
+            <td><p><b>FRACCION ARANCELARIA</b></p></td>
+            <td><p><b>TIPO DE MATERIAL</b></p></td>
+        </tr>
+        <tr style="text-align:center;">
+            <td>' . htmlspecialchars($row['clave']) . '</td>
+            <td>' . htmlspecialchars($row['descripcion']) . '</td>
+            <td>' . htmlspecialchars($row['cantidad']) . '</td>
+            <td>' . htmlspecialchars($row['unidad']) . '</td>
+            <td>' . htmlspecialchars($row['kilogramos']) . '</td>
+            <td>' . htmlspecialchars($row['fraccion']) . '</td>
+            <td>' . htmlspecialchars($row['tipo']) . '</td>
+        </tr>
+        <tr style="background-color: #c8c8c8ff;text-align:center;">
+            <td><p><b>PEDIMENTO</b></p></td>
+            <td><p><b>CLAVE MATERIAL PELIGROSO</b></p></td>
+            <td><p><b>CLAVE TIPO DE EMBALAJE</b></p></td>
+            <td><p><b>DOCUMENTO ADUANERO</b></p></td>
+            <td><p><b>REGIMEN ADUANERO</b></p></td>
+            <td colspan="2"><p><b>RFC DE IMPORTADOR</b></p></td>
+        </tr>
+        <tr style="text-align:center;">
+            <td>' . htmlspecialchars($row['pedimento']) . '</td>
+            <td>' . htmlspecialchars($row['material']) . '</td>
+            <td>' . htmlspecialchars($row['embalaje']) . '</td>
+            <td>' . htmlspecialchars($row['aduanero']) . '</td>
+            <td>' . htmlspecialchars($row['regimen']) . '</td>
+            <td colspan="2">' . htmlspecialchars($row['importador']) . '</td>
         </tr>';
         }
     }
-
-    $query_incrementables = "SELECT incrementable, incrementableUSD, incrementableMx FROM incrementablesftl WHERE idFtl = $id";
-    $resultado_incrementables = mysqli_query($con, $query_incrementables);
-
-    $incrementables_html = '';
-    if (mysqli_num_rows($resultado_incrementables) > 0) {
-        while ($row = mysqli_fetch_assoc($resultado_incrementables)) {
-            $incrementables_html .= '
-        <tr>
-            <td>' . htmlspecialchars($row['incrementable']) . '</td>
-            <td>$' . number_format($row['incrementableUSD'], 2, '.', ',') . ' USD</td>
-            <td>$' . number_format($row['incrementableMx'], 2, '.', ',') . ' MXN</td>
-        </tr>';
-        }
-    }
-
-    $query_gasto = "SELECT * FROM gastosftl WHERE idFtl = $id";
-    $resultado_gasto = mysqli_query($con, $query_gasto);
-
-    $gasto_html = '';
-    if (mysqli_num_rows($resultado_gasto) > 0) {
-        while ($row = mysqli_fetch_assoc($resultado_gasto)) {
-            // Excluir la fila si conceptoGasto es "Seguro de tránsito de mercancía" y montoGasto es "0"
-            if ($row['conceptoGasto'] === "Seguro de tránsito de mercancía" && floatval($row['montoGasto']) == 0) {
-                continue; // Saltar esta iteración del bucle
-            }
-
-            $gasto_html .= '
-            <tr>
-                <td>' . htmlspecialchars($row['conceptoGasto']) . '</td>
-                <td>$' . number_format($row['montoGasto'], 2, '.', ',') . '</td>
-            </tr>';
-        }
-    }
-
 
     $query_run = mysqli_query($con, $query);
     if (mysqli_num_rows($query_run) > 0) {
@@ -179,8 +185,7 @@ WHERE
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/x-icon" href="https://lysce.com.mx/images/ics.ico">
-    <title>Cotización FTL | LYSCE</title>
+    <title>Carta de instrucciones FTL | LYSCE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -198,6 +203,10 @@ WHERE
         }
         .table td {
             border: 1px solid #858585;
+            padding: 0px 5px;
+        }
+        .noBorder td {
+            border: 0px solid #ffffffff;
             padding: 0px 5px;
         }
             .bg-secondary {
@@ -221,7 +230,7 @@ WHERE
         <tr style="border: 0px;">
             <td class="text-center" style="width: 20%;border: 0px;">
                 <img class="logo" src="https://lysce.com.mx/assets/img/lysce/lysce_logo.png">
-                <p>LOGISTICS AND FOREIGN TRADE SERVICES</p>
+                 <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
             </td>
             <td style="width: 40%;border: 0px;">
                 <h2><b>GRUPO LYSCE S.C.</b></h2>
@@ -230,8 +239,9 @@ WHERE
                 <p style="margin: 0;">Tel / Fax +52 (449) 300 3265</p>
             </td>
             <td style="width: 30%;border: 0px;">
-                <h2 style="margin-bottom:10px;"><b>QUOTATION</b></h2>
-                <p>Folio: <span style="color:rgb(159, 41, 41);text-transform:uppercase;">' . $registro['identificador'] . '</span></p>
+                <h2 style="margin-bottom:10px;"><b>CARTA DE INSTRUCCIONES</b></h2>
+                <p class="bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoFtl'] . '</b></p>
+                <p>Folio: <span style="color:rgb(159, 41, 41);text-transform:uppercase;">' . $registro['folio'] . '</span></p>
                 <p>Aguascalientes, Ags a ' . $registro['fecha'] . '</p>
                 <br>
                 <br>
@@ -239,7 +249,6 @@ WHERE
         </tr>
     </table>
     <br>
-    <p class="text-center bg-warning" style="border: 1px solid #666666;margin: 5px 0px;padding:5px;"><b>' . $registro['tipoFtl'] . '</b></p>
     <table class="table">
         <tr>
             <td colspan="3"><b>Cliente</b>
@@ -281,141 +290,47 @@ WHERE
                  
             </td>
         </tr>
-         <tr style="border: 0px;">
-            <td colspan="3" style="border: 0px;">
-            <table style="width:100%;border: 0px;">
-                <tr style="width:100%;border: 0px;">
-                    <td style="width:33%;border: 0px;">
-                        <p><b>Distancia:</b> ' . number_format($registro['distanciaOrigenDestinoMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaOrigenDestinoKms'], 2, '.', ',') . ' kms</p>
-                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . '</p>
-                        <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
-                        <br>
-                    </td>
-                    
-                    <td style="width:33%;border: 0px;">
-                        <p><b>Total CFT:</b> ' . number_format($registro['totalFt3'], 2, '.', ',') . '</p>
-                        <p><b>Total m3:</b> ' . number_format($registro['totalM3'], 2, '.', ',') . '</p>
-                        <br>
-                        <br>
-                    </td>
-                    
-                    <td style="width:33%;border: 0px;">
-                        <p><b>Distancia:</b> ' . number_format($registro['distanciaDestinoFinalMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaDestinoFinalKms'], 2, '.', ',') . ' kms</p>
-                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . '</p>
-                        <p><b>Operador:</b> ' . $registro['operador'] . '</p>
-                        <p><b>Unidad:</b> ' . $registro['unidad'] . '</p>
-                    </td>
-                </tr>
-            </table>
+    </table>
+    <table style="width:100%;">
+        <tr>
+            <td>
+                <p><b>Transportista: </b>' . $registro['transportista'] . '</p>
+                <p><b>Unidad: </b>' . $registro['unidad'] . '</p>
+                <p><b>No: </b>' . $registro['numero'] . '</p>
+                <p><b>Placas: </b>' . $registro['placas'] . '</p>
+            </td>
+            <td>
+                <p><b>Transfer: </b>' . $registro['transfer'] . '</p>
+                <p><b>CAAT: </b>' . $registro['caat'] . '</p>
+                <p><b>SCAC: </b>' . $registro['scac'] . '</p>
             </td>
         </tr>
     </table>
+
     <h3>DESCRIPCIÓN DE LAS MERCANCIAS</h3>
   <table id="mercancias" class="table">
         <thead>
             <tr style="background-color:#e7e7e7;">
-                <td>Cantidad</td>
-                <td>Unidad medida</td>
-                <td>Descripción</td>
-                <td>Dimensiones</td>
-                <td>Peso</td>
-                <td>Valor factura</td>
+                <td class="text-center">Contenido</td>
+                <td class="text-center">Referencia</td>
             </tr>
         </thead>
         <tbody>
             ' . $mercancias_html . '
-            <tr class="bg-secondary">
-                <td>' . $registro['totalBultos'] . ' Total de bultos</td>
-                <td></td>
-                <td>1 ' . $registro['moneda'] . ' = ' . $registro['valorMoneda'] . '</td>
-                <td></td>
-                <td>
-                    <p>Peso total de la mercacía</p>
-                    <p>' . number_format($registro['pesoMercanciaLbs'], 2, '.', ',') . ' Lbs</p>
-                    <p>' . number_format($registro['pesoMercanciaKgs'], 2, '.', ',') . ' Kgs</p>
-                </td>
-                <td></td>
-            </tr>
-            <tr class="bg-secondary">
-                <td colspan="5" style="text-align:right;"><b>VALOR TOTAL COMERCIAL USD</b></td>
-                <td><b>$' . number_format($registro['valorMercancia'], 2, '.', ',') . '</b></td>
-            </tr>
-            <tr class="bg-secondary">
-                <td colspan="5" style="text-align:right;"><b>VALOR TOTAL COMERCIAL MXN</b></td>
-                <td><b>$' . number_format($registro['valorComercial'], 2, '.', ',') . '</b></td>
-            </tr>
         </tbody>
     </table>';
 
             if ($servicios_html != '') {
                 $html .= '
-    <h3>TIPO DE SERVICIO</h3>
+    <h3>COMPLEMETO DE CARTA PORTE (CCP)</h3>
   <table id="servicios" class="table">
-        <thead>
-            <tr style="background-color:#e7e7e7;">
-                <td>Servicio</td>
-                <td>Tiempo de servicio</td>
-            </tr>
-        </thead>
         <tbody>
             ' . $servicios_html . '
         </tbody>
     </table>';
             }
 
-            if ($incrementables_html != '') {
-                $html .= '
-        <h3>INCREMENTABLES</h3>
-        <table id="incrementables" class="table">
-            <thead>
-            <tr style="background-color:#e7e7e7;">
-                <td>Incrementable</td>
-                <td>USD</td>
-                <td>MX</td>
-            </tr>
-        </thead>
-            <tbody>
-                ' . $incrementables_html . '
-            <tr class="bg-secondary">
-                <td style="text-align:right;"><b>Total</b></td>
-                <td><b>$' . number_format($registro['totalIncrementableUsd'], 2, '.', ',') . ' USD</b></td>
-                <td><b>$' . number_format($registro['totalIncrementableMx'], 2, '.', ',') . ' MXN</b></td>
-            </tr>
-        </tbody>
-    </table>';
-            }
-
             $html .= '
-    <h3>GASTOS POR FLETE TERRESTRE</h3>
-  <table id="gastos" class="table">
-        <thead>
-            <tr style="background-color:#e7e7e7;">
-                <td>Concepto</td>
-                <td>Monto</td>
-            </tr>
-        </thead>
-        <tbody>
-            ' . $gasto_html . '
-            <tr class="bg-secondary">
-                <td style="text-align:right;">Subtotal</td>
-                <td>$' . number_format($registro['subtotalFlete'], 2, '.', ',') . ' USD</td>
-            </tr>
-            <tr class="bg-secondary">
-                <td style="text-align:right;">IVA</td>
-                <td>$' . number_format($registro['impuestosFlete'], 2, '.', ',') . ' USD</td>
-            </tr>
-            <tr class="bg-secondary">
-                <td style="text-align:right;">Retención</td>
-                <td>$' . number_format($registro['retencionFlete'], 2, '.', ',') . ' USD</td>
-            </tr><tr class="bg-warning">
-                <td style="text-align:right;"><b>TOTAL USD</b></td>
-                <td><b>$' . number_format($registro['totalCotizacionNumero'], 2, '.', ',') . ' USD</b></td>
-            </tr>
-            <tr class="bg-warning" style="text-align:center;">
-                <td colspan="2"><b>' . $registro['totalCotizacionTexto'] . '</b></td>
-            </tr>
-        </tbody>
-    </table>
     <h2>OBSERVACIONES</h2>
     <pre>' . $registro['observaciones'] . '</pre>
 </body>
@@ -433,5 +348,5 @@ WHERE
 
     // Salida del PDF (descarga)
     $cliente_nombre_sin_espacios = str_replace(' ', '_', $registro['cliente_nombre']);
-    $dompdf->stream('cotizacion_FTL_' . $cliente_nombre_sin_espacios . '_' . $registro['identificador'] . '.pdf', ['Attachment' => true]);
+    $dompdf->stream('carta_de_instrucciones_FTL_' . $cliente_nombre_sin_espacios . '_' . $registro['folio'] . '.pdf', ['Attachment' => true]);
 }

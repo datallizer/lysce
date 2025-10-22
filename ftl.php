@@ -167,7 +167,7 @@ if (isset($_SESSION['email'])) {
                                                     <td>
                                                         <p><?= $registro['fecha']; ?></p>
                                                     </td>
-                                                    <td style="width: 105px;text-align:center;">
+                                                    <td style="min-width:85px;text-align:center;">
 
                                                         <button type="button" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#myModal<?= $registro['id']; ?>" data-id="<?= $registro['id']; ?>"><i class="bi bi-eye-fill"></i></button>
 
@@ -678,6 +678,13 @@ if (isset($_SESSION['email'])) {
                                                                             <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
                                                                             <i style="font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
                                                                             <p>Cotización (Español)</p>
+                                                                        </a>
+
+                                                                        <a href="<?= $linkHabilitado ? 'generate_ftl_en.php?id=' . $registro['id'] : '#' ?>"
+                                                                            class="file-download btn btn-sm m-1 <?= $linkHabilitado ? 'btn-primary' : 'btn-secondary disabled' ?>"
+                                                                            <?= $linkHabilitado ? '' : 'aria-disabled="true" tabindex="-1"' ?>>
+                                                                            <i style="font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+                                                                            <p>Quotation (English)</p>
                                                                         </a>
 
                                                                         <a href="<?= $linkHabilitado ? 'generate_carta_instrucciones_ftl.php?id=' . $registro['id'] : '#' ?>"

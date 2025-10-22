@@ -244,25 +244,25 @@ WHERE
         <tr>
             <td colspan="3"><b>Cliente</b>
                 <p>' . $registro['cliente_nombre'] . '</p>
-                <p><b>Domicilio:</b> ' . $registro['cliente_calle'] . ' #' . $registro['cliente_numexterior'] . ' ' . $registro['cliente_numinterior'] . ', ' . $registro['cliente_colonia'] . ', ' . $registro['cliente_city'] . ', ' . $registro['cliente_state'] . ', ' . $registro['cliente_pais'] . ', ' . $registro['cliente_cpostal'] . '</p>
-                <p><b>Teléfono:</b> ' . $registro['cliente_telefono'] . '</p>
+                <p><b>Address:</b> ' . $registro['cliente_calle'] . ' #' . $registro['cliente_numexterior'] . ' ' . $registro['cliente_numinterior'] . ', ' . $registro['cliente_colonia'] . ', ' . $registro['cliente_city'] . ', ' . $registro['cliente_state'] . ', ' . $registro['cliente_pais'] . ', ' . $registro['cliente_cpostal'] . '</p>
+                <p><b>Phone:</b> ' . $registro['cliente_telefono'] . '</p>
                 <p><b>Email:</b> ' . $registro['cliente_correo'] . '</p>
-                <p><b>Contacto:</b> ' . $registro['cliente_contacto'] . '</p>
+                <p><b>Contact:</b> ' . $registro['cliente_contacto'] . '</p>
                 <p><b>RFC:</b> ' . $registro['cliente_rfc'] . '</p>
             </td>
         </tr>
         <tr>
             <td>
-                <b>Origen:</b>
+                <b>Origin:</b>
                 <p>' . $registro['origen_nombre'] . '</p>
-                <p><b>Domicilio:</b> ' . $registro['origen_domicilio'] . ' #' . $registro['origen_exterior'] . ' ' . $registro['origen_interior'] . ', ' . $registro['origen_fraccionamiento'] . ', ' . $registro['origen_ciudad'] . ', ' . $registro['origen_estado'] . ', ' . $registro['origen_country'] . ' ' . $registro['origen_postal'] . '</p>
-                <p><b>Teléfono:</b> ' . $registro['origen_phone'] . '</p>
+                <p><b>Address:</b> ' . $registro['origen_domicilio'] . ' #' . $registro['origen_exterior'] . ' ' . $registro['origen_interior'] . ', ' . $registro['origen_fraccionamiento'] . ', ' . $registro['origen_ciudad'] . ', ' . $registro['origen_estado'] . ', ' . $registro['origen_country'] . ' ' . $registro['origen_postal'] . '</p>
+                <p><b>Phone:</b> ' . $registro['origen_phone'] . '</p>
                 <p><b>Email:</b> ' . $registro['origen_email'] . '</p>
-                <p><b>Contacto:</b> ' . $registro['origen_contact'] . '</p>
+                <p><b>Contact:</b> ' . $registro['origen_contact'] . '</p>
                 <p><b>RFC:</b> ' . $registro['origen_tax'] . '</p>
             </td>
             <td>
-                <b>Destino en frontera:</b>
+                <b>Delivered at Place:</b>
                 <p>' . $registro['destino_nombre'] . '</p>
                 <p><b>Domicilio:</b> ' . $registro['destino_domicilio'] . ' #' . $registro['destino_exterior'] . ' ' . $registro['destino_interior'] . ', ' . $registro['destino_fraccionamiento'] . ', ' . $registro['destino_ciudad'] . ', ' . $registro['destino_estado'] . ', ' . $registro['destino_country'] . ' ' . $registro['destino_postal'] . '</p>
                 <p><b>Teléfono:</b> ' . $registro['destino_phone'] . '</p>
@@ -271,7 +271,7 @@ WHERE
                 <p><b>RFC:</b> ' . $registro['destino_tax'] . '</p>
             </td>
             <td>
-                <b>Destino Final:</b>
+                <b>Final Destination:</b>
                 <p>' . $registro['final_nombre'] . '</p>
                 <p><b>Domicilio:</b> ' . $registro['final_domicilio'] . ' #' . $registro['final_exterior'] . ' ' . $registro['final_interior'] . ', ' . $registro['final_fraccionamiento'] . ', ' . $registro['final_ciudad'] . ', ' . $registro['final_estado'] . ', ' . $registro['final_country'] . ' ' . $registro['final_postal'] . '</p>
                 <p><b>Teléfono:</b> ' . $registro['final_phone'] . '</p>

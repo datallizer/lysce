@@ -15,9 +15,30 @@ if (isset($_POST['delete'])) {
 
     $delete_gastos = "DELETE FROM gastosftl WHERE idFtl='$id'";
     $delete_incrementables = "DELETE FROM incrementablesftl WHERE idFtl='$id'";
-    $delete_descripcion = "DELETE FROM descripcionmercanciasftl WHERE idFtl='$id'";
     $delete_servicio = "DELETE FROM servicioftl WHERE idFtl='$id'";
     $delete_carta = "DELETE FROM cartainstruccionesftl WHERE idFtl='$id'";
+    $delete_ccp = "DELETE FROM ccpftl WHERE idFtl='$id'";
+
+    $query_ids = "SELECT id FROM descripcionmercanciasftl WHERE idFtl = '$id'";
+    $result_ids = mysqli_query($con, $query_ids);
+
+    if ($result_ids && mysqli_num_rows($result_ids) > 0) {
+        $ids = [];
+        while ($row = mysqli_fetch_assoc($result_ids)) {
+            $ids[] = $row['id'];
+        }
+
+        // Convertir a formato para IN()
+        $ids_str = implode(',', $ids);
+
+        // 2️⃣ Eliminar de referenciaftl donde idDesc coincida con los ids obtenidos
+        $delete_referencia = "DELETE FROM referenciaftl WHERE idDesc IN ($ids_str)";
+        mysqli_query($con, $delete_referencia);
+    }
+
+    // 3️⃣ Eliminar los registros principales
+    $delete_descripcion = "DELETE FROM descripcionmercanciasftl WHERE idFtl = '$id'";
+    mysqli_query($con, $delete_descripcion);
 
     $delete_ftl = "DELETE FROM ftl WHERE id='$id'";
 
@@ -320,13 +341,13 @@ if (isset($_POST['update'])) {
         // Actualizar tablas relacionadas
 
         // Eliminar registros actuales y volver a insertar (Alternativa: UPDATE)
-        mysqli_query($con, "DELETE FROM descripcionmercanciasftl WHERE idFtl = '$id'");
         mysqli_query($con, "DELETE FROM servicioftl WHERE idFtl = '$id'");
         mysqli_query($con, "DELETE FROM incrementablesftl WHERE idFtl = '$id'");
         mysqli_query($con, "DELETE FROM gastosftl WHERE idFtl = '$id'");
 
         if (!empty($_POST['cantidad']) && is_array($_POST['cantidad'])) {
             foreach ($_POST['cantidad'] as $i => $cantidad) {
+                $idDesc = isset($_POST['idDesc'][$i]) ? mysqli_real_escape_string($con, $_POST['idDesc'][$i]) : ''; // id existente o vacío
                 $cantidad_val = mysqli_real_escape_string($con, $cantidad);
                 $unidadMedida_val = mysqli_real_escape_string($con, $_POST['unidadMedida'][$i]);
                 $nmfc_val = mysqli_real_escape_string($con, $_POST['nmfc'][$i]);
@@ -343,8 +364,28 @@ if (isset($_POST['update'])) {
                 $kilogramos_val = mysqli_real_escape_string($con, $_POST['kilogramos'][$i]);
                 $valorFactura_val = mysqli_real_escape_string($con, $_POST['valorFactura'][$i]);
 
-                // Actualizar los registros en la tabla descripcionmercanciasftl
-                $sql_detalle = "INSERT INTO descripcionmercanciasftl (
+                if (!empty($idDesc)) {
+                    // Si existe el idDesc → actualizar
+                    $sql_detalle = "UPDATE descripcionmercanciasftl SET
+                cantidad='$cantidad_val',
+                unidadMedida='$unidadMedida_val',
+                nmfc='$nmfc_val',
+                descripcion='$descripcion_val',
+                largoCm='$largoCm_val',
+                anchoCm='$anchoCm_val',
+                altoCm='$altoCm_val',
+                largoPlg='$largoPlg_val',
+                anchoPlg='$anchoPlg_val',
+                altoPlg='$altoPlg_val',
+                piesCubicos='$piesCubicos_val',
+                metrosCubicos='$metrosCubicos_val',
+                libras='$libras_val',
+                kilogramos='$kilogramos_val',
+                valorFactura='$valorFactura_val'
+            WHERE id='$idDesc' AND idFtl='$id'";
+                } else {
+                    // Si no hay idDesc → insertar nuevo
+                    $sql_detalle = "INSERT INTO descripcionmercanciasftl (
                 idFtl, cantidad, unidadMedida, nmfc, descripcion,
                 largoCm, anchoCm, altoCm, largoPlg, anchoPlg, altoPlg,
                 piesCubicos, metrosCubicos, libras, kilogramos, valorFactura
@@ -353,6 +394,8 @@ if (isset($_POST['update'])) {
                 '$largoCm_val', '$anchoCm_val', '$altoCm_val', '$largoPlg_val', '$anchoPlg_val', '$altoPlg_val',
                 '$piesCubicos_val', '$metrosCubicos_val', '$libras_val', '$kilogramos_val', '$valorFactura_val'
             )";
+                }
+
                 mysqli_query($con, $sql_detalle);
             }
         }
@@ -436,6 +479,19 @@ if (isset($_POST['instrucciones'])) {
         // No existe → insertar nuevo registro
         $sql_insert = "INSERT INTO transportistas (transportista, unidad, numero, placas, estatus) VALUES ('$transportista', '$unidad', '$numero', '$placas', '1')";
         mysqli_query($con, $sql_insert);
+    }
+
+    $caat = strtoupper($caat);
+    $scac = strtoupper($scac);
+
+    // Verificar si ya existen en la tabla transfers
+    $sql_transfers = "SELECT id FROM transfers WHERE caat = '$caat' AND scac = '$scac' LIMIT 1";
+    $query_transfers = mysqli_query($con, $sql_transfers);
+
+    if (mysqli_num_rows($query_transfers) == 0) {
+        // No existe → insertar nuevo registro
+        $sql_insert_transfers = "INSERT INTO transfers (transfer, caat, scac, estatus) VALUES ('$transfer', '$caat', '$scac', '1')";
+        mysqli_query($con, $sql_insert_transfers);
     }
 
     $sql = "UPDATE cartainstruccionesftl SET 
