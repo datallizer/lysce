@@ -465,6 +465,8 @@ if (isset($_POST['instrucciones'])) {
     $recorrido = mysqli_real_escape_string($con, $_POST['recorrido']);
     $arribo = mysqli_real_escape_string($con, $_POST['arribo']);
     $horadescarga = mysqli_real_escape_string($con, $_POST['horadescarga']);
+    $limitedescarga = mysqli_real_escape_string($con, $_POST['limitedescarga']);
+    $limitecarga = mysqli_real_escape_string($con, $_POST['limitecarga']);
     $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
     $usuario = $_SESSION['email'];
 
@@ -508,6 +510,8 @@ if (isset($_POST['instrucciones'])) {
         recorrido = '$recorrido',
         arribo = '$arribo',
         horadescarga = '$horadescarga',
+        limitedescarga = '$limitedescarga',
+        limitecarga = '$limitecarga',
         observaciones = '$observaciones',
         usuario = '$usuario'
     WHERE id = '$id'";

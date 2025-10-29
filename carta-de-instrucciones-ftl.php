@@ -400,7 +400,8 @@ if (isset($_GET['id'])) {
                                                 </p>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Horario de carga:</b>
-                                                    <input name="horacarga" class="form-control" style="width: 267px; display: inline-block;" type="time" value="<?= $registro['horacarga']; ?>">
+                                                    <input name="horacarga" class="form-control" style="width: 140px; display: inline-block;" type="time" value="<?= $registro['horacarga']; ?>"> a
+                                                    <input name="limitecarga" class="form-control" style="width: 140px; display: inline-block;" type="time" value="<?= $registro['limitecarga']; ?>">
                                                 </p>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Tiempo de recorrido:</b>
@@ -414,7 +415,7 @@ if (isset($_GET['id'])) {
                                                 </p>
                                                 <p style="display: inline-block;margin-bottom: 5px;">
                                                     <b>Horario de descarga:</b>
-                                                    <input name="horadescarga" class="form-control" style="width: 267px; display: inline-block;" type="time" value="<?= $registro['horadescarga']; ?>">
+                                                    <input name="horadescarga" class="form-control" style="width: 140px; display: inline-block;" type="time" value="<?= $registro['horadescarga']; ?>"> a <input name="limitedescarga" class="form-control" style="width: 140px; display: inline-block;" type="time" value="<?= $registro['limitedescarga']; ?>">
                                                 </p>
                                             </div>
 

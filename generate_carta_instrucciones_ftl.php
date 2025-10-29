@@ -205,6 +205,10 @@ WHERE
             border: 1px solid #858585;
             padding: 0px 5px;
         }
+        .noBorder {
+            width: 100%;
+            border-collapse: collapse;
+        }
         .noBorder td {
             border: 0px solid #ffffffff;
             padding: 0px 5px;
@@ -233,10 +237,6 @@ WHERE
                  <p>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</p>
             </td>
             <td style="width: 40%;border: 0px;">
-                <h2><b>GRUPO LYSCE S.C.</b></h2>
-                <p style="margin: 0;">R.F.C GLY170421ES6</p>
-                <p style="margin: 0;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte,<br> Aguascalientes, Ags. C.P. 20127</p>
-                <p style="margin: 0;">Tel / Fax +52 (449) 300 3265</p>
             </td>
             <td style="width: 30%;border: 0px;">
                 <h2 style="margin-bottom:10px;"><b>CARTA DE INSTRUCCIONES</b></h2>
@@ -331,8 +331,41 @@ WHERE
             }
 
             $html .= '
+            <br>
+            <table class="noBorder">
+                <tr>
+                    <td><b>Fecha de carga:</b> ' . $registro['carga'] . '</td>
+                    <td><b>Fecha de arribo:</b> ' . $registro['arribo'] . '</td>
+                </tr>
+                <tr>
+                    <td><b>Horario de carga:</b> ' . $registro['horacarga'] . (!empty($registro['limitecarga']) ? ' a ' . $registro['limitecarga'] : '') . '</td>
+                    <td><b>Horario de descarga:</b> ' . $registro['horadescarga'] . (!empty($registro['limitedescarga']) ? ' a ' . $registro['limitedescarga'] : '') . '</td>
+                </tr>
+                <tr>
+                    <td><b>Tiempo de recorrido:</b> ' . $registro['recorrido'] . '</td>
+                </tr>
+            </table>
+            <br>
     <h2>OBSERVACIONES</h2>
-    <pre>' . $registro['observaciones'] . '</pre>
+    <div style="width:97%;border: 1px solid #e7e7e7;padding:10px;">
+        <pre>' . $registro['observaciones'] . '</pre>
+    </div>
+    <br>
+    <div style="text-align:center;">
+        <p><b>ATENTAMENTE</b></p>
+        <p>EQUIPO LYSCE</p>
+    </div>
+    <table class="noBorder">
+        <tr>
+            <td>
+                <h2><b>GRUPO LYSCE S.C.</b></h2>
+                <p style="margin: 0;">R.F.C GLY170421ES6</p>
+                <p style="margin: 0;">Sierra del Laurel 312 piso 2, Bosques del Prado Norte,<br> Aguascalientes, Ags. C.P. 20127</p>
+                <p style="margin: 0;">Tel / Fax +52 (449) 300 3265</p>
+            </td>
+            <td><h2 style="text-align:right;"><span style="color:rgba(208, 52, 52, 1)">MOVIENDO SOLUCIONES</span></h2></td>
+        </tr>
+    </table>
 </body>
 </html>';
         }
