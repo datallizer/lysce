@@ -1,7 +1,11 @@
 <?php
 $token = 'ea4cccf26c102391e1ae1798ce52fd4c3e083e81987675d8572569c91f7464c2';
 
-$hoy = '2025-05-27';
+// Establece zona horaria (ajústala si es necesario)
+date_default_timezone_set('America/Mexico_City');
+
+// Fecha actual en formato AAAA-MM-DD
+$hoy = date('Y-m-d');
 
 // Construye la URL con fecha actual
 $url = "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/$hoy/$hoy";

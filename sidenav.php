@@ -32,6 +32,10 @@ require 'dbcon.php';
                             <div class="sb-nav-link-icon"><i class="bi bi-person-fill"></i></div>
                             Usuarios
                         </a>
+                        <a class="nav-link" href="carta-instrucciones.php">
+                            <div class="sb-nav-link-icon"><i class="bi bi-envelope-paper-fill"></i></div>
+                            Carta instrucciones
+                        </a>
                         <!-- <a class="nav-link" href="cotizaciones.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Cotizaciones

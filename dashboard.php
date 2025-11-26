@@ -36,7 +36,7 @@ if (isset($_SESSION['email'])) {
     } else {
         $_SESSION['alert'] = [
             'title' => 'USUARIO NO ENCONTRADO',
-            'icon' => 'ERROR'
+            'icon' => 'error'
         ];
         header('Location: login.php');
         exit();
@@ -115,10 +115,6 @@ if (isset($_SESSION['email'])) {
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
                                         foreach ($query_run as $registro) {
-                                            $linkHabilitado = $registro['cliente_nombre'] !== null &&
-                                                $registro['origen_nombre'] !== null &&
-                                                $registro['destino_nombre'] !== null &&
-                                                $registro['final_nombre'] !== null;
                                     ?>
                                             <tr>
                                                 <td>
@@ -673,10 +669,6 @@ if (isset($_SESSION['email'])) {
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
                                         foreach ($query_run as $registro) {
-                                            $linkHabilitado = $registro['cliente_nombre'] !== null &&
-                                                $registro['origen_nombre'] !== null &&
-                                                $registro['destino_nombre'] !== null &&
-                                                $registro['final_nombre'] !== null;
                                     ?>
                                             <tr>
                                                 <td>

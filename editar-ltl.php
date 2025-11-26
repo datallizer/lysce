@@ -210,10 +210,10 @@ if (isset($_SESSION['email'])) {
                                                             <input name="tiempoRecorridoOrigenDestino" value="<?= $registro['tiempoRecorridoOrigenDestino']; ?>" class="form-control" style="width: 110px; display: inline-block;" type="text">
                                                         </p><br>
 
-                                                        <p style="display: inline-block;margin-bottom: 5px;">
-                                                            <b>Operador:</b>
-                                                            <input name="servicio" value="<?= $registro['servicio']; ?>" class="form-control" style="width: 167px; display: inline-block;" type="text">
-                                                        </p>
+                                                        <!-- <p style="display: inline-block;margin-bottom: 5px;">
+                                                            <b>Operador:</b> -->
+                                                            <input name="servicio" value="<?= $registro['servicio']; ?>" class="form-control" style="width: 167px; display: inline-block;" type="hidden">
+                                                        <!-- </p> -->
                                                     </div>
                                                     <div class="col-4">
                                                         <p style="display: inline-block;margin-bottom: 5px;">
@@ -242,10 +242,10 @@ if (isset($_SESSION['email'])) {
                                                     <input name="tiempoRecorridoDestinoFinal" value="<?= $registro['tiempoRecorridoDestinoFinal']; ?>" class="form-control" style="width: 80px; display: inline-block;" type="text">
                                                 </p><br>
 
-                                                <p style="display: inline-block;margin-bottom: 5px;">
-                                                    <b>Operador:</b>
-                                                    <input name="operador" value="<?= $registro['operador']; ?>" class="form-control" style="width: 167px; display: inline-block;" type="text">
-                                                </p>
+                                                <!-- <p style="display: inline-block;margin-bottom: 5px;">
+                                                    <b>Operador:</b> -->
+                                                    <input name="operador" value="<?= $registro['operador']; ?>" class="form-control" style="width: 167px; display: inline-block;" type="hidden">
+                                                <!-- </p> -->
 
                                                 <p style="display: inline-block;">
                                                     <b>Unidad:</b>

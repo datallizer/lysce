@@ -288,7 +288,6 @@ WHERE
                     <td style="width:33%;border: 0px;">
                         <p><b>Distancia:</b> ' . number_format($registro['distanciaOrigenDestinoMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaOrigenDestinoKms'], 2, '.', ',') . ' kms</p>
                         <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . '</p>
-                        <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
                         <br>
                     </td>
                     
@@ -302,7 +301,6 @@ WHERE
                     <td style="width:33%;border: 0px;">
                         <p><b>Distancia:</b> ' . number_format($registro['distanciaDestinoFinalMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaDestinoFinalKms'], 2, '.', ',') . ' kms</p>
                         <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . '</p>
-                        <p><b>Operador:</b> ' . $registro['operador'] . '</p>
                         <p><b>Unidad:</b> ' . $registro['unidad'] . '</p>
                     </td>
                 </tr>

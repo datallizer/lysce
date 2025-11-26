@@ -159,10 +159,10 @@ if (isset($_SESSION['email'])) {
                                     <input name="tiempoRecorridoOrigenDestino" class="form-control" style="width: 110px; display: inline-block;" type="text" id="recorrido">
                                 </p><br>
 
-                                <p style="display: inline-block;margin-bottom: 5px;">
-                                    <b>Operador:</b>
-                                    <input name="servicio" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
-                                </p>
+                                <!-- <p style="display: inline-block;margin-bottom: 5px;">
+                                    <b>Operador:</b> -->
+                                    <input name="servicio" class="form-control" style="width: 167px; display: inline-block;" type="hidden" id="servicio">
+                                <!-- </p> -->
                             </div>
                             <div class="col-4">
                                 <p style="display: inline-block;margin-bottom: 5px;">
@@ -191,10 +191,10 @@ if (isset($_SESSION['email'])) {
                             <input name="tiempoRecorridoDestinoFinal" class="form-control" style="width: 80px; display: inline-block;" type="text" id="recorrido">
                         </p><br>
 
-                        <p style="display: inline-block;margin-bottom: 5px;">
-                            <b>Operador:</b>
-                            <input name="operador" class="form-control" style="width: 167px; display: inline-block;" type="text" id="servicio">
-                        </p>
+                        <!-- <p style="display: inline-block;margin-bottom: 5px;">
+                            <b>Operador:</b> -->
+                            <input name="operador" class="form-control" style="width: 167px; display: inline-block;" type="hidden" id="servicio">
+                        <!-- </p> -->
 
                         <p style="display: inline-block;">
                             <b>Unidad:</b>

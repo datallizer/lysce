@@ -231,7 +231,7 @@ WHERE
             </td>
             <td style="width: 30%;border: 0px;">
                 <h2 style="margin-bottom:10px;"><b>QUOTATION</b></h2>
-                <p>Folio: <span style="color:rgb(159, 41, 41);text-transform:uppercase;">' . $registro['identificador'] . '</span></p>
+                <p>Reference Number: <span style="color:rgb(159, 41, 41);text-transform:uppercase;">' . $registro['identificador'] . '</span></p>
                 <p>Aguascalientes, Ags a ' . $registro['fecha'] . '</p>
                 <br>
                 <br>
@@ -248,7 +248,7 @@ WHERE
                 <p><b>Phone:</b> ' . $registro['cliente_telefono'] . '</p>
                 <p><b>Email:</b> ' . $registro['cliente_correo'] . '</p>
                 <p><b>Contact:</b> ' . $registro['cliente_contacto'] . '</p>
-                <p><b>RFC:</b> ' . $registro['cliente_rfc'] . '</p>
+                <p><b>Tax ID:</b> ' . $registro['cliente_rfc'] . '</p>
             </td>
         </tr>
         <tr>
@@ -259,25 +259,25 @@ WHERE
                 <p><b>Phone:</b> ' . $registro['origen_phone'] . '</p>
                 <p><b>Email:</b> ' . $registro['origen_email'] . '</p>
                 <p><b>Contact:</b> ' . $registro['origen_contact'] . '</p>
-                <p><b>RFC:</b> ' . $registro['origen_tax'] . '</p>
+                <p><b>Tax ID:</b> ' . $registro['origen_tax'] . '</p>
             </td>
             <td>
                 <b>Delivered at Place:</b>
                 <p>' . $registro['destino_nombre'] . '</p>
-                <p><b>Domicilio:</b> ' . $registro['destino_domicilio'] . ' #' . $registro['destino_exterior'] . ' ' . $registro['destino_interior'] . ', ' . $registro['destino_fraccionamiento'] . ', ' . $registro['destino_ciudad'] . ', ' . $registro['destino_estado'] . ', ' . $registro['destino_country'] . ' ' . $registro['destino_postal'] . '</p>
-                <p><b>Teléfono:</b> ' . $registro['destino_phone'] . '</p>
+                <p><b>Address:</b> ' . $registro['destino_domicilio'] . ' #' . $registro['destino_exterior'] . ' ' . $registro['destino_interior'] . ', ' . $registro['destino_fraccionamiento'] . ', ' . $registro['destino_ciudad'] . ', ' . $registro['destino_estado'] . ', ' . $registro['destino_country'] . ' ' . $registro['destino_postal'] . '</p>
+                <p><b>Phone:</b> ' . $registro['destino_phone'] . '</p>
                 <p><b>Email:</b> ' . $registro['destino_email'] . '</p>
-                <p><b>Contacto:</b> ' . $registro['destino_contact'] . '</p>
-                <p><b>RFC:</b> ' . $registro['destino_tax'] . '</p>
+                <p><b>Contact:</b> ' . $registro['destino_contact'] . '</p>
+                <p><b>Tax ID:</b> ' . $registro['destino_tax'] . '</p>
             </td>
             <td>
                 <b>Final Destination:</b>
                 <p>' . $registro['final_nombre'] . '</p>
-                <p><b>Domicilio:</b> ' . $registro['final_domicilio'] . ' #' . $registro['final_exterior'] . ' ' . $registro['final_interior'] . ', ' . $registro['final_fraccionamiento'] . ', ' . $registro['final_ciudad'] . ', ' . $registro['final_estado'] . ', ' . $registro['final_country'] . ' ' . $registro['final_postal'] . '</p>
-                <p><b>Teléfono:</b> ' . $registro['final_phone'] . '</p>
+                <p><b>Address:</b> ' . $registro['final_domicilio'] . ' #' . $registro['final_exterior'] . ' ' . $registro['final_interior'] . ', ' . $registro['final_fraccionamiento'] . ', ' . $registro['final_ciudad'] . ', ' . $registro['final_estado'] . ', ' . $registro['final_country'] . ' ' . $registro['final_postal'] . '</p>
+                <p><b>Phone:</b> ' . $registro['final_phone'] . '</p>
                 <p><b>Email:</b> ' . $registro['final_email'] . '</p>
-                <p><b>Contacto:</b> ' . $registro['final_contact'] . '</p>
-                <p><b>RFC:</b> ' . $registro['final_tax'] . '</p>
+                <p><b>Contact:</b> ' . $registro['final_contact'] . '</p>
+                <p><b>Tax:</b> ' . $registro['final_tax'] . '</p>
                  
             </td>
         </tr>
@@ -286,9 +286,8 @@ WHERE
             <table style="width:100%;border: 0px;">
                 <tr style="width:100%;border: 0px;">
                     <td style="width:33%;border: 0px;">
-                        <p><b>Distancia:</b> ' . number_format($registro['distanciaOrigenDestinoMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaOrigenDestinoKms'], 2, '.', ',') . ' kms</p>
-                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . '</p>
-                        <p><b>Operador:</b> ' . $registro['servicio'] . '</p>
+                        <p><b>Distance:</b> ' . number_format($registro['distanciaOrigenDestinoMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaOrigenDestinoKms'], 2, '.', ',') . ' kms</p>
+                        <p><b>Time/Duration:</b> ' . $registro['tiempoRecorridoOrigenDestino'] . '</p>
                         <br>
                     </td>
                     
@@ -300,9 +299,8 @@ WHERE
                     </td>
                     
                     <td style="width:33%;border: 0px;">
-                        <p><b>Distancia:</b> ' . number_format($registro['distanciaDestinoFinalMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaDestinoFinalKms'], 2, '.', ',') . ' kms</p>
-                        <p><b>Tiempo/Recorrido:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . '</p>
-                        <p><b>Operador:</b> ' . $registro['operador'] . '</p>
+                        <p><b>Distance:</b> ' . number_format($registro['distanciaDestinoFinalMillas'], 2, '.', ',') . ' millas | ' . number_format($registro['distanciaDestinoFinalKms'], 2, '.', ',') . ' kms</p>
+                        <p><b>Time/Duration:</b> ' . $registro['tiempoRecorridoDestinoFinal'] . '</p>
                         <p><b>Unidad:</b> ' . $registro['unidad'] . '</p>
                     </td>
                 </tr>

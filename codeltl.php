@@ -384,3 +384,122 @@ if (isset($_POST['update'])) {
         exit;
     }
 }
+
+if (isset($_POST['instrucciones'])) {
+    $id = mysqli_real_escape_string($con, $_POST['id']);
+    $idLtl = mysqli_real_escape_string($con, $_POST['idLtl']);
+    $fecha = mysqli_real_escape_string($con, $_POST['fecha']);
+    $transportista = mysqli_real_escape_string($con, $_POST['transportista']);
+    $unidad = mysqli_real_escape_string($con, $_POST['unidad']);
+    $numero = mysqli_real_escape_string($con, $_POST['numero']);
+    $placas = mysqli_real_escape_string($con, $_POST['placas']);
+    $transfer = mysqli_real_escape_string($con, $_POST['transfer']);
+    $caat = mysqli_real_escape_string($con, $_POST['caat']);
+    $scac = mysqli_real_escape_string($con, $_POST['scac']);
+    $carga = mysqli_real_escape_string($con, $_POST['carga']);
+    $horacarga = mysqli_real_escape_string($con, $_POST['horacarga']);
+    $recorrido = mysqli_real_escape_string($con, $_POST['recorrido']);
+    $arribo = mysqli_real_escape_string($con, $_POST['arribo']);
+    $horadescarga = mysqli_real_escape_string($con, $_POST['horadescarga']);
+    $limitedescarga = mysqli_real_escape_string($con, $_POST['limitedescarga']);
+    $limitecarga = mysqli_real_escape_string($con, $_POST['limitecarga']);
+    $observaciones = mysqli_real_escape_string($con, $_POST['observaciones']);
+    $usuario = $_SESSION['email'];
+
+    $numero = strtoupper($numero);
+    $placas = strtoupper($placas);
+
+    // Verificar si ya existen en la tabla transportistas
+    $sql_check = "SELECT id FROM transportistas WHERE numero = '$numero' AND placas = '$placas' LIMIT 1";
+    $query_check = mysqli_query($con, $sql_check);
+
+    if (mysqli_num_rows($query_check) == 0) {
+        // No existe → insertar nuevo registro
+        $sql_insert = "INSERT INTO transportistas (transportista, unidad, numero, placas, estatus) VALUES ('$transportista', '$unidad', '$numero', '$placas', '1')";
+        mysqli_query($con, $sql_insert);
+    }
+
+    $caat = strtoupper($caat);
+    $scac = strtoupper($scac);
+
+    // Verificar si ya existen en la tabla transfers
+    $sql_transfers = "SELECT id FROM transfers WHERE caat = '$caat' AND scac = '$scac' LIMIT 1";
+    $query_transfers = mysqli_query($con, $sql_transfers);
+
+    if (mysqli_num_rows($query_transfers) == 0) {
+        // No existe → insertar nuevo registro
+        $sql_insert_transfers = "INSERT INTO transfers (transfer, caat, scac, estatus) VALUES ('$transfer', '$caat', '$scac', '1')";
+        mysqli_query($con, $sql_insert_transfers);
+    }
+
+    $sql = "UPDATE cartainstruccionesltl SET 
+        fecha = '$fecha',
+        transportista = '$transportista',
+        unidad = '$unidad',
+        numero = '$numero',
+        placas = '$placas',
+        transfer = '$transfer',
+        caat = '$caat',
+        scac = '$scac',
+        carga = '$carga',
+        horacarga = '$horacarga',
+        recorrido = '$recorrido',
+        arribo = '$arribo',
+        horadescarga = '$horadescarga',
+        limitedescarga = '$limitedescarga',
+        limitecarga = '$limitecarga',
+        observaciones = '$observaciones',
+        usuario = '$usuario'
+    WHERE id = '$id'";
+
+    $query_run = mysqli_query($con, $sql);
+
+    if ($query_run) {
+
+        // Actualizar tablas relacionadas
+        mysqli_query($con, "DELETE FROM ccpltl WHERE idLtl = '$idLtl'");
+
+
+        if (!empty($_POST['factura']) && is_array($_POST['factura'])) {
+            foreach ($_POST['factura'] as $i => $factura) {
+                $factura_val = mysqli_real_escape_string($con, $factura);
+                $idDesc = mysqli_real_escape_string($con, $_POST['idDesc'][$i]);
+                $pedimento_val = mysqli_real_escape_string($con, $_POST['pedimento'][$i]);
+                mysqli_query($con, "DELETE FROM referencialtl WHERE idDesc = '$idDesc'");
+
+                $sql_servicio = "INSERT INTO referencialtl (idDesc, factura, pedimento)
+                                 VALUES ('$idDesc', '$factura_val', '$pedimento_val')";
+                mysqli_query($con, $sql_servicio);
+            }
+        }
+
+        if (!empty($_POST['clave']) && is_array($_POST['clave'])) {
+            foreach ($_POST['clave'] as $i => $clave) {
+                $clave_val = mysqli_real_escape_string($con, $clave);
+                $descripcion_val = mysqli_real_escape_string($con, $_POST['descripcion'][$i]);
+                $cantidad_val = mysqli_real_escape_string($con, $_POST['cantidad'][$i]);
+                $unidad_val = mysqli_real_escape_string($con, $_POST['unidadCpp'][$i]);
+                $kilogramos_val = mysqli_real_escape_string($con, $_POST['kilogramos'][$i]);
+                $fraccion_val = mysqli_real_escape_string($con, $_POST['fraccion'][$i]);
+                $tipo_val = mysqli_real_escape_string($con, $_POST['tipo'][$i]);
+                $pedimento_val = mysqli_real_escape_string($con, $_POST['pedimento'][$i]);
+                $material_val = mysqli_real_escape_string($con, $_POST['material'][$i]);
+                $embalaje_val = mysqli_real_escape_string($con, $_POST['embalaje'][$i]);
+                $aduanero_val = mysqli_real_escape_string($con, $_POST['aduanero'][$i]);
+                $regimen_val = mysqli_real_escape_string($con, $_POST['regimen'][$i]);
+                $importador_val = mysqli_real_escape_string($con, $_POST['importador'][$i]);
+
+                $sql_cpp = "INSERT INTO ccpltl (idLtl, clave, descripcion, cantidad, unidad, kilogramos, fraccion, tipo, pedimento, material, embalaje, aduanero, regimen, importador) VALUES ('$idLtl', '$clave_val', '$descripcion_val', '$cantidad_val', '$unidad_val', '$kilogramos_val', '$fraccion_val', '$tipo_val', '$pedimento_val', '$material_val', '$embalaje_val', '$aduanero_val', '$regimen_val', '$importador_val')";
+                mysqli_query($con, $sql_cpp);
+            }
+        }
+
+        $_SESSION['alert'] = ['title' => "CARTA INSTRUCCIONES LTL ACTUALIZADA EXITOSAMENTE", 'icon' => 'success'];
+        header("Location: ltl.php");
+        exit;
+    } else {
+        $_SESSION['alert'] = ['title' => 'ERROR AL ACTUALIZAR', 'icon' => 'error'];
+        header("Location: ltl.php");
+        exit;
+    }
+}

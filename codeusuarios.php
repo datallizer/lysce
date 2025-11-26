@@ -62,11 +62,11 @@ if (isset($_POST['update'])) {
                 $src_image = imagecreatefromgif($image_tmp_name);
                 break;
             default:
-            $_SESSION['alert'] = [
-                'message' => 'Selecciona otra imagen',
-                'title' => 'FORMATO NO SOPORTADO',
-                'icon' => 'error'
-            ];
+                $_SESSION['alert'] = [
+                    'message' => 'Selecciona otra imagen',
+                    'title' => 'FORMATO NO SOPORTADO',
+                    'icon' => 'error'
+                ];
                 header("Location: usuarios.php");
                 exit(0);
         }
@@ -91,8 +91,24 @@ if (isset($_POST['update'])) {
         }
     }
 
+    $updateFields = "
+    nombre='$nombre',
+    apellidop='$apellidop',
+    apellidom='$apellidom',
+    email='$email',
+    rol='$rol',
+    estatus='$estatus'
+";
+
+    // Solo actualizar el password si se capturó uno nuevo
+    if (!empty($_POST['password'])) {
+        $password = mysqli_real_escape_string($con, $_POST['password']);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $updateFields .= ", password='$hashed_password'";
+    }
+
     // Actualizar los datos del usuario
-    $query = "UPDATE `usuarios` SET `nombre` = '$nombre',`password` = '$hashed_password', `apellidop` = '$apellidop', `apellidom` = '$apellidom', `email` = '$email', `rol` = '$rol', `estatus` = '$estatus' WHERE `usuarios`.`id` = '$id'";
+    $query = "UPDATE usuarios SET $updateFields WHERE id='$id'";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {

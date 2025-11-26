@@ -112,7 +112,7 @@ if (isset($_SESSION['email'])) {
                                                 </div>
 
                                                 <div class="form-floating col-4 mt-3">
-                                                    <input type="password" class="form-control" name="password" id="password" value="<?= $registro['password']; ?>">
+                                                    <input type="password" class="form-control" name="password" id="password">
                                                     <label for="password">Contraseña</label>
                                                 </div>
 
@@ -128,16 +128,8 @@ if (isset($_SESSION['email'])) {
                                                 <div class="form-floating col-12 col-md-5 mt-3">
                                                     <select class="form-select" name="rol" id="rol">
                                                         <option value="" disabled selected>Selecciona una opción</option>
-                                                        <option value="1" <?= ($rol_actual == 1) ? 'selected' : ''; ?>>Administrador</option>
-                                                        <option value="2" <?= ($rol_actual == 2) ? 'selected' : ''; ?>>Gerencia</option>
-                                                        <option value="4" <?= ($rol_actual == 4) ? 'selected' : ''; ?>>Tecnico controles</option>
-                                                        <option value="5" <?= ($rol_actual == 5) ? 'selected' : ''; ?>>Ing- Diseño</option>
-                                                        <option value="6" <?= ($rol_actual == 6) ? 'selected' : ''; ?>>Compras</option>
-                                                        <option value="7" <?= ($rol_actual == 7) ? 'selected' : ''; ?>>Almacenista</option>
-                                                        <option value="8" <?= ($rol_actual == 8) ? 'selected' : ''; ?>>Tecnico mecanico</option>
-                                                        <option value="9" <?= ($rol_actual == 9) ? 'selected' : ''; ?>>Ing.Control</option>
-                                                        <option value="10" <?= ($rol_actual == 10) ? 'selected' : ''; ?>>Recursos humanos</option>
-                                                        <option value="13" <?= ($rol_actual == 13) ? 'selected' : ''; ?>>Ing. Laser</option>
+                                                        <option value="1" <?= ($rol_actual == 1) ? 'selected' : ''; ?>>Gerencia</option>
+                                                        <option value="2" <?= ($rol_actual == 2) ? 'selected' : ''; ?>>Colaborador/a</option>
                                                     </select>
                                                     <label for="rol">Rol</label>
                                                 </div>

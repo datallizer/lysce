@@ -29,15 +29,15 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
-$ftlId = null;
+$ltlId = null;
 if (isset($_GET['id'])) {
-    $stmt = $con->prepare("SELECT id FROM ftl WHERE id = ?");
+    $stmt = $con->prepare("SELECT id FROM ltl WHERE id = ?");
     $stmt->bind_param("s", $_GET['id']);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $row = $result->fetch_assoc()) {
-        $ftlId = $row['id'];
+        $ltlId = $row['id'];
     }
 
     $stmt->close();
@@ -51,7 +51,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Carta de instrucciones FTL | LYSCE</title>
+    <title>Carta de instrucciones LTL | LYSCE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/ics.ico" />
@@ -67,7 +67,7 @@ if (isset($_GET['id'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="ftl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
+                                <a href="ltl.php" class="btn btn-danger btn-sm float-end">Regresar</a>
                             </div>
                             <div class="card-body">
 
@@ -75,23 +75,23 @@ if (isset($_GET['id'])) {
 
                                 if (isset($_GET['id'])) {
                                     $registro_id = mysqli_real_escape_string($con, $_GET['id']);
-                                    $query = "SELECT * FROM cartainstruccionesftl WHERE idFtl='$registro_id'";
+                                    $query = "SELECT * FROM cartainstruccionesltl WHERE idLtl='$registro_id'";
                                     $query_run = mysqli_query($con, $query);
 
                                     if (mysqli_num_rows($query_run) > 0) {
                                         $registro = mysqli_fetch_array($query_run);
-                                        $titulo = $registro['tipoFtl'];
+                                        $titulo = $registro['tipoLtl'];
                                 ?>
-                                        <form action="codeftl.php" method="POST" class="row justify-content-evenly">
+                                        <form action="codeltl.php" method="POST" class="row justify-content-evenly">
                                             <input class="form-control" value="<?= $registro['id']; ?>" type="hidden" name="id">
-                                            <input class="form-control" value="<?= $registro['idFtl']; ?>" type="hidden" name="idFtl">
+                                            <input class="form-control" value="<?= $registro['idLtl']; ?>" type="hidden" name="idLtl">
                                             <div class="col-4 mb-3 text-start">
                                                 <img style="width: 70%;" src="images/logo.png" alt="">
                                                 <p><b>LOGÍSTICA Y SERVICIOS DE COMERCIO EXTERIOR</b></p>
                                             </div>
                                             <div class="col-6 mb-3">
                                                 <h2><b>CARTA DE INSTRUCCIONES</b></h2>
-                                                <input class="form-control bg-warning" name="tipoFtl" value="<?= $registro['tipoFtl']; ?>" disabled>
+                                                <input class="form-control bg-warning" name="tipoLtl" value="<?= $registro['tipoLtl']; ?>" disabled>
                                                 <p>No.</p>
                                                 <input class="form-control" type="text" name="folio" value="<?= $registro['folio']; ?>" disabled>
                                                 <p>Fecha</p>
@@ -278,7 +278,7 @@ if (isset($_GET['id'])) {
                                                             <th colspan="2">Referencia</th>
                                                         </tr>
                                                         <?php
-                                                        $query_desc = "SELECT d.*, d.id AS idmerca, r.factura AS factura_ref, r.pedimento AS pedimento_ref FROM descripcionmercanciasftl d LEFT JOIN referenciaftl r ON r.idDesc = d.id WHERE d.idFtl = $ftlId";
+                                                        $query_desc = "SELECT d.*, d.id AS idmerca, r.factura AS factura_ref, r.pedimento AS pedimento_ref FROM descripcionmercanciasltl d LEFT JOIN referencialtl r ON r.idDesc = d.id WHERE d.idLtl = $ltlId";
 
                                                         $query_run_desc = mysqli_query($con, $query_desc);
 
@@ -336,7 +336,7 @@ if (isset($_GET['id'])) {
                                                     <table class="table table-striped table-bordered" id="incrementableTable" style="margin-bottom: 0px;">
                                                         <tbody>
                                                             <?php
-                                                            $query_desc = "SELECT * FROM ccpftl WHERE idFtl = $registro_id";
+                                                            $query_desc = "SELECT * FROM ccpltl WHERE idLtl = $registro_id";
 
                                                             $query_run_desc = mysqli_query($con, $query_desc);
 
@@ -441,7 +441,7 @@ if (isset($_GET['id'])) {
 
 
                                             <div class="modal-footer mt-5">
-                                                <a href="ftl.php" class="btn btn-secondary m-1">Cancelar</a>
+                                                <a href="ltl.php" class="btn btn-secondary m-1">Cancelar</a>
                                                 <button type="submit" class="btn btn-success m-1" name="instrucciones">Guardar</button>
                                             </div>
                                         </form>

@@ -307,9 +307,9 @@ if (isset($_SESSION['email'])) {
                                                                                             <b>Tiempo / Recorrido:</b> <?= $ftl['tiempoRecorridoOrigenDestino']; ?>
                                                                                         </p>
 
-                                                                                        <p style="margin-bottom: 5px;">
+                                                                                        <!-- <p style="margin-bottom: 5px;">
                                                                                             <b>Operador:</b> <?= $ftl['servicio']; ?>
-                                                                                        </p>
+                                                                                        </p> -->
                                                                                     </div>
                                                                                     <div class="col-4">
                                                                                         <p style="margin-bottom: 5px;">
@@ -332,9 +332,9 @@ if (isset($_SESSION['email'])) {
                                                                                     <b>Tiempo / Recorrido:</b> <?= $ftl['tiempoRecorridoDestinoFinal']; ?>
                                                                                 </p>
 
-                                                                                <p style="margin-bottom: 5px;">
+                                                                                <!-- <p style="margin-bottom: 5px;">
                                                                                     <b>Operador:</b> <?= $ftl['operador']; ?>
-                                                                                </p>
+                                                                                </p> -->
 
                                                                                 <p>
                                                                                     <b>Unidad:</b> <?= $ftl['unidad']; ?>

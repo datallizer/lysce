@@ -175,6 +175,8 @@ if (isset($_SESSION['email'])) {
                                                             <i class="bi bi-file-earmark-arrow-down-fill"></i>
                                                         </a>
 
+                                                        <a href="carta-de-instrucciones-ltl.php?id=<?= $registro['id']; ?>" class="btn btn-success btn-sm m-1"><i class="bi bi-card-text"></i></a>
+
                                                         <a href="editar-ltl.php?id=<?= $registro['id']; ?>" class="btn btn-warning btn-sm m-1"><i class="bi bi-pencil-square"></i></a>
 
                                                         <form action="codeltl.php" method="POST" class="d-inline">
@@ -319,9 +321,9 @@ if (isset($_SESSION['email'])) {
                                                                                             <b>Tiempo / Recorrido:</b> <?= $ltl['tiempoRecorridoOrigenDestino']; ?>
                                                                                         </p>
 
-                                                                                        <p style="margin-bottom: 5px;">
+                                                                                        <!-- <p style="margin-bottom: 5px;">
                                                                                             <b>Operador:</b> <?= $ltl['servicio']; ?>
-                                                                                        </p>
+                                                                                        </p> -->
                                                                                     </div>
                                                                                     <div class="col-4">
                                                                                         <p style="margin-bottom: 5px;">
@@ -344,9 +346,9 @@ if (isset($_SESSION['email'])) {
                                                                                     <b>Tiempo / Recorrido:</b> <?= $ltl['tiempoRecorridoDestinoFinal']; ?>
                                                                                 </p>
 
-                                                                                <p style="margin-bottom: 5px;">
+                                                                                <!-- <p style="margin-bottom: 5px;">
                                                                                     <b>Operador:</b> <?= $ltl['operador']; ?>
-                                                                                </p>
+                                                                                </p> -->
 
                                                                                 <p>
                                                                                     <b>Unidad:</b> <?= $ltl['unidad']; ?>
